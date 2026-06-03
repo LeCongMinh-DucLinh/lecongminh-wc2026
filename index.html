@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -26,7 +26,7 @@
 
         .match-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 15px 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--secondary); }
         .match-info { flex: 1; font-size: 0.9em; color: #718096; }
-        .match-info .group-tag { background: #e2e8f0; color: var(--primary); padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+        .match-info .group-tag { background: #e2e8f0; color: var(--primary); padding: 2px 8px; border-radius: 4px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
         
         .match-display { display: flex; align-items: center; justify-content: center; flex: 2; font-weight: bold; font-size: 1.1em; }
         .team { width: 35%; text-align: center; }
@@ -141,7 +141,7 @@
             { stt: 72, group: "J", date: "2026-06-28", time: "09:00", team1: "Jordan", team2: "Argentina", score1: "", score2: "" },
 
             // VÒNG LOẠI TRỰC TIẾP (KNOCKOUT)
-             { stt: 73, group: "Knockout", date: "2026-06-29", time: "02:00", team1: "Nhì A", team2: "Nhì B", score1: "", score2: "" },
+            { stt: 73, group: "Knockout", date: "2026-06-29", time: "02:00", team1: "Nhì A", team2: "Nhì B", score1: "", score2: "" },
             { stt: 74, group: "Knockout", date: "2026-06-30", time: "03:30", team1: "Nhất E", team2: "Ba A/B/C/D/F", score1: "", score2: "" },
             { stt: 75, group: "Knockout", date: "2026-06-30", time: "08:00", team1: "Nhất F", team2: "Nhì C", score1: "", score2: "" },
             { stt: 76, group: "Knockout", date: "2026-06-30", time: "00:00", team1: "Nhất C", team2: "Nhì F", score1: "", score2: "" },
@@ -187,7 +187,7 @@
 
         const matchesRef = ref(database, 'matches');
         
-       onValue(matchesRef, (snapshot) => {
+        onValue(matchesRef, (snapshot) => {
             const data = snapshot.val();
             if (!data) {
                 set(matchesRef, initialMatches);
@@ -197,6 +197,49 @@
                 renderStandings(currentMatchesData, selectedGroup);
             }
         });
+
+        // HÀM HIỂN THỊ DANH SÁCH TRẬN ĐẤU (BỔ SUNG)
+        window.renderMatches = function(data, groupFilter) {
+            const matchListDiv = document.getElementById('match-list');
+            matchListDiv.innerHTML = '';
+
+            data.forEach((m, index) => {
+                if (!m) return;
+                // Kiểm tra bộ lọc bảng đấu
+                if (groupFilter !== 'ALL' && m.group !== groupFilter) return;
+
+                const card = document.createElement('div');
+                card.className = 'match-card';
+
+                // Format ngày hiển thị (VD: 12/06/2026)
+                const dateParts = m.date.split('-');
+                const displayDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+
+                card.innerHTML = `
+                    <div class="match-info">
+                        <span class="group-tag">Trận ${m.stt} - Bảng ${m.group}</span>
+                        <div>📅 ${displayDate} - ⏰ ${m.time}</div>
+                    </div>
+                    <div class="match-display">
+                        <div class="team">${m.team1}</div>
+                        <div class="score-zone">
+                            <input type="number" min="0" class="score-input" id="t1-${index}" value="${m.score1}">
+                            <span>-</span>
+                            <input type="number" min="0" class="score-input" id="t2-${index}" value="${m.score2}">
+                        </div>
+                        <div class="team">${m.team2}</div>
+                    </div>
+                    <div>
+                        <button class="btn-update" onclick="updateScore(${index})">Cập nhật</button>
+                    </div>
+                `;
+                matchListDiv.appendChild(card);
+            });
+
+            if(matchListDiv.innerHTML === '') {
+                matchListDiv.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 20px;">Không có trận đấu nào thuộc nhóm này.</p>';
+            }
+        }
 
         // Hàm tự động tính toán và hiển thị Bảng Xếp Hạng như Excel
         window.renderStandings = function(data, groupFilter) {
@@ -296,9 +339,18 @@
             const s1 = document.getElementById(`t1-${index}`).value;
             const s2 = document.getElementById(`t2-${index}`).value;
             
-            set(ref(database, `matches/${index}/score1`), s1 === "" ? "" : parseInt(s1));
-            set(ref(database, `matches/${index}/score2`), s2 === "" ? "" : parseInt(s2));
-            alert("Đã cập nhật kết quả trận đấu số " + (index + 1) + " thành công!");
+            // Xử lý nếu người dùng xóa trắng điểm số để reset trận đấu
+            const score1Value = s1 === "" ? "" : parseInt(s1);
+            const score2Value = s2 === "" ? "" : parseInt(s2);
+
+            set(ref(database, `matches/${index}/score1`), score1Value);
+            set(ref(database, `matches/${index}/score2`), score2Value)
+            .then(() => {
+                alert("Đã cập nhật kết quả trận đấu số " + (index + 1) + " thành công!");
+            })
+            .catch((error) => {
+                alert("Lỗi cập nhật dữ liệu: " + error.message);
+            });
         }
 
         window.filterGroup = function(group, event) {
@@ -316,8 +368,8 @@
 <div class="container">
     <h1>🏆 CẬP NHẬT KẾT QUẢ WORLD CUP 2026</h1>
     <p style="text-align: center; color: #4a5568; font-style: italic; margin-top: -20px; margin-bottom: 30px;">
-    Hệ thống cập nhật và tính điểm tự động - Phát triển bởi: <strong>Lê Công Minh</strong>
-</p>
+        Hệ thống cập nhật và tính điểm tự động - Phát triển bởi: <strong>Lê Công Minh</strong>
+    </p>
     <div class="tabs">
         <button class="tab-btn active" onclick="filterGroup('ALL', event)">Tất cả trận</button>
         <button class="tab-btn" onclick="filterGroup('A', event)">Bảng A</button>
@@ -335,7 +387,6 @@
         <button class="tab-btn" onclick="filterGroup('Knockout', event)">Vòng Đối Kháng</button>
     </div>
 
-    <!-- Khung hiển thị Bảng Xếp Hạng mới được tích hợp tự động -->
     <div class="standings-container" id="standings-box">
         <h3 class="standings-title">📊 XẾP HẠNG BẢNG <span id="current-group-name">A</span></h3>
         <table class="standings-table">
@@ -354,8 +405,7 @@
                 </tr>
             </thead>
             <tbody id="standings-body">
-                <!-- Dữ liệu xếp hạng tự động sinh ra ở đây -->
-            </tbody>
+                </tbody>
         </table>
     </div>
 
