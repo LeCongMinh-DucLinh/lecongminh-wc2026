@@ -187,13 +187,15 @@
 
         const matchesRef = ref(database, 'matches');
         
-       // Ép hệ thống cập nhật lại toàn bộ 104 trận mới lên Firebase
-        set(matchesRef, initialMatches).then(() => {
-            onValue(matchesRef, (snapshot) => {
-                currentMatchesData = snapshot.val();
+       onValue(matchesRef, (snapshot) => {
+            const data = snapshot.val();
+            if (!data) {
+                set(matchesRef, initialMatches);
+            } else {
+                currentMatchesData = data;
                 renderMatches(currentMatchesData, selectedGroup);
                 renderStandings(currentMatchesData, selectedGroup);
-            });
+            }
         });
 
         window.renderMatches = function(data, groupFilter) {
