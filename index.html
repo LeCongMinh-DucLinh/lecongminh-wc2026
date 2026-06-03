@@ -198,110 +198,73 @@
             }
         });
 
-        window.renderMatches = function(data, groupFilter) {
-            const container = document.getElementById('match-list');
-            container.innerHTML = '';
-
-            data.forEach((m, index) => {
-                if (!m) return;
-                if (groupFilter !== 'ALL' && m.group !== groupFilter) return;
-
-                const card = document.createElement('div');
-                card.className = 'match-card';
-                card.innerHTML = `
-                    <div class="match-info">
-                        <span class="group-tag">${m.group === 'Knockout' ? 'Vòng Trực Tiếp' : 'Bảng ' + m.group}</span><br><br>
-                        📅 ${m.date} | 🕒 ${m.time}<br>
-                        <small>Mã trận: Số ${m.stt}</small>
-                    </div>
-                    <div class="match-display">
-                        <div class="team">${m.team1}</div>
-                        <div class="score-zone">
-                            <input type="number" class="score-input" id="t1-${index}" value="${m.score1 !== undefined ? m.score1 : ''}" placeholder="-">
-                            <span>:</span>
-                            <input type="number" class="score-input" id="t2-${index}" value="${m.score2 !== undefined ? m.score2 : ''}" placeholder="-">
-                        </div>
-                        <div class="team">${m.team2}</div>
-                    </div>
-                    <div>
-                        <button class="btn-update" onclick="updateScore(${index})">Lưu</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
         // Hàm tự động tính toán và hiển thị Bảng Xếp Hạng như Excel
-       window.renderStandings = function(data, groupFilter) {
-    const standingsContainer = document.getElementById('standings-box');
-    const tbody = document.getElementById('standings-body');
-    const groupNameSpan = document.getElementById('current-group-name');
-    
-    // Chỉ hiển thị BXH khi chọn một Bảng cụ thể (A -> L)
-    if (groupFilter === 'ALL' || groupFilter === 'Vòng Đối Kháng') {
-        standingsContainer.style.display = 'none';
-        return;
-    }
-
-    standingsContainer.style.display = 'block';
-    groupNameSpan.innerText = groupFilter;
-    tbody.innerHTML = '';
-
-    let teamsData = {};
-
-    // 1. Thu thập danh sách đội tuyển và tính toán số liệu từ kết quả trận đấu
-    data.forEach(m => {
-        // Chuyển đổi "Bảng K" thành "K" để khớp với dữ liệu gốc
-        const cleanGroup = groupFilter.replace('Bảng ', '').trim();
-        if (!m || m.group !== cleanGroup) return;
-
-        // Khởi tạo dữ liệu cho đội 1 nếu chưa có
-        if (!teamsData[m.team1]) {
-            teamsData[m.team1] = { name: m.team1, pld: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
-        }
-        // Khởi tạo dữ liệu cho đội 2 nếu chưa có
-        if (!teamsData[m.team2]) {
-            teamsData[m.team2] = { name: m.team2, pld: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
-        }
-
-        // Nếu trận đấu đã được nhập điểm số hợp lệ
-        if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
-            const s1 = parseInt(m.score1);
-            const s2 = parseInt(m.score2);
-
-            teamsData[m.team1].pld += 1;
-            teamsData[m.team2].pld += 1;
-
-            teamsData[m.team1].gf += s1;
-            teamsData[m.team1].ga += s2;
-            teamsData[m.team2].gf += s2;
-            teamsData[m.team2].ga += s1;
-
-            if (s1 > s2) {
-                teamsData[m.team1].w += 1;
-                teamsData[m.team1].pts += 3;
-                teamsData[m.team2].l += 1;
-            } else if (s1 < s2) {
-                teamsData[m.team2].w += 1;
-                teamsData[m.team2].pts += 3;
-                teamsData[m.team1].l += 1;
-            } else {
-                teamsData[m.team1].d += 1;
-                teamsData[m.team1].pts += 1;
-                teamsData[m.team2].d += 1;
-                teamsData[m.team2].pts += 1;
+        window.renderStandings = function(data, groupFilter) {
+            const standingsContainer = document.getElementById('standings-box');
+            const tbody = document.getElementById('standings-body');
+            const groupNameSpan = document.getElementById('current-group-name');
+            
+            // Chỉ hiển thị BXH khi chọn một Bảng cụ thể từ A đến L
+            if (groupFilter === 'ALL' || groupFilter === 'Knockout') {
+                standingsContainer.style.display = 'none';
+                return;
             }
-        }
-    });
 
-    // Đoạn code tính hiệu số bàn thắng bại và vẽ giao diện (tbody) phía dưới anh giữ nguyên nhé...
+            standingsContainer.style.display = 'block';
+            groupNameSpan.innerText = groupFilter;
+            tbody.innerHTML = '';
 
-                    teamsData[m.team1].gd = teamsData[m.team1].gf - teamsData[m.team1].ga;
-                    teamsData[m.team2].gd = teamsData[m.team2].gf - teamsData[m.team2].ga;
+            let teamsData = {};
+
+            // 1. Thu thập danh sách đội tuyển và tính toán số liệu từ kết quả trận đấu
+            data.forEach(m => {
+                if (!m || m.group !== groupFilter) return;
+
+                // Khởi tạo dữ liệu cho đội 1 nếu chưa có
+                if (!teamsData[m.team1]) {
+                    teamsData[m.team1] = { name: m.team1, pld: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
+                }
+                // Khởi tạo dữ liệu cho đội 2 nếu chưa có
+                if (!teamsData[m.team2]) {
+                    teamsData[m.team2] = { name: m.team2, pld: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
+                }
+
+                // Nếu trận đấu đã được nhập điểm số hợp lệ
+                if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
+                    const s1 = parseInt(m.score1);
+                    const s2 = parseInt(m.score2);
+
+                    teamsData[m.team1].pld += 1;
+                    teamsData[m.team2].pld += 1;
+
+                    teamsData[m.team1].gf += s1;
+                    teamsData[m.team1].ga += s2;
+                    teamsData[m.team2].gf += s2;
+                    teamsData[m.team2].ga += s1;
+
+                    if (s1 > s2) {
+                        teamsData[m.team1].w += 1;
+                        teamsData[m.team1].pts += 3;
+                        teamsData[m.team2].l += 1;
+                    } else if (s1 < s2) {
+                        teamsData[m.team2].w += 1;
+                        teamsData[m.team2].pts += 3;
+                        teamsData[m.team1].l += 1;
+                    } else {
+                        teamsData[m.team1].d += 1;
+                        teamsData[m.team1].pts += 1;
+                        teamsData[m.team2].d += 1;
+                        teamsData[m.team2].pts += 1;
+                    }
                 }
             });
 
-            // 2. Chuyển object sang mảng để sắp xếp thứ tự hạng tuyển thủ
+            // 2. Tính hiệu số bàn thắng bại (Hiệu số = Bàn thắng - Bàn thua)
+            Object.keys(teamsData).forEach(teamName => {
+                teamsData[teamName].gd = teamsData[teamName].gf - teamsData[teamName].ga;
+            });
+
+            // 3. Chuyển object sang mảng để sắp xếp thứ tự hạng tuyển thủ
             let sortedTeams = Object.values(teamsData);
             sortedTeams.sort((a, b) => {
                 if (b.pts !== a.pts) return b.pts - a.pts; // Ưu tiên 1: Điểm số
@@ -309,7 +272,7 @@
                 return b.gf - a.gf;                         // Ưu tiên 3: Tổng số bàn thắng
             });
 
-            // 3. Đổ dữ liệu đã xử lý vào bảng giao diện HTML
+            // 4. Đổ dữ liệu đã xử lý vào bảng giao diện HTML
             sortedTeams.forEach((t, i) => {
                 const tr = document.createElement('tr');
                 const displayGd = t.gd > 0 ? `+${t.gd}` : t.gd; // Hiển thị dấu + trước hiệu số dương
