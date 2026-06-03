@@ -187,13 +187,19 @@
 
         database.ref('matches').on('value', (snapshot) => {
             const data = snapshot.val();
+            if (data && data.length > 0 && (!data[72] || data[21].group !== "K" || data[22].group !== "L")) {
+                database.ref('matches').set(initialMatches);
+                return;
+            }
             if (!data) {
                 database.ref('matches').set(initialMatches);
-            } else {
-                currentMatchesData = data;
-                renderMatches(currentMatchesData, selectedGroup);
-                renderStandings(currentMatchesData, selectedGroup);
+                return;
             }
+            
+            currentMatchesData = data;
+            renderMatches(currentMatchesData, selectedGroup);
+            renderStandings(currentMatchesData, selectedGroup);
+
         }, (error) => {
             console.error("Lỗi đồng bộ Firebase: ", error);
             document.getElementById('match-list').innerHTML = `<p style="text-align: center; color: red;">Không thể tải dữ liệu. Lỗi: ${error.message}</p>`;
