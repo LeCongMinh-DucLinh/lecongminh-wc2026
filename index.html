@@ -43,12 +43,10 @@
         }
     </style>
 
-    <!-- Sử dụng thư viện Firebase Scripts phiên bản ổn định cao giúp chạy mượt trên Web Hosting -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        // Cấu hình đồng bộ hóa cơ sở dữ liệu
         const firebaseConfig = {
             apiKey: "AIzaSyDfol_cQNPKCBCleaSiv2wnBOEYuMZZdRA",
             authDomain: "lichthidauwc-2026.firebaseapp.com",
@@ -59,7 +57,6 @@
             appId: "1:856206610008:web:c99417cb23003eda470b55"
         };
 
-        // Khởi tạo Firebase phiên bản tương thích chống lỗi CORS
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
@@ -114,15 +111,80 @@
             { stt: 45, group: "K", date: "2026-06-24", time: "00:00", team1: "Bồ Đào Nha", team2: "Uzbekistan", score1: "", score2: "" },
             { stt: 46, group: "L", date: "2026-06-24", time: "03:00", team1: "Anh", team2: "Ghana", score1: "", score2: "" },
             { stt: 47, group: "L", date: "2026-06-24", time: "06:00", team1: "Panama", team2: "Croatia", score1: "", score2: "" },
-            { stt: 48, group: "K", date: "2026-06-24", time: "09:00", team1: "Colombia", team2: "Congo", score1: "", score2: ""
+            { stt: 48, group: "K", date: "2026-06-24", time: "09:00", team1: "Colombia", team2: "Congo", score1: "", score2: "" },
 
-            // (Các trận lượt 3 và vòng sau giữ nguyên như thiết kế ban đầu)
+            // LƯỢT 3 VÒNG BẢNG
+            { stt: 49, group: "A", date: "2026-06-25", time: "02:00", team1: "Nam Phi", team2: "Hàn Quốc", score1: "", score2: "" },
+            { stt: 50, group: "A", date: "2026-06-25", time: "02:00", team1: "CH Séc", team2: "Mexico", score1: "", score2: "" },
+            { stt: 51, group: "B", date: "2026-06-25", time: "07:00", team1: "Bosnia và Herz", team2: "Qatar", score1: "", score2: "" },
+            { stt: 52, group: "B", date: "2026-06-25", time: "07:00", team1: "Thụy Sĩ", team2: "Canada", score1: "", score2: "" },
+            { stt: 53, group: "C", date: "2026-06-26", time: "00:00", team1: "Ma rốc", team2: "Haiti", score1: "", score2: "" },
+            { stt: 54, group: "C", date: "2026-06-26", time: "00:00", team1: "Scotland", team2: "Brazil", score1: "", score2: "" },
+            { stt: 55, group: "E", date: "2026-06-26", time: "03:00", team1: "Curacao", team2: "Bờ Biển Ngà", score1: "", score2: "" },
+            { stt: 56, group: "E", date: "2026-06-26", time: "03:00", team1: "Ecuador", team2: "Đức", score1: "", score2: "" },
+            { stt: 57, group: "F", date: "2026-06-26", time: "06:00", team1: "Nhật Bản", team2: "Thụy Điển", score1: "", score2: "" },
+            { stt: 58, group: "F", date: "2026-06-26", time: "06:00", team1: "Tunisia", team2: "Hà Lan", score1: "", score2: "" },
+            { stt: 59, group: "D", date: "2026-06-26", time: "09:00", team1: "Thổ Nhĩ Kỳ", team2: "Mỹ", score1: "", score2: "" },
+            { stt: 60, group: "D", date: "2026-06-26", time: "09:00", team1: "Paraguay", team2: "Úc", score1: "", score2: "" },
+            { stt: 61, group: "I", date: "2026-06-27", time: "02:00", team1: "Na Uy", team2: "Pháp", score1: "", score2: "" },
+            { stt: 62, group: "I", date: "2026-06-27", time: "02:00", team1: "Senegal", team2: "Iraq", score1: "", score2: "" },
+            { stt: 63, group: "H", date: "2026-06-27", time: "07:00", team1: "Cape Verde", team2: "Ả rập xê út", score1: "", score2: "" },
+            { stt: 64, group: "H", date: "2026-06-27", time: "07:00", team1: "Uruguay", team2: "Tây Ban Nha", score1: "", score2: "" },
+            { stt: 65, group: "G", date: "2026-06-27", time: "10:00", team1: "Ai cập", team2: "Iran", score1: "", score2: "" },
+            { stt: 66, group: "G", date: "2026-06-27", time: "10:00", team1: "New Zealand", team2: "Bỉ", score1: "", score2: "" },
+            { stt: 67, group: "L", date: "2026-06-28", time: "04:00", team1: "Panama", team2: "Anh", score1: "", score2: "" },
+            { stt: 68, group: "L", date: "2026-06-28", time: "04:00", team1: "Croatia", team2: "Ghana", score1: "", score2: "" },
+            { stt: 69, group: "K", date: "2026-06-28", time: "06:30", team1: "Colombia", team2: "Bồ Đào Nha", score1: "", score2: "" },
+            { stt: 70, group: "K", date: "2026-06-28", time: "06:30", team1: "Congo", team2: "Uzbekistan", score1: "", score2: "" },
+            { stt: 71, group: "J", date: "2026-06-28", time: "09:00", team1: "Algeria", team2: "Áo", score1: "", score2: "" },
+            { stt: 72, group: "J", date: "2026-06-28", time: "09:00", team1: "Jordan", team2: "Argentina", score1: "", score2: "" },
+
+            // VÒNG LOẠI TRỰC TIẾP ĐẦU TIÊN (VÒNG 48 ĐỘI)
+            { stt: 73, group: "Knockout", date: "2026-06-29", time: "02:00", team1: "Nhì A", team2: "Nhì B", score1: "", score2: "" },
+            { stt: 74, group: "Knockout", date: "2026-06-30", time: "03:30", team1: "Nhất E", team2: "Ba A/B/C/D/F", score1: "", score2: "" },
+            { stt: 75, group: "Knockout", date: "2026-06-30", time: "08:00", team1: "Nhất F", team2: "Nhì C", score1: "", score2: "" },
+            { stt: 76, group: "Knockout", date: "2026-06-30", time: "00:00", team1: "Nhất C", team2: "Nhì F", score1: "", score2: "" },
+            { stt: 77, group: "Knockout", date: "2026-07-01", time: "04:00", team1: "Nhất I", team2: "Ba C/D/F/G/H", score1: "", score2: "" },
+            { stt: 78, group: "Knockout", date: "2026-07-01", time: "00:00", team1: "Nhì E", team2: "Nhì I", score1: "", score2: "" },
+            { stt: 79, group: "Knockout", date: "2026-07-01", time: "08:00", team1: "Nhất A", team2: "Ba C/E/F/H/I", score1: "", score2: "" },
+            { stt: 80, group: "Knockout", date: "2026-07-01", time: "23:00", team1: "Nhất L", team2: "Ba E/H/I/J/K", score1: "", score2: "" },
+            { stt: 81, group: "Knockout", date: "2026-07-03", time: "06:00", team1: "Nhì K", team2: "Nhì L", score1: "", score2: "" },
+            { stt: 82, group: "Knockout", date: "2026-07-02", time: "07:00", team1: "Nhất D", team2: "Ba B/E/F/I/J", score1: "", score2: "" },
+            { stt: 83, group: "Knockout", date: "2026-07-02", time: "03:00", team1: "Nhất G", team2: "Ba A/E/H/I/J", score1: "", score2: "" },
+            { stt: 84, group: "Knockout", date: "2026-07-03", time: "02:00", team1: "Nhất H", team2: "Nhì J", score1: "", score2: "" },
+            { stt: 85, group: "Knockout", date: "2026-07-03", time: "10:00", team1: "Nhất B", team2: "Ba E/F/G/I/J", score1: "", score2: "" },
+            { stt: 86, group: "Knockout", date: "2026-07-04", time: "05:00", team1: "Nhất J", team2: "Nhì H", score1: "", score2: "" },
+            { stt: 87, group: "Knockout", date: "2026-07-04", time: "08:30", team1: "Nhất K", team2: "Ba D/E/I/J/L", score1: "", score2: "" },
+            { stt: 88, group: "Knockout", date: "2026-07-04", time: "01:30", team1: "Nhì D", team2: "Nhì G", score1: "", score2: "" },
+
+            // VÒNG RE-ROUND (VÒNG 32 ĐỘI TIẾP THEO)
+            { stt: 89, group: "Knockout", date: "2026-07-05", time: "04:00", team1: "Thắng 73", team2: "Thắng 74", score1: "", score2: "" },
+            { stt: 90, group: "Knockout", date: "2026-07-05", time: "00:00", team1: "Thắng 75", team2: "Thắng 76", score1: "", score2: "" },
+            { stt: 91, group: "Knockout", date: "2026-07-06", time: "03:00", team1: "Thắng 77", team2: "Thắng 78", score1: "", score2: "" },
+            { stt: 92, group: "Knockout", date: "2026-07-06", time: "07:00", team1: "Thắng 79", team2: "Thắng 80", score1: "", score2: "" },
+            { stt: 93, group: "Knockout", date: "2026-07-07", time: "02:00", team1: "Thắng 81", team2: "Thắng 82", score1: "", score2: "" },
+            { stt: 94, group: "Knockout", date: "2026-07-07", time: "07:00", team1: "Thắng 83", team2: "Thắng 84", score1: "", score2: "" },
+            { stt: 95, group: "Knockout", date: "2026-07-07", time: "23:00", team1: "Thắng 85", team2: "Thắng 86", score1: "", score2: "" },
+            { stt: 96, group: "Knockout", date: "2026-07-08", time: "03:00", team1: "Thắng 87", team2: "Thắng 88", score1: "", score2: "" },
+
+            // TỨ KẾT
+            { stt: 97, group: "Knockout", date: "2026-07-10", time: "03:00", team1: "Thắng 89", team2: "Thắng 90", score1: "", score2: "" },
+            { stt: 98, group: "Knockout", date: "2026-07-11", time: "02:00", team1: "Thắng 91", team2: "Thắng 92", score1: "", score2: "" },
+            { stt: 99, group: "Knockout", date: "2026-07-12", time: "04:00", team1: "Thắng 93", team2: "Thắng 94", score1: "", score2: "" },
+            { stt: 100, group: "Knockout", date: "2026-07-12", time: "08:00", team1: "Thắng 95", team2: "Thắng 96", score1: "", score2: "" },
+
+            // BÁN KẾT
+            { stt: 101, group: "Knockout", date: "2026-07-15", time: "02:00", team1: "Thắng 97", team2: "Thắng 98", score1: "", score2: "" },
+            { stt: 102, group: "Knockout", date: "2026-07-16", time: "02:00", team1: "Thắng 99", team2: "Thắng 100", score1: "", score2: "" },
+
+            // TRANH HẠNG BA VÀ CHUNG KẾT
+            { stt: 103, group: "Knockout", date: "2026-07-19", time: "04:00", team1: "Thua 101", team2: "Thua 102 (Tranh Hạng 3)", score1: "", score2: "" },
+            { stt: 104, group: "Knockout", date: "2026-07-20", time: "02:00", team1: "Thắng 101", team2: "Thắng 102 (CHUNG KẾT)", score1: "", score2: "" }
         ];
 
         let currentMatchesData = [];
         let selectedGroup = 'ALL';
 
-        // Lắng nghe dữ liệu hoạt động liên tục từ database
         database.ref('matches').on('value', (snapshot) => {
             const data = snapshot.val();
             if (!data) {
@@ -153,7 +215,7 @@
 
                 card.innerHTML = `
                     <div class="match-info">
-                        <span class="group-tag">Trận ${m.stt} - Bảng ${m.group}</span>
+                        <span class="group-tag">Trận ${m.stt} - ${m.group === 'Knockout' ? 'Vòng Trực Tiếp' : 'Bảng ' + m.group}</span>
                         <div>📅 ${displayDate} - ⏰ ${m.time}</div>
                     </div>
                     <div class="match-display">
@@ -166,7 +228,7 @@
                         <div class="team">${m.team2}</div>
                     </div>
                     <div>
-                        <button class="btn-update" onclick="updateScore(${index})">Cập nhật</button>
+                        <button class="btn-update" onclick="updateScore(${index})">Lưu</button>
                     </div>
                 `;
                 matchListDiv.appendChild(card);
