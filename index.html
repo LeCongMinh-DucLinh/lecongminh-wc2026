@@ -29,6 +29,7 @@
         
         .match-display { display: flex; align-items: center; justify-content: center; flex: 2; font-weight: bold; font-size: 1.1em; }
         .team { width: 35%; text-align: center; }
+        .team.actual-team { color: #2b6cb0; font-weight: 800; } /* Làm nổi bật tên đội thật khi được điền vào */
         .score-zone { display: flex; align-items: center; gap: 5px; margin: 0 15px; }
         .score-input { width: 45px; height: 35px; text-align: center; font-size: 1.1em; font-weight: bold; border: 2px solid #cbd5e0; border-radius: 6px; }
         
@@ -101,9 +102,9 @@
             { stt: 35, group: "E", date: "2026-06-21", time: "07:00", team1: "Ecuador", team2: "Curacao", score1: "", score2: "" },
             { stt: 36, group: "F", date: "2026-06-21", time: "11:00", team1: "Tunisia", team2: "Nhật Bản", score1: "", score2: "" },
             { stt: 37, group: "H", date: "2026-06-21", time: "23:00", team1: "Tây Ban Nha", team2: "Ả rập xê út", score1: "", score2: "" },
+            { stt: 40, group: "G", date: "2026-06-22", time: "08:00", team1: "New Zealand", team2: "Ai cập", score1: "", score2: "" },
             { stt: 38, group: "G", date: "2026-06-22", time: "02:00", team1: "Bỉ", team2: "Iran", score1: "", score2: "" },
             { stt: 39, group: "H", date: "2026-06-22", time: "05:00", team1: "Uruguay", team2: "Cape Verde", score1: "", score2: "" },
-            { stt: 40, group: "G", date: "2026-06-22", time: "08:00", team1: "New Zealand", team2: "Ai cập", score1: "", score2: "" },
             { stt: 41, group: "J", date: "2026-06-23", time: "00:00", team1: "Argentina", team2: "Áo", score1: "", score2: "" },
             { stt: 42, group: "I", date: "2026-06-23", time: "04:00", team1: "Pháp", team2: "Iraq", score1: "", score2: "" },
             { stt: 43, group: "I", date: "2026-06-23", time: "07:00", team1: "Na Uy", team2: "Senegal", score1: "", score2: "" },
@@ -142,22 +143,22 @@
             // VÒNG LOẠI TRỰC TIẾP ĐẦU TIÊN (VÒNG 48 ĐỘI)
             { stt: 73, group: "Knockout", date: "2026-06-29", time: "02:00", team1: "Nhì A", team2: "Nhì B", score1: "", score2: "" },
             { stt: 74, group: "Knockout", date: "2026-06-30", time: "03:30", team1: "Nhất E", team2: "Ba A/B/C/D/F", score1: "", score2: "" },
-            { stt: 75, group: "Knockout", date: "2026-06-30", time: "08:00", team1: "Nhất F", team2: "Nhì C", score1: "", score2: "" },
-            { stt: 76, group: "Knockout", date: "2026-07-01", time: "00:00", team1: "Nhất C", team2: "Nhì F", score1: "", score2: "" },
-            { stt: 77, group: "Knockout", date: "2026-07-01", time: "04:00", team1: "Nhất I", team2: "Ba C/D/F/G/H", score1: "", score2: "" },
-            { stt: 78, group: "Knockout", date: "2026-07-01", time: "00:00", team1: "Nhì E", team2: "Nhì I", score1: "", score2: "" },
-            { stt: 79, group: "Knockout", date: "2026-07-01", time: "08:00", team1: "Nhất A", team2: "Ba C/E/F/H/I", score1: "", score2: "" },
-            { stt: 80, group: "Knockout", date: "2026-07-01", time: "23:00", team1: "Nhất L", team2: "Ba E/H/I/J/K", score1: "", score2: "" },
-            { stt: 81, group: "Knockout", date: "2026-07-03", time: "06:00", team1: "Nhì K", team2: "Nhì L", score1: "", score2: "" },
-            { stt: 82, group: "Knockout", date: "2026-07-02", time: "07:00", team1: "Nhất D", team2: "Ba B/E/F/I/J", score1: "", score2: "" },
-            { stt: 83, group: "Knockout", date: "2026-07-02", time: "03:00", team1: "Nhất G", team2: "Ba A/E/H/I/J", score1: "", score2: "" },
-            { stt: 84, group: "Knockout", date: "2026-07-03", time: "02:00", team1: "Nhất H", team2: "Nhì J", score1: "", score2: "" },
-            { stt: 85, group: "Knockout", date: "2026-07-03", time: "10:00", team1: "Nhất B", team2: "Ba E/F/G/I/J", score1: "", score2: "" },
-            { stt: 86, group: "Knockout", date: "2026-07-04", time: "05:00", team1: "Nhất J", team2: "Nhì H", score1: "", score2: "" },
-            { stt: 87, group: "Knockout", date: "2026-07-04", time: "08:30", team1: "Nhất K", team2: "Ba D/E/I/J/L", score1: "", score2: "" },
-            { stt: 88, group: "Knockout", date: "2026-07-04", time: "01:30", team1: "Nhì D", team2: "Nhì G", score1: "", score2: "" },
+            { stt: 75, group: "Knockout", date: "2026-07-01", time: "00:00", team1: "Nhất F", team2: "Nhì C", score1: "", score2: "" },
+            { stt: 76, group: "Knockout", date: "2026-07-01", time: "04:00", team1: "Nhất C", team2: "Nhì F", score1: "", score2: "" },
+            { stt: 77, group: "Knockout", date: "2026-07-01", time: "00:00", team1: "Nhất I", team2: "Ba C/D/F/G/H", score1: "", score2: "" },
+            { stt: 78, group: "Knockout", date: "2026-07-01", time: "08:00", team1: "Nhì E", team2: "Nhì I", score1: "", score2: "" },
+            { stt: 79, group: "Knockout", date: "2026-07-01", time: "23:00", team1: "Nhất A", team2: "Ba C/E/F/H/I", score1: "", score2: "" },
+            { stt: 80, group: "Knockout", date: "2026-07-03", time: "06:00", team1: "Nhất L", team2: "Ba E/H/I/J/K", score1: "", score2: "" },
+            { stt: 81, group: "Knockout", date: "2026-07-02", time: "07:00", team1: "Nhì K", team2: "Nhì L", score1: "", score2: "" },
+            { stt: 82, group: "Knockout", date: "2026-07-02", time: "03:00", team1: "Nhất D", team2: "Ba B/E/F/I/J", score1: "", score2: "" },
+            { stt: 83, group: "Knockout", date: "2026-07-03", time: "02:00", team1: "Nhất G", team2: "Ba A/E/H/I/J", score1: "", score2: "" },
+            { stt: 84, group: "Knockout", date: "2026-07-03", time: "10:00", team1: "Nhất H", team2: "Nhì J", score1: "", score2: "" },
+            { stt: 85, group: "Knockout", date: "2026-07-04", time: "05:00", team1: "Nhất B", team2: "Ba E/F/G/I/J", score1: "", score2: "" },
+            { stt: 86, group: "Knockout", date: "2026-07-04", time: "08:30", team1: "Nhất J", team2: "Nhì H", score1: "", score2: "" },
+            { stt: 87, group: "Knockout", date: "2026-07-04", time: "01:30", team1: "Nhất K", team2: "Ba D/E/I/J/L", score1: "", score2: "" },
+            { stt: 88, group: "Knockout", date: "2026-07-04", time: "11:00", team1: "Nhì D", team2: "Nhì G", score1: "", score2: "" },
 
-            // VÒNG RE-ROUND (VÒNG 32 ĐỘI TIẾP THEO)
+            // VÒNG 32 ĐỘI TIẾP THEO
             { stt: 89, group: "Knockout", date: "2026-07-05", time: "04:00", team1: "Thắng 73", team2: "Thắng 74", score1: "", score2: "" },
             { stt: 90, group: "Knockout", date: "2026-07-05", time: "00:00", team1: "Thắng 75", team2: "Thắng 76", score1: "", score2: "" },
             { stt: 91, group: "Knockout", date: "2026-07-06", time: "03:00", team1: "Thắng 77", team2: "Thắng 78", score1: "", score2: "" },
@@ -202,9 +203,51 @@
             document.getElementById('match-list').innerHTML = `<p style="text-align: center; color: red;">Không thể tải dữ liệu. Lỗi: ${error.message}</p>`;
         });
 
+        // HÀM MỚI BỔ SUNG: Tự động chạy ngầm toàn bộ các bảng đấu để tìm ra vị trí Nhất / Nhì chuẩn xác nhất
+        function getGroupWinners(data) {
+            let groupStandings = {};
+            const groupsList = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+            
+            groupsList.forEach(g => { groupStandings[g] = {}; });
+
+            data.forEach(m => {
+                if (!m || m.group === 'Knockout') return;
+                let g = m.group;
+                if (!groupStandings[g]) return;
+
+                if (!groupStandings[g][m.team1]) groupStandings[g][m.team1] = { name: m.team1, pts: 0, gd: 0, gf: 0, pld: 0 };
+                if (!groupStandings[g][m.team2]) groupStandings[g][m.team2] = { name: m.team2, pts: 0, gd: 0, gf: 0, pld: 0 };
+
+                if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
+                    const s1 = parseInt(m.score1); const s2 = parseInt(m.score2);
+                    groupStandings[g][m.team1].pld += 1; groupStandings[g][m.team2].pld += 1;
+                    groupStandings[g][m.team1].gf += s1; groupStandings[g][m.team1].gd += (s1 - s2);
+                    groupStandings[g][m.team2].gf += s2; groupStandings[g][m.team2].gd += (s2 - s1);
+                    if (s1 > s2) groupStandings[g][m.team1].pts += 3;
+                    else if (s1 < s2) groupStandings[g][m.team2].pts += 3;
+                    else { groupStandings[g][m.team1].pts += 1; groupStandings[g][m.team2].pts += 1; }
+                }
+            });
+
+            let mapping = {};
+            groupsList.forEach(g => {
+                let sorted = Object.values(groupStandings[g]).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+                
+                // Điều kiện: Bảng đấu phải đá đủ cả 6 trận (mỗi đội đá đủ 3 trận) thì mới chính thức khóa sổ và đẩy tên lên vòng loại
+                let isFinished = sorted.length === 4 && sorted.every(team => team.pld === 3);
+
+                mapping[`Nhất ${g}`] = isFinished ? sorted[0].name : `Nhất ${g}`;
+                mapping[`Nhì ${g}`] = isFinished ? sorted[1].name : `Nhì ${g}`;
+            });
+            return mapping;
+        }
+
         function renderMatches(data, groupFilter) {
             const matchListDiv = document.getElementById('match-list');
             matchListDiv.innerHTML = '';
+            
+            // Lấy bảng quy đổi tên đội thực tế từ vòng bảng
+            const winnersMap = getGroupWinners(data);
 
             data.forEach((m, index) => {
                 if (!m) return;
@@ -216,19 +259,36 @@
                 const dateParts = m.date.split('-');
                 const displayDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
 
+                // Xử lý thông minh: Nếu là vòng Đối Kháng, tự động kiểm tra xem có tên đội thực tế chưa
+                let finalTeam1 = m.team1;
+                let finalTeam2 = m.team2;
+                let classT1 = "team";
+                let classT2 = "team";
+
+                if (m.group === 'Knockout') {
+                    if (winnersMap[m.team1] && winnersMap[m.team1] !== m.team1) {
+                        finalTeam1 = winnersMap[m.team1];
+                        classT1 += " actual-team"; // Thêm màu sắc nổi bật cho đội đã lộ diện
+                    }
+                    if (winnersMap[m.team2] && winnersMap[m.team2] !== m.team2) {
+                        finalTeam2 = winnersMap[m.team2];
+                        classT2 += " actual-team";
+                    }
+                }
+
                 card.innerHTML = `
                     <div class="match-info">
                         <span class="group-tag">Trận ${m.stt} - ${m.group === 'Knockout' ? 'Vòng Trực Tiếp' : 'Bảng ' + m.group}</span>
                         <div>📅 ${displayDate} - ⏰ ${m.time}</div>
                     </div>
                     <div class="match-display">
-                        <div class="team">${m.team1}</div>
+                        <div class="${classT1}">${finalTeam1}</div>
                         <div class="score-zone">
                             <input type="number" min="0" class="score-input" id="t1-${index}" value="${m.score1 !== undefined ? m.score1 : ''}">
                             <span>-</span>
                             <input type="number" min="0" class="score-input" id="t2-${index}" value="${m.score2 !== undefined ? m.score2 : ''}">
                         </div>
-                        <div class="team">${m.team2}</div>
+                        <div class="${classT2}">${finalTeam2}</div>
                     </div>
                     <div>
                         <button class="btn-update" onclick="updateScore(${index})">Lưu</button>
@@ -242,7 +302,6 @@
             }
         }
 
-        // ĐÃ SỬA: Ép chặt điều kiện lọc để không bị kéo đội bảng khác vào xếp hạng
         function renderStandings(data, groupFilter) {
             const standingsContainer = document.getElementById('standings-box');
             const tbody = document.getElementById('standings-body');
@@ -260,7 +319,6 @@
             let teamsData = {};
 
             data.forEach(m => {
-                // Kiểm tra tuyệt đối: Chỉ lấy trận đấu thuộc chính xác groupFilter
                 if (!m || m.group !== groupFilter) return;
 
                 if (!teamsData[m.team1]) teamsData[m.team1] = { name: m.team1, pld: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
@@ -286,7 +344,6 @@
             });
 
             let sortedTeams = Object.values(teamsData);
-            
             sortedTeams.forEach(team => { team.gd = team.gf - team.ga; });
             sortedTeams.sort((a, b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
 
