@@ -46,6 +46,8 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         const firebaseConfig = {
@@ -110,9 +112,9 @@
             { stt: 43, group: "I", date: "2026-06-23", time: "07:00", team1: "Na Uy", team2: "Senegal", score1: "", score2: "" },
             { stt: 44, group: "J", date: "2026-06-23", time: "10:00", team1: "Jordan", team2: "Algeria", score1: "", score2: "" },
             { stt: 45, group: "K", date: "2026-06-24", time: "00:00", team1: "Bồ Đào Nha", team2: "Uzbekistan", score1: "", score2: "" },
-            { stt: 46, group: "L", date: "2026-06-24", time: "03:00", team1: "Anh", team2: "Ghana", score1: "", score2: "" },
-            { stt: 47, group: "L", date: "2026-06-24", time: "06:00", team1: "Panama", team2: "Croatia", score1: "", score2: "" },
-            { stt: 48, group: "K", date: "2026-06-24", time: "09:00", team1: "Colombia", team2: "Congo", score1: "", score2: "" },
+            { stt: 46, group: "L", date: "2026-06-24", time: "03:00", team1: "Anh", team2: "Croatia", score1: "", score2: "" },
+            { stt: 23, group: "L", date: "2026-06-18", time: "06:00", team1: "Ghana", team2: "Panama", score1: "", score2: "" },
+            { stt: 24, group: "K", date: "2026-06-18", time: "09:00", team1: "Uzbekistan", team2: "Colombia", score1: "", score2: "" },
 
             // LƯỢT 3 VÒNG BẢNG
             { stt: 49, group: "A", date: "2026-06-25", time: "02:00", team1: "Nam Phi", team2: "Hàn Quốc", score1: "", score2: "" },
@@ -236,21 +238,18 @@
             return mapping;
         }
 
-        // HÀM ĐƯỢC TỐI ƯU TOÀN DIỆN: Đảm bảo lấy tên đội thật chính xác kể cả khi trận trước chưa đầy đủ thông tin đối thủ
         function getKnockoutAdvancedMap(data, groupWinnersMap) {
             let knockoutMap = {};
 
             data.forEach(m => {
                 if (!m || m.group !== 'Knockout') return;
                 
-                // Điền tên đội từ vòng bảng vào trước nếu có để phục vụ dò tìm người thắng
                 let currentRealTeam1 = m.team1;
                 let currentRealTeam2 = m.team2;
 
                 if (groupWinnersMap[currentRealTeam1]) currentRealTeam1 = groupWinnersMap[currentRealTeam1];
                 if (groupWinnersMap[currentRealTeam2]) currentRealTeam2 = groupWinnersMap[currentRealTeam2];
 
-                // Nếu trận đấu này kế thừa từ một trận đấu Knockout trước đó, hãy lấy tên đội thật đã được tìm thấy trước đó
                 let cleanKey1 = currentRealTeam1.replace(/\s*\(.*\)/g, '').trim();
                 let cleanKey2 = currentRealTeam2.replace(/\s*\(.*\)/g, '').trim();
                 
@@ -302,7 +301,6 @@
                 let isActualT2 = false;
 
                 if (m.group === 'Knockout') {
-                    // 1. Đổ dữ liệu từ vòng bảng lên
                     if (groupWinnersMap[finalTeam1]) {
                         if (groupWinnersMap[finalTeam1] !== finalTeam1) isActualT1 = true;
                         finalTeam1 = groupWinnersMap[finalTeam1];
@@ -312,7 +310,6 @@
                         finalTeam2 = groupWinnersMap[finalTeam2];
                     }
 
-                    // 2. Liên thông chuỗi Thắng / Thua từ các trận Knockout trước đó
                     let cleanKey1 = finalTeam1.replace(/\s*\(.*\)/g, '').trim();
                     let cleanKey2 = finalTeam2.replace(/\s*\(.*\)/g, '').trim();
 
@@ -418,6 +415,7 @@
             });
         }
 
+        // ĐÃ NÂNG CẤP: Thay thế hàm alert hệ thống cũ bằng hộp thoại SweetAlert2 giao diện sang trọng
         window.updateScore = function(index) {
             const s1 = document.getElementById(`t1-${index}`).value;
             const s2 = document.getElementById(`t2-${index}`).value;
@@ -429,9 +427,23 @@
                 score1: score1Value,
                 score2: score2Value
             }).then(() => {
-                alert("Đã lưu tỷ số trận đấu!");
+                // Hiển thị hộp thoại thành công chuẩn SweetAlert2
+                Swal.fire({
+                    title: 'Thông báo',
+                    text: 'Đã lưu tỷ số trận đấu!',
+                    icon: 'success',
+                    confirmButtonText: 'Đồng ý',
+                    confirmButtonColor: '#3182ce'
+                });
             }).catch((error) => {
-                alert("Lỗi: " + error.message);
+                // Hiển thị hộp thoại lỗi trực quan
+                Swal.fire({
+                    title: 'Có lỗi xảy ra',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonText: 'Đóng',
+                    confirmButtonColor: '#e53e3e'
+                });
             });
         }
 
@@ -466,7 +478,7 @@
         <button class="tab-btn" onclick="filterGroup('J', event)">Bảng J</button>
         <button class="tab-btn" onclick="filterGroup('K', event)">Bảng K</button>
         <button class="tab-btn" onclick="filterGroup('L', event)">Bảng L</button>
-        <button class="tab-btn" onclick="filterGroup('Knockout', event)">Vòng Loại Trực Tiếp</button>
+        <button class="tab-btn" onclick="filterGroup('Knockout', event)">Vòng Đối Kháng</button>
     </div>
 
     <div class="standings-container" id="standings-box">
