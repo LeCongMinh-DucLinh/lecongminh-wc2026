@@ -143,7 +143,7 @@
             { stt: 73, group: "Knockout", date: "2026-06-29", time: "02:00", team1: "Nhì A", team2: "Nhì B", score1: "", score2: "" },
             { stt: 74, group: "Knockout", date: "2026-06-30", time: "03:30", team1: "Nhất E", team2: "Ba A/B/C/D/F", score1: "", score2: "" },
             { stt: 75, group: "Knockout", date: "2026-06-30", time: "08:00", team1: "Nhất F", team2: "Nhì C", score1: "", score2: "" },
-            { stt: 76, group: "Knockout", date: "2026-06-30", time: "00:00", team1: "Nhất C", team2: "Nhì F", score1: "", score2: "" },
+            { stt: 76, group: "Knockout", date: "2026-07-01", time: "00:00", team1: "Nhất C", team2: "Nhì F", score1: "", score2: "" },
             { stt: 77, group: "Knockout", date: "2026-07-01", time: "04:00", team1: "Nhất I", team2: "Ba C/D/F/G/H", score1: "", score2: "" },
             { stt: 78, group: "Knockout", date: "2026-07-01", time: "00:00", team1: "Nhì E", team2: "Nhì I", score1: "", score2: "" },
             { stt: 79, group: "Knockout", date: "2026-07-01", time: "08:00", team1: "Nhất A", team2: "Ba C/E/F/H/I", score1: "", score2: "" },
@@ -185,7 +185,6 @@
         let currentMatchesData = [];
         let selectedGroup = 'ALL';
 
-        // Đoạn code lắng nghe cơ sở dữ liệu đã được tối ưu lại an toàn hơn
         database.ref('matches').on('value', (snapshot) => {
             const data = snapshot.val();
             
@@ -243,6 +242,7 @@
             }
         }
 
+        // ĐÃ SỬA: Ép chặt điều kiện lọc để không bị kéo đội bảng khác vào xếp hạng
         function renderStandings(data, groupFilter) {
             const standingsContainer = document.getElementById('standings-box');
             const tbody = document.getElementById('standings-body');
@@ -260,6 +260,7 @@
             let teamsData = {};
 
             data.forEach(m => {
+                // Kiểm tra tuyệt đối: Chỉ lấy trận đấu thuộc chính xác groupFilter
                 if (!m || m.group !== groupFilter) return;
 
                 if (!teamsData[m.team1]) teamsData[m.team1] = { name: m.team1, pld: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
@@ -286,7 +287,7 @@
 
             let sortedTeams = Object.values(teamsData);
             
-            sortedTeams.forEach(name => { name.gd = name.gf - name.ga; });
+            sortedTeams.forEach(team => { team.gd = team.gf - team.ga; });
             sortedTeams.sort((a, b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
 
             sortedTeams.forEach((t, i) => {
