@@ -187,18 +187,29 @@
 
         database.ref('matches').on('value', (snapshot) => {
             const data = snapshot.val();
-            if (data && data.length > 0 && (!data[72] || data[21].group !== "K" || data[22].group !== "L")) {
-                database.ref('matches').set(initialMatches);
-                return;
-            }
-            if (!data) {
-                database.ref('matches').set(initialMatches);
-                return;
-            }
-            
-            currentMatchesData = data;
-            renderMatches(currentMatchesData, selectedGroup);
-            renderStandings(currentMatchesData, selectedGroup);
+           if (!data) {
+        database.ref('matches').set(initialMatches);
+        return;
+    }
+
+    // 2. Kiểm tra tính toàn vẹn của dữ liệu (bảng K và L)
+    // Dùng Array.isArray() hoặc kiểm tra trực tiếp data[21]/data[22] để tránh lỗi .length của Object
+    const isDataInvalid = 
+        !data[72] || 
+        !data[21] || data[21].group !== "K" || 
+        !data[22] || data[22].group !== "L";
+
+    if (isDataInvalid) {
+        console.warn("Dữ liệu không hợp lệ, đang tiến hành reset về initialMatches...");
+        database.ref('matches').set(initialMatches);
+        return; // Dừng lại ở đây, đợi Firebase cập nhật xong sẽ tự trigger lại hàm .on()
+    }
+    
+    // 3. Nếu dữ liệu đã chuẩn -> Tiến hành lưu và render
+    currentMatchesData = data;
+    renderMatches(currentMatchesData, selectedGroup);
+    renderStandings(currentMatchesData, selectedGroup);
+});
 
         }, (error) => {
             console.error("Lỗi đồng bộ Firebase: ", error);
