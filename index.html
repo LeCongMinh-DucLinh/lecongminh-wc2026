@@ -185,13 +185,11 @@
         let currentMatchesData = [];
         let selectedGroup = 'ALL';
 
+        // Đoạn code lắng nghe cơ sở dữ liệu đã được tối ưu lại an toàn hơn
         database.ref('matches').on('value', (snapshot) => {
             const data = snapshot.val();
-          if (data && data.length > 0 && (!data[72] || data[21].group !== "K" || data[22].group !== "L")) {
-                database.ref('matches').set(initialMatches);
-                return;
-            }
-            if (!data) {
+            
+            if (!data || data.length === 0) {
                 database.ref('matches').set(initialMatches);
                 return;
             }
@@ -261,7 +259,6 @@
 
             let teamsData = {};
 
-            // Bổ sung điều kiện lọc nghiêm ngặt m.group === groupFilter
             data.forEach(m => {
                 if (!m || m.group !== groupFilter) return;
 
@@ -287,7 +284,6 @@
                 }
             });
 
-            // Chỉ tính toán và hiển thị các đội thực sự có trận đấu trong bảng này
             let sortedTeams = Object.values(teamsData);
             
             sortedTeams.forEach(name => { name.gd = name.gf - name.ga; });
@@ -305,6 +301,7 @@
                 tbody.appendChild(tr);
             });
         }
+
         window.updateScore = function(index) {
             const s1 = document.getElementById(`t1-${index}`).value;
             const s2 = document.getElementById(`t2-${index}`).value;
