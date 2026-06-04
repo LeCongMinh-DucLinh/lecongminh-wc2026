@@ -202,7 +202,6 @@
             console.error("Lỗi đồng bộ Firebase: ", error);
         });
 
-        // 1. Hàm tính toán thứ hạng vòng bảng (như cũ)
         function getGroupWinners(data) {
             let groupStandings = {};
             const groupsList = ['A','B','C','D','E','F','G','H','I','J','K','L'];
@@ -237,24 +236,33 @@
             return mapping;
         }
 
-        // HÀM MỚI BỔ SUNG: Dò ngược chuỗi kết quả vòng Loại trực tiếp (Trận 73 đến 104) để tìm đội Thắng/Thua
-        function getKnockoutAdvancedMap(data) {
+        // HÀM ĐƯỢC TỐI ƯU TOÀN DIỆN: Đảm bảo lấy tên đội thật chính xác kể cả khi trận trước chưa đầy đủ thông tin đối thủ
+        function getKnockoutAdvancedMap(data, groupWinnersMap) {
             let knockoutMap = {};
 
-            // Duyệt tuần tự từ trận đầu đến trận cuối của vòng loại trực tiếp để kết quả tự động liên thông nhau
             data.forEach(m => {
                 if (!m || m.group !== 'Knockout') return;
                 
+                // Điền tên đội từ vòng bảng vào trước nếu có để phục vụ dò tìm người thắng
+                let currentRealTeam1 = m.team1;
+                let currentRealTeam2 = m.team2;
+
+                if (groupWinnersMap[currentRealTeam1]) currentRealTeam1 = groupWinnersMap[currentRealTeam1];
+                if (groupWinnersMap[currentRealTeam2]) currentRealTeam2 = groupWinnersMap[currentRealTeam2];
+
+                // Nếu trận đấu này kế thừa từ một trận đấu Knockout trước đó, hãy lấy tên đội thật đã được tìm thấy trước đó
+                let cleanKey1 = currentRealTeam1.replace(/\s*\(.*\)/g, '').trim();
+                let cleanKey2 = currentRealTeam2.replace(/\s*\(.*\)/g, '').trim();
+                
+                if (knockoutMap[cleanKey1]) currentRealTeam1 = knockoutMap[cleanKey1];
+                if (knockoutMap[cleanKey2]) currentRealTeam2 = knockoutMap[cleanKey2];
+
                 let s1 = m.score1;
                 let s2 = m.score2;
 
                 if (s1 !== "" && s2 !== "" && s1 !== undefined && s2 !== undefined) {
                     let score1 = parseInt(s1);
                     let score2 = parseInt(s2);
-                    
-                    // Giải quyết chuỗi text hiển thị (lấy tên đội thật nếu trận trước đó đã được giải mã thành tên quốc gia rồi)
-                    let currentRealTeam1 = knockoutMap[m.team1] || m.team1;
-                    let currentRealTeam2 = knockoutMap[m.team2] || m.team2;
 
                     if (score1 > score2) {
                         knockoutMap[`Thắng ${m.stt}`] = currentRealTeam1;
@@ -263,8 +271,7 @@
                         knockoutMap[`Thắng ${m.stt}`] = currentRealTeam2;
                         knockoutMap[`Thua ${m.stt}`] = currentRealTeam1;
                     } else {
-                        // Trường hợp hòa ở vòng Knockout, hiển thị thông báo nhắc chọn đội thắng luân lưu
-                        knockoutMap[`Thắng ${m.stt}`] = `Thắng ${m.stt} (Chưa phân định PK)`;
+                        knockoutMap[`Thắng ${m.stt}`] = `Thắng ${m.stt} (Chưa phân PK)`;
                         knockoutMap[`Thua ${m.stt}`] = `Thua ${m.stt}`;
                     }
                 }
@@ -276,9 +283,8 @@
             const matchListDiv = document.getElementById('match-list');
             matchListDiv.innerHTML = '';
             
-            // Nạp cả 2 bộ bản đồ dịch tên đội
             const groupWinnersMap = getGroupWinners(data);
-            const knockoutAdvancedMap = getKnockoutAdvancedMap(data);
+            const knockoutAdvancedMap = getKnockoutAdvancedMap(data, groupWinnersMap);
 
             data.forEach((m, index) => {
                 if (!m) return;
@@ -292,44 +298,43 @@
 
                 let finalTeam1 = m.team1;
                 let finalTeam2 = m.team2;
-                let classT1 = "team";
-                let classT2 = "team";
+                let isActualT1 = false;
+                let isActualT2 = false;
 
                 if (m.group === 'Knockout') {
-                    // Bước 1: Kiểm tra xem có phải bắt cặp từ vòng bảng hay không
-                    if (groupWinnersMap[finalTeam1] && groupWinnersMap[finalTeam1] !== finalTeam1) {
+                    // 1. Đổ dữ liệu từ vòng bảng lên
+                    if (groupWinnersMap[finalTeam1]) {
+                        if (groupWinnersMap[finalTeam1] !== finalTeam1) isActualT1 = true;
                         finalTeam1 = groupWinnersMap[finalTeam1];
                     }
-                    if (groupWinnersMap[finalTeam2] && groupWinnersMap[finalTeam2] !== finalTeam2) {
+                    if (groupWinnersMap[finalTeam2]) {
+                        if (groupWinnersMap[finalTeam2] !== finalTeam2) isActualT2 = true;
                         finalTeam2 = groupWinnersMap[finalTeam2];
                     }
 
-                    // Bước 2: Kiểm tra tiếp liên thông chuỗi Thắng / Thua từ các trận Knockout trước đó
-                    // Làm sạch chuỗi ký tự phụ nếu có ví dụ "(Tranh Hạng 3)" hay "(CHUNG KẾT)" để hàm tìm kiếm chuẩn xác
+                    // 2. Liên thông chuỗi Thắng / Thua từ các trận Knockout trước đó
                     let cleanKey1 = finalTeam1.replace(/\s*\(.*\)/g, '').trim();
                     let cleanKey2 = finalTeam2.replace(/\s*\(.*\)/g, '').trim();
 
                     if (knockoutAdvancedMap[cleanKey1]) {
                         finalTeam1 = knockoutAdvancedMap[cleanKey1];
-                        classT1 += " actual-team";
-                    } else if (finalTeam1 !== m.team1) {
-                        classT1 += " actual-team"; // Đội từ vòng bảng đổ lên cũng tô màu sáng lên
+                        isActualT1 = true;
                     }
-
                     if (knockoutAdvancedMap[cleanKey2]) {
-                        // Giữ lại nhãn chú thích nhỏ cho trận Chung kết và Tranh hạng 3 dễ nhìn
-                        if(finalTeam2.includes("(Tranh Hạng 3)")) {
-                            finalTeam2 = knockoutAdvancedMap[cleanKey2] + " (Tranh Hạng 3)";
-                        } else if(finalTeam2.includes("(CHUNG KẾT)")) {
-                            finalTeam2 = knockoutAdvancedMap[cleanKey2] + " (CHUNG KẾT)";
+                        let baseName = knockoutAdvancedMap[cleanKey2];
+                        if(m.team2.includes("(Tranh Hạng 3)")) {
+                            finalTeam2 = baseName + " (Tranh Hạng 3)";
+                        } else if(m.team2.includes("(CHUNG KẾT)")) {
+                            finalTeam2 = baseName + " (CHUNG KẾT)";
                         } else {
-                            finalTeam2 = knockoutAdvancedMap[cleanKey2];
+                            finalTeam2 = baseName;
                         }
-                        classT2 += " actual-team";
-                    } else if (finalTeam2 !== m.team2) {
-                        classT2 += " actual-team";
+                        isActualT2 = true;
                     }
                 }
+
+                let classT1 = isActualT1 ? "team actual-team" : "team";
+                let classT2 = isActualT2 ? "team actual-team" : "team";
 
                 card.innerHTML = `
                     <div class="match-info">
@@ -390,7 +395,6 @@
                     } else if (s1 < s2) {
                         teamsData[m.team2].w += 1; teamsData[m.team2].pts += 3; teamsData[m.team1].l += 1;
                     } else {
-                        teamsData[m.theme1]
                         teamsData[m.team1].d += 1; teamsData[m.team1].pts += 1;
                         teamsData[m.team2].d += 1; teamsData[m.team2].pts += 1;
                     }
