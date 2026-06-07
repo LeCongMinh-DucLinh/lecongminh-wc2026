@@ -26,6 +26,7 @@
         .match-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 15px 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--secondary); }
         .match-info { flex: 1; font-size: 0.9em; color: #718096; }
         .match-info .group-tag { background: #e2e8f0; color: var(--primary); padding: 2px 8px; border-radius: 4px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+        .match-info .timezone-note { font-size: 0.85em; color: #e53e3e; font-weight: bold; margin-top: 2px; }
         
         .match-display { display: flex; align-items: center; justify-content: center; flex: 2; font-weight: bold; font-size: 1.1em; }
         .team { width: 35%; text-align: center; }
@@ -44,9 +45,11 @@
         }
     </style>
 
+    <!-- Thư viện liên kết Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     
+    <!-- Thư viện SweetAlert2 làm đẹp thông báo -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
@@ -113,8 +116,6 @@
             { stt: 44, group: "J", date: "2026-06-23", time: "10:00", team1: "Jordan", team2: "Algeria", score1: "", score2: "" },
             { stt: 45, group: "K", date: "2026-06-24", time: "00:00", team1: "Bồ Đào Nha", team2: "Uzbekistan", score1: "", score2: "" },
             { stt: 46, group: "L", date: "2026-06-24", time: "03:00", team1: "Anh", team2: "Croatia", score1: "", score2: "" },
-            { stt: 23, group: "L", date: "2026-06-18", time: "06:00", team1: "Ghana", team2: "Panama", score1: "", score2: "" },
-            { stt: 24, group: "K", date: "2026-06-18", time: "09:00", team1: "Uzbekistan", team2: "Colombia", score1: "", score2: "" },
 
             // LƯỢT 3 VÒNG BẢNG
             { stt: 49, group: "A", date: "2026-06-25", time: "02:00", team1: "Nam Phi", team2: "Hàn Quốc", score1: "", score2: "" },
@@ -188,21 +189,35 @@
         let currentMatchesData = [];
         let selectedGroup = 'ALL';
 
+        // Lấy tên múi giờ hiện tại của thiết bị (VD: "Asia/Ho_Chi_Minh" hoặc "America/New_York")
+        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
         database.ref('matches').on('value', (snapshot) => {
             const data = snapshot.val();
-            
             if (!data || data.length === 0) {
                 database.ref('matches').set(initialMatches);
                 return;
             }
-            
             currentMatchesData = data;
             renderMatches(currentMatchesData, selectedGroup);
             renderStandings(currentMatchesData, selectedGroup);
-
         }, (error) => {
             console.error("Lỗi đồng bộ Firebase: ", error);
         });
+
+        // Hàm THÊM MỚI: Tự động chuyển đổi ngày/giờ từ GMT+7 sang múi giờ của người xem
+        function convertGMT7ToLocal(dateStr, timeStr) {
+            // Ép chuỗi thành định dạng ISO hợp lệ của múi giờ Việt Nam (GMT+7)
+            const gmt7DateTimeStr = `${dateStr}T${timeStr}:00+07:00`;
+            const dateObj = new Date(gmt7DateTimeStr);
+
+            // Xuất ngày theo định dạng DD/MM/YYYY
+            const localDate = dateObj.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            // Xuất giờ theo định dạng HH:MM
+            const localTime = dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+            return { date: localDate, time: localTime };
+        }
 
         function getGroupWinners(data) {
             let groupStandings = {};
@@ -240,10 +255,8 @@
 
         function getKnockoutAdvancedMap(data, groupWinnersMap) {
             let knockoutMap = {};
-
             data.forEach(m => {
                 if (!m || m.group !== 'Knockout') return;
-                
                 let currentRealTeam1 = m.team1;
                 let currentRealTeam2 = m.team2;
 
@@ -256,13 +269,10 @@
                 if (knockoutMap[cleanKey1]) currentRealTeam1 = knockoutMap[cleanKey1];
                 if (knockoutMap[cleanKey2]) currentRealTeam2 = knockoutMap[cleanKey2];
 
-                let s1 = m.score1;
-                let s2 = m.score2;
+                let s1 = m.score1; let s2 = m.score2;
 
                 if (s1 !== "" && s2 !== "" && s1 !== undefined && s2 !== undefined) {
-                    let score1 = parseInt(s1);
-                    let score2 = parseInt(s2);
-
+                    let score1 = parseInt(s1); let score2 = parseInt(s2);
                     if (score1 > score2) {
                         knockoutMap[`Thắng ${m.stt}`] = currentRealTeam1;
                         knockoutMap[`Thua ${m.stt}`] = currentRealTeam2;
@@ -292,8 +302,8 @@
                 const card = document.createElement('div');
                 card.className = 'match-card';
 
-                const dateParts = m.date.split('-');
-                const displayDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+                // ĐÃ NÂNG CẤP: Gọi hàm tự động chuyển đổi múi giờ sang giờ địa phương của người xem
+                const localDateTime = convertGMT7ToLocal(m.date, m.time);
 
                 let finalTeam1 = m.team1;
                 let finalTeam2 = m.team2;
@@ -336,7 +346,8 @@
                 card.innerHTML = `
                     <div class="match-info">
                         <span class="group-tag">Trận ${m.stt} - ${m.group === 'Knockout' ? 'Vòng Trực Tiếp' : 'Bảng ' + m.group}</span>
-                        <div>📅 ${displayDate} - ⏰ ${m.time}</div>
+                        <div>📅 ${localDateTime.date} - ⏰ ${localDateTime.time}</div>
+                        <div class="timezone-note">🌍 Múi giờ: ${userTimeZone}</div>
                     </div>
                     <div class="match-display">
                         <div class="${classT1}">${finalTeam1}</div>
@@ -415,7 +426,6 @@
             });
         }
 
-        // ĐÃ NÂNG CẤP: Thay thế hàm alert hệ thống cũ bằng hộp thoại SweetAlert2 giao diện sang trọng
         window.updateScore = function(index) {
             const s1 = document.getElementById(`t1-${index}`).value;
             const s2 = document.getElementById(`t2-${index}`).value;
@@ -427,7 +437,6 @@
                 score1: score1Value,
                 score2: score2Value
             }).then(() => {
-                // Hiển thị hộp thoại thành công chuẩn SweetAlert2
                 Swal.fire({
                     title: 'Thông báo',
                     text: 'Đã lưu tỷ số trận đấu!',
@@ -436,7 +445,6 @@
                     confirmButtonColor: '#3182ce'
                 });
             }).catch((error) => {
-                // Hiển thị hộp thoại lỗi trực quan
                 Swal.fire({
                     title: 'Có lỗi xảy ra',
                     text: error.message,
@@ -461,7 +469,7 @@
 <div class="container">
     <h1>🏆 CẬP NHẬT KẾT QUẢ WORLD CUP 2026</h1>
     <p style="text-align: center; color: #4a5568; font-style: italic; margin-top: -20px; margin-bottom: 30px;">
-        Người dùng cập nhật kết quả - Hệ thống tự động xếp hạng <strong></strong>
+        Hệ thống cập nhật và tính điểm tự động - Phát triển bởi: <strong>Lê Công Minh</strong>
     </p>
     
     <div class="tabs">
@@ -478,7 +486,7 @@
         <button class="tab-btn" onclick="filterGroup('J', event)">Bảng J</button>
         <button class="tab-btn" onclick="filterGroup('K', event)">Bảng K</button>
         <button class="tab-btn" onclick="filterGroup('L', event)">Bảng L</button>
-        <button class="tab-btn" onclick="filterGroup('Knockout', event)">Vòng loại trực tiếp</button>
+        <button class="tab-btn" onclick="filterGroup('Knockout', event)">Vòng Đối Kháng</button>
     </div>
 
     <div class="standings-container" id="standings-box">
