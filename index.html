@@ -191,7 +191,32 @@
 
         // Lấy tên múi giờ hiện tại của thiết bị (VD: "Asia/Ho_Chi_Minh" hoặc "America/New_York")
         const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+// --- ĐOẠN CODE TỰ ĐỘNG ĐẾM LƯỢT TRUY CẬP VÀ ONLINE ---
+        // 1. Xử lý tăng tổng số lượt truy cập (Views)
+        const viewsRef = database.ref('stats/totalViews');
+        viewsRef.transaction((currentValue) => {
+            return (currentValue || 0) + 1;
+        });
 
+        // Lắng nghe và hiển thị tổng số lượt truy cập lên màn hình
+        viewsRef.on('value', (snapshot) => {
+            document.getElementById('total-views').innerText = snapshot.val() || 0;
+        });
+
+        // 2. Xử lý đếm số người đang online trực tiếp
+        // Tạo một mã định danh ngẫu nhiên cho mỗi người đang mở web
+        const myUserRef = database.ref('stats/onlineUsers').push();
+        
+        // Khi người dùng đóng tab hoặc tắt mạng, tự động xóa bản ghi online của họ
+        myUserRef.onDisconnect().remove();
+        myUserRef.set(true); // Đánh dấu là đang online
+
+        // Lắng nghe và hiển thị số người đang online thực tế
+        database.ref('stats/onlineUsers').on('value', (snapshot) => {
+            const count = snapshot.numChildren();
+            document.getElementById('online-count').innerText = count;
+        });
+        // --- HẾT ĐOẠN CODE THỐNG KÊ ---
         database.ref('matches').on('value', (snapshot) => {
             const data = snapshot.val();
             if (!data || data.length === 0) {
@@ -471,6 +496,16 @@
     <p style="text-align: center; color: #4a5568; font-style: italic; margin-top: -20px; margin-bottom: 30px;">
         <strong> Người dùng cập nhật kết quả trận đấu - Hệ thống tự động xếp hạng </strong>
     </p>
+    <!-- THANH THỐNG KÊ TRUY CẬP MỚI -->
+<div style="display: flex; justify-content: center; gap: 20px; margin: -10px auto 25px auto; max-width: 400px; background: white; padding: 10px 15px; border-radius: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); font-size: 0.9em; font-weight: bold;">
+    <div style="color: #2b6cb0; display: flex; align-items: center; gap: 5px;">
+        👁️ Tổng lượt truy cập: <span id="total-views" style="color: #2d3748; background: #edf2f7; padding: 2px 8px; border-radius: 12px;">...</span>
+    </div>
+    <div style="color: #38a169; display: flex; align-items: center; gap: 5px;">
+        🟢 Đang trực tuyến: <span id="online-count" style="color: white; background: #38a169; padding: 2px 8px; border-radius: 12px;">...</span>
+    </div>
+</div>
+<!-- HẾT THANH THỐNG KÊ -->
     
     <div class="tabs">
         <button class="tab-btn active" onclick="filterGroup('ALL', event)">Tất cả trận</button>
