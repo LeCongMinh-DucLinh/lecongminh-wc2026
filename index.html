@@ -562,10 +562,7 @@
         const s1 = document.getElementById(`score1-${matchIndex}`).value;
         const s2 = document.getElementById(`score2-${matchIndex}`).value;
 
-        if (s1 === "" || s2 === "") {
-            Swal.fire('Thất bại', 'Vui lòng điền đầy đủ tỷ số!', 'error');
-            return;
-        }
+       
 
         if (parseInt(s1) === parseInt(s2) && currentMatchesData[matchIndex].group === 'Knockout') {
             Swal.fire('Thông báo', 'Vòng Knockout phải phân định thắng thua (điền tỷ số penalty nếu có)!', 'warning');
