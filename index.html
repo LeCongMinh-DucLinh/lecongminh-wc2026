@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Cup 2026 - L?ch Thi Ð?u & B?ng x?p h?ng</title>
+    <title>World Cup 2026 - Lịch thi đấu và bảng xếp hạng</title>
     <style>
         :root { --primary: #1a365d; --secondary: #3182ce; --bg: #f7fafc; --text: #2d3748; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
@@ -101,7 +101,7 @@
         }
 
         const initialMatches = [
-            // LU?T 1 VÒNG B?NG
+            // LƯỢT 1-VÒNG BẢNG
             { stt: 1, group: "A", date: "2026-06-12", time: "02:00", team1: "Mexico", team2: "Nam Phi", score1: "", score2: "" },
             { stt: 2, group: "A", date: "2026-06-12", time: "09:00", team1: "Hàn Qu?c", team2: "CH Séc", score1: "", score2: "" },
             { stt: 3, group: "B", date: "2026-06-13", time: "02:00", team1: "Canada", team2: "Bosnia và Herz", score1: "", score2: "" },
@@ -127,7 +127,7 @@
             { stt: 23, group: "L", date: "2026-06-18", time: "06:00", team1: "Ghana", team2: "Panama", score1: "", score2: "" },
             { stt: 24, group: "K", date: "2026-06-18", time: "09:00", team1: "Uzbekistan", team2: "Colombia", score1: "", score2: "" },
 
-            // LU?T 2 VÒNG B?NG
+            // LƯỢT 2 VÒNG BẢNG
             { stt: 25, group: "A", date: "2026-06-18", time: "23:00", team1: "CH Séc", team2: "Nam Phi", score1: "", score2: "" },
             { stt: 26, group: "B", date: "2026-06-19", time: "02:00", team1: "Th?y Si", team2: "Bosnia và Herz", score1: "", score2: "" },
             { stt: 27, group: "B", date: "2026-06-19", time: "05:00", team1: "Canada", team2: "Qatar", score1: "", score2: "" },
@@ -151,7 +151,7 @@
             { stt: 45, group: "K", date: "2026-06-24", time: "00:00", team1: "B? Ðào Nha", team2: "Uzbekistan", score1: "", score2: "" },
             { stt: 46, group: "L", date: "2026-06-24", time: "03:00", team1: "Anh", team2: "Croatia", score1: "", score2: "" },
 
-            // LU?T 3 VÒNG B?NG
+            // LƯỢT 3 VÒNG BẢNG
             { stt: 49, group: "A", date: "2026-06-25", time: "02:00", team1: "Nam Phi", team2: "Hàn Qu?c", score1: "", score2: "" },
             { stt: 50, group: "A", date: "2026-06-25", time: "02:00", team1: "CH Séc", team2: "Mexico", score1: "", score2: "" },
             { stt: 51, group: "B", date: "2026-06-25", time: "07:00", team1: "Bosnia và Herz", team2: "Qatar", score1: "", score2: "" },
@@ -177,7 +177,7 @@
             { stt: 71, group: "J", date: "2026-06-28", time: "09:00", team1: "Algeria", team2: "Áo", score1: "", score2: "" },
             { stt: 72, group: "J", date: "2026-06-28", time: "09:00", team1: "Jordan", team2: "Argentina", score1: "", score2: "" },
 
-            // VÒNG LO?I TR?C TI?P Ð?U TIÊN (VÒNG 48 Ð?I)
+            // VÒNG LOẠI TRỰC TIẾP ĐẦU TIÊN (VÒNG 48 Ð?I)
             { stt: 73, group: "Knockout", date: "2026-06-29", time: "02:00", team1: "Nhì A", team2: "Nhì B", score1: "", score2: "" },
             { stt: 74, group: "Knockout", date: "2026-06-30", time: "03:30", team1: "Nh?t E", team2: "Ba A/B/C/D/F", score1: "", score2: "" },
             { stt: 75, group: "Knockout", date: "2026-06-30", time: "08:00", team1: "Nh?t F", team2: "Nhì C", score1: "", score2: "" },
@@ -582,9 +582,9 @@
                 .then(() => {
                     Swal.fire({
                         title: 'Thông báo',
-                        text: 'Ðã luu t? s? tr?n d?u!',
+                        text: 'Đã lưu tỷ số trận đấu',
                         icon: 'success',
-                        confirmButtonText: 'Ð?ng ý',
+                        confirmButtonText: 'Đồng ý',
                         confirmButtonColor: '#3085d6'
                     });
                 })
@@ -602,13 +602,13 @@
 <body>
 
 <div class="container">
-    <h1>C?P NH?T K?T QU? & B?NG X?P H?NG WORLD CUP 2026</h1>
+    <h1>CẬP NHẬT KẾT QUẢ & BẢNG XẾP HẠNG WORLD CUP 2026</h1>
      <p style="text-align: center; color: #4a5568; font-style: italic; margin-top: -20px; margin-bottom: 30px;">
-        Ngu?i dùng c?p nh?t k?t qu? tr?n d?u - H? th?ng t? d?ng x?p h?ng
+        Người dùng cập nhật kết quả trận đấu - hệ thống tự động xếp hạng
     </p>
     <div style="text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 0.95em; color: #4a5568;">
-        ?? T?ng lu?t truy c?p: <span id="total-views" style="color: #2b6cb0;">0</span> 
-        | ?? Ðang tr?c tuy?n: <span id="online-count" style="color: #48bb78;">0</span>
+        ?? Tổng lượt truy cập: <span id="total-views" style="color: #2b6cb0;">0</span> 
+        | ?? Đang trực tuyến: <span id="online-count" style="color: #48bb78;">0</span>
     </div>
 
     <div class="tabs">
@@ -672,7 +672,7 @@
 </div>
 <!-- Ph?n Footer c?a b?n -->
     <footer style="text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9em;">
-        © 2026 B?n quy?n thu?c v? <strong>Lê Công Minh</strong> | Thi?t k? cho World Cup 2026 ?
+        © 2026 Bản quyền thuộc về <strong>Lê Công Minh</strong> | Thiết kế cho World Cup 2026 ?
     </footer>
 </body>
 </html>
