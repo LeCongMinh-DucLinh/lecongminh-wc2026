@@ -676,22 +676,6 @@
 
     <div id="match-list"></div>
 </div>
-    function xuatFilePDF() {
-    // 1. Chọn vùng giao diện mà bạn muốn in ra file PDF (ở đây là div có id="vung-ket-qua")
-    const element = document.getElementById('vung-ket-qua');
-    
-    // 2. Cấu hình các tùy chọn cho file PDF xuất ra
-    const options = {
-        margin:       10, // Khoảng cách lề (mm)
-        filename:     'Ket_Qua_World_Cup_2026.pdf', // Tên file khi tải về
-        image:        { type: 'jpeg', quality: 0.98 }, // Chất lượng hình ảnh trong PDF
-        html2canvas:  { scale: 2, useCORS: true }, // Tăng gấp đôi độ phân giải (scale: 2) để chữ không bị mờ và cho phép hiển thị cờ từ URL khác (useCORS)
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' } // Khổ giấy A4 đứng
-    };
-
-    // 3. Tiến hành chuyển đổi và tự động tải file về máy
-    html2pdf().set(options).from(element).save();
-}
 <!-- Phần Footer của bạn -->
     <footer style="text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9em;">
         © 2026 Bản quyền thuộc về <strong>Lê Công Minh</strong> | Thiết kế cho World Cup 2026 ⚽
