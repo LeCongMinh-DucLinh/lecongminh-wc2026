@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <meta charset="UTF-8">
+      <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>World Cup 2026 - Lịch Thi Đấu & Bảng xếp hạng</title>
     <style>
@@ -533,11 +532,7 @@
                 }
             });
 <button onclick="xuatFilePDF()" style="padding: 10px 20px; background-color: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-bottom: 15px;">
-    📄 Xuất Bảng Kết Quả (PDF)
-</button>
-
-<div id="vung-ket-qua">
-    </div>
+    
             // Sắp xếp thứ hạng tổng giữa 12 đội hạng ba theo tiêu chí FIFA
             thirdPlaceTeams.sort((a, b) => {
                 if (b.pts !== a.pts) return b.pts - a.pts;
