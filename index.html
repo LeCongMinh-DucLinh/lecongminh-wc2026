@@ -2,388 +2,734 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sơ Đồ Nhánh Đấu World Cup 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>World Cup 2026 - Lịch thi đấu và bảng xếp hạng</title>
     <style>
-        /* CSS GIAO DIỆN HIỂN THỊ TRỰC QUAN & CHUYÊN NGHIỆP */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f9fa;
-            margin: 0;
-            padding: 20px;
+        :root { 
+            --primary: #1a365d; 
+            --secondary: #3182ce; 
+            --bg: #f7fafc; 
+            --text: #2d3748; 
+            --success: #48bb78;
+            --danger: #e53e3e;
         }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-
-        /* Khung chứa toàn bộ sơ đồ nhánh đấu (Cuộn ngang tốt trên thiết bị di động) */
-        .tournament-container {
-            display: flex;
-            overflow-x: auto;
-            padding: 20px 10px 40px 10px;
-            gap: 30px;
-            align-items: flex-start;
-        }
-
-        /* Định dạng từng cột vòng đấu */
-        .round {
-            display: flex;
-            flex-direction: column;
-            width: 220px;
-            flex-shrink: 0;
-        }
-
-        /* Tiêu đề cố định phía trên mỗi vòng đấu giống image_091a55.png */
-        .round-title {
-            text-align: center;
-            font-weight: bold;
-            padding: 8px;
-            background-color: #fff;
-            border: 1px solid #ccd1d9;
-            margin-bottom: 25px;
-            border-radius: 4px;
-            color: #4a5568;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        /* Khung chứa một cặp đấu */
-        .matchup {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        /* Cấu hình khoảng cách giãn đều các trận theo từng vòng đấu để nhánh nối chuẩn khít */
-        .round-32 .matchup { margin: 12px 0; height: 70px; }
-        .round-16 .matchup { margin: 59px 0; height: 70px; }
-        .round-qf .matchup { margin: 153px 0; height: 70px; }
-        .round-sf .matchup { margin: 341px 0; height: 70px; }
-        .round-final .matchup { margin: 717px 0; height: 70px; }
-        .round-third .matchup { margin: 20px 0; height: 70px; }
-
-        .match-info {
-            font-size: 11px;
-            color: #0056b3;
-            margin-bottom: 3px;
-            padding-left: 2px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        /* Định dạng thanh hiển thị thông tin đội bóng */
-        .team-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #ffffff;
-            border: 1px solid #ccd1d9;
-            padding: 4px 8px;
-            font-size: 13px;
-            height: 24px;
-        }
-
-        .team-box:first-of-type {
-            border-bottom: none;
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
-        }
-
-        .team-box:last-of-type {
-            border-bottom-left-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-
-        .team-name {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 500;
-            color: #2d3748;
-        }
-
-        .score {
-            font-weight: bold;
-            width: 20px;
-            text-align: center;
-            border-left: 1px solid #e6e9ed;
-            padding-left: 5px;
-            color: #1a202c;
-        }
-
-        /* HỆ THỐNG ĐƯỜNG KẺ NHÁNH NỐI TỰ ĐỘNG CHUẨN XÁC */
         
-        /* Nhánh từ Vòng 32 ra */
-        .round-32 .matchup::after {
-            content: ""; position: absolute; right: -30px; top: 41px; width: 30px; height: 47px; border-right: 1px solid #4a5568;
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 10px;
+            line-height: 1.5;
         }
-        .round-32 .matchup:nth-child(odd)::after { border-bottom: 1px solid #4a5568; }
-        .round-32 .matchup:nth-child(even)::after { top: -6px; border-top: 1px solid #4a5568; }
+        
+        .container { max-width: 1200px; margin: auto; padding-bottom: 30px; }
+        
+        h1 { 
+            text-align: center; 
+            color: var(--primary); 
+            margin: 15px 0 20px 0; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            font-size: 1.6em;
+        }
+        
+        /* Bộ nút lọc (Tabs) tối ưu cho màn hình nhỏ, tự động xuống hàng và canh đều */
+        .tabs { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 6px; 
+            margin-bottom: 20px; 
+        }
+        
+        .tab-btn { 
+            padding: 8px 14px; 
+            background: #edf2f7; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: bold; 
+            border-radius: 20px; 
+            transition: all 0.2s;
+            font-size: 0.85em;
+            flex-grow: 1;
+            max-width: 110px;
+            text-align: center;
+        }
+        .tab-btn.active, .tab-btn:hover { background: var(--secondary); color: white; }
+        
+        /* Hộp chứa bảng xếp hạng có thanh cuộn chống tràn viền */
+        .standings-container { 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            padding: 15px; 
+            margin-bottom: 25px; 
+            border-top: 5px solid var(--primary); 
+            display: none; 
+        }
+        
+        .standings-title { 
+            margin-top: 0; 
+            margin-bottom: 12px; 
+            color: var(--primary); 
+            font-size: 1.1em; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            font-weight: bold;
+        }
+        
+        /* Bọc ngoài bảng để kích hoạt cuộn ngang trên điện thoại */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 6px;
+        }
+        
+        .standings-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.9em; min-width: 500px; }
+        .standings-table th { background: #edf2f7; color: var(--primary); padding: 10px 6px; font-weight: bold; }
+        .standings-table td { padding: 10px 6px; border-bottom: 1px solid #e2e8f0; }
+        .standings-table tr:hover { background-color: #f8fafc; }
+        .standings-table td.team-name { text-align: left; font-weight: bold; }
+        
+        .flag-box { display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; white-space: nowrap; }
+        .flag-img { width: 22px; height: 14px; object-fit: cover; border: 1px solid #cbd5e0; border-radius: 2px; }
 
-        /* Nhánh vào và ra của Vòng 16 */
-        .round-16 .matchup::before {
-            content: ""; position: absolute; left: -30px; top: 41px; width: 30px; border-top: 1px solid #4a5568;
+        /* Card trận đấu linh hoạt, chuyển sang hàng dọc trên mobile */
+        .match-card { 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            padding: 15px; 
+            margin-bottom: 12px; 
+            display: flex; 
+            flex-direction: column;
+            gap: 12px;
+            border-left: 5px solid var(--secondary); 
         }
-        .round-16 .matchup::after {
-            content: ""; position: absolute; right: -30px; top: 41px; width: 30px; height: 94px; border-right: 1px solid #4a5568;
+        
+        @media (min-width: 769px) {
+            .match-card { flex-direction: row; justify-content: space-between; align-items: center; padding: 15px 20px; }
         }
-        .round-16 .matchup:nth-child(odd)::after { border-bottom: 1px solid #4a5568; }
-        .round-16 .matchup:nth-child(even)::after { top: -53px; border-top: 1px solid #4a5568; }
+        
+        .match-info { font-size: 0.85em; color: #718096; }
+        .match-info .group-tag { background: #e2e8f0; color: var(--primary); padding: 2px 8px; border-radius: 4px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+        .match-info .timezone-note { font-size: 0.85em; color: var(--danger); font-weight: bold; margin-top: 2px; }
+        
+        .match-display { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            font-weight: bold; 
+            font-size: 1em;
+            width: 100%;
+        }
+        
+        @media (min-width: 769px) {
+            .match-display { flex: 2; justify-content: center; font-size: 1.1em; }
+        }
+        
+        .team { width: 42%; display: flex; align-items: center; gap: 6px; }
+        .team.team-1 { justify-content: flex-end; text-align: right; }
+        .team.team-2 { justify-content: flex-start; text-align: left; }
+        .team.actual-team { color: #2b6cb0; font-weight: 800; }
+        
+        .score-zone { display: flex; align-items: center; gap: 5px; justify-content: center; }
+        .score-input { width: 42px; height: 35px; text-align: center; font-size: 1.1em; font-weight: bold; border: 2px solid #cbd5e0; border-radius: 6px; -moz-appearance: textfield; }
+        .score-input::-webkit-outer-spin-button, .score-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        .action-zone { text-align: center; }
+        @media (min-width: 769px) { .action-zone { text-align: right; } }
+        
+        .btn-update { background: var(--success); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.2s; width: 100%; max-width: 120px; }
+        .btn-update:hover { background: #38a169; }
 
-        /* Nhánh vào và ra của Vòng Tứ kết (Quarterfinals) */
-        .round-qf .matchup::before {
-            content: ""; position: absolute; left: -30px; top: 41px; width: 30px; border-top: 1px solid #4a5568;
-        }
-        .round-qf .matchup::after {
-            content: ""; position: absolute; right: -30px; top: 41px; width: 30px; height: 188px; border-right: 1px solid #4a5568;
-        }
-        .round-qf .matchup:nth-child(odd)::after { border-bottom: 1px solid #4a5568; }
-        .round-qf .matchup:nth-child(even)::after { top: -147px; border-top: 1px solid #4a5568; }
+        .top-8-di-tiep { background-color: #d4edda !important; color: #155724; }
+        .bi-loai { background-color: #f8d7da !important; color: #721c24; }
+        .ghi-chu-h3 { font-size: 0.8em; color: #718096; margin-top: -5px; margin-bottom: 15px; font-style: italic; text-align: center; }
+        
+        .pdf-zone { text-align: center; margin-bottom: 20px; }
+        .btn-pdf { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.95em; transition: background 0.2s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn-pdf:hover { background: #c53030; }
 
-        /* Nhánh vào và ra của Vòng Bán kết (Semifinals) */
-        .round-sf .matchup::before {
-            content: ""; position: absolute; left: -30px; top: 41px; width: 30px; border-top: 1px solid #4a5568;
-        }
-        .round-sf .matchup::after {
-            content: ""; position: absolute; right: -30px; top: 41px; width: 30px; height: 376px; border-right: 1px solid #4a5568;
-        }
-        .round-sf .matchup:nth-child(odd)::after { border-bottom: 1px solid #4a5568; }
-        .round-sf .matchup:nth-child(even)::after { top: -335px; border-top: 1px solid #4a5568; }
-
-        /* Nhánh vào trận Chung kết */
-        .round-final .matchup::before {
-            content: ""; position: absolute; left: -30px; top: 41px; width: 30px; border-top: 1px solid #4a5568;
-        }
+        /* Sơ đồ cây giải đấu chống vỡ khối trên Mobile */
+        .bracket-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 15px 10px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid var(--secondary); margin-bottom: 25px; display: none; }
+        .bracket-container { display: flex; gap: 20px; min-width: 1150px; justify-content: space-between; position: relative; }
+        .bracket-round { display: flex; flex-direction: column; justify-content: space-around; flex: 1; list-style: none; padding: 0; margin: 0; }
+        .bracket-round-title { text-align: center; font-weight: bold; color: var(--primary); background: #edf2f7; padding: 6px; border-radius: 6px; margin-bottom: 15px; font-size: 0.85em; text-transform: uppercase; }
+        .bracket-matchup { display: flex; flex-direction: column; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin: 8px 0; padding: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .bracket-team-row { display: flex; justify-content: space-between; align-items: center; padding: 5px; font-size: 0.85em; border-radius: 4px; }
+        .bracket-team-row.winner { background-color: #e6fffa; color: #006d5b; font-weight: bold; }
+        .bracket-team-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; display: flex; align-items: center; gap: 6px; }
+        .bracket-team-score { font-weight: bold; background: #edf2f7; padding: 2px 6px; border-radius: 4px; min-width: 16px; text-align: center; }
+        .bracket-match-meta { font-size: 0.7em; color: #a0aec0; text-align: center; border-bottom: 1px dashed #e2e8f0; padding-bottom: 4px; margin-bottom: 4px; font-weight: bold; }
+        
+        /* Thống kê lượng truy cập nhỏ gọn dưới chân trang */
+        .stats-bar { display: flex; justify-content: center; gap: 15px; font-size: 0.8em; color: #718096; margin-top: 15px; background: #edf2f7; padding: 6px; border-radius: 6px; }
+        .stats-item { display: flex; align-items: center; gap: 4px; }
     </style>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
-    <h1>SƠ ĐỒ NHÁNH ĐẤU WORLD CUP 2026</h1>
+<div class="container">
+    <h1>World Cup 2026</h1>
+    <div class="ghi-chu-h3">Lịch thi đấu & Bảng xếp hạng cập nhật tự động</div>
 
-    <div class="tournament-container">
-        
-        <div class="round round-32">
-            <div class="round-title">Round of 32</div>
-            
-            <div class="matchup">
-                <div class="match-info">June 29 - Foxborough</div>
-                <div class="team-box"><span class="team-name">🇩🇪 Germany</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇵🇾 Paraguay</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">June 30 - East Rutherford</div>
-                <div class="team-box"><span class="team-name">🇫🇷 France</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇸🇪 Sweden</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">June 28 - Inglewood</div>
-                <div class="team-box"><span class="team-name">🇿🇦 South Africa</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇨🇦 Canada</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">June 29 - Guadalupe</div>
-                <div class="team-box"><span class="team-name">🇳🇱 Netherlands</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇲🇦 Morocco</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 2 - Toronto</div>
-                <div class="team-box"><span class="team-name">🇵🇹 Portugal</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇭🇷 Croatia</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 2 - Inglewood</div>
-                <div class="team-box"><span class="team-name">🇪🇸 Spain</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇦🇹 Austria</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 1 - Santa Clara</div>
-                <div class="team-box"><span class="team-name">🇺🇸 United States</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇧🇦 Bosnia and Herz.</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 1 - Seattle</div>
-                <div class="team-box"><span class="team-name">🇧🇪 Belgium</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇸🇳 Senegal</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">June 29 - Houston</div>
-                <div class="team-box"><span class="team-name">🇧🇷 Brazil</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇯🇵 Japan</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">June 30 - Arlington</div>
-                <div class="team-box"><span class="team-name">🇨🇮 Ivory Coast</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇳🇴 Norway</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">June 30 - Mexico City</div>
-                <div class="team-box"><span class="team-name">🇲🇽 Mexico</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇪🇨 Ecuador</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 1 - Atlanta</div>
-                <div class="team-box"><span class="team-name">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇨🇩 DR Congo</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 3 - Miami Gardens</div>
-                <div class="team-box"><span class="team-name">🇦🇷 Argentina</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇨🇻 Cape Verde</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 3 - Arlington</div>
-                <div class="team-box"><span class="team-name">🇦🇺 Australia</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇪🇬 Egypt</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 2 - Vancouver</div>
-                <div class="team-box"><span class="team-name">🇨🇭 Switzerland</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇩🇿 Algeria</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 3 - Kansas City</div>
-                <div class="team-box"><span class="team-name">🇨🇴 Colombia</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">🇬🇭 Ghana</span><span class="score"></span></div>
-            </div>
-        </div>
-
-        <div class="round round-16">
-            <div class="round-title">Round of 16</div>
-            
-            <div class="matchup">
-                <div class="match-info">July 4 - Philadelphia</div>
-                <div class="team-box"><span class="team-name">Winner Match 74</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 77</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 4 - Houston</div>
-                <div class="team-box"><span class="team-name">Winner Match 73</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 75</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 6 - Arlington</div>
-                <div class="team-box"><span class="team-name">Winner Match 83</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 84</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 6 - Seattle</div>
-                <div class="team-box"><span class="team-name">Winner Match 81</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 82</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 5 - East Rutherford</div>
-                <div class="team-box"><span class="team-name">Winner Match 76</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 78</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 5 - Mexico City</div>
-                <div class="team-box"><span class="team-name">Winner Match 79</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 80</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 7 - Atlanta</div>
-                <div class="team-box"><span class="team-name">Winner Match 86</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 88</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 7 - Vancouver</div>
-                <div class="team-box"><span class="team-name">Winner Match 85</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 87</span><span class="score"></span></div>
-            </div>
-        </div>
-
-        <div class="round round-qf">
-            <div class="round-title">Quarterfinals</div>
-            
-            <div class="matchup">
-                <div class="match-info">July 9 - Foxborough</div>
-                <div class="team-box"><span class="team-name">Winner Match 89</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 90</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 10 - Inglewood</div>
-                <div class="team-box"><span class="team-name">Winner Match 93</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 94</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 11 - Miami Gardens</div>
-                <div class="team-box"><span class="team-name">Winner Match 91</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 92</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 11 - Kansas City</div>
-                <div class="team-box"><span class="team-name">Winner Match 95</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 96</span><span class="score"></span></div>
-            </div>
-        </div>
-
-        <div class="round round-sf">
-            <div class="round-title">Semifinals</div>
-            
-            <div class="matchup">
-                <div class="match-info">July 14 - Arlington</div>
-                <div class="team-box"><span class="team-name">Winner Match 97</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 98</span><span class="score"></span></div>
-            </div>
-
-            <div class="matchup">
-                <div class="match-info">July 15 - Atlanta</div>
-                <div class="team-box"><span class="team-name">Winner Match 99</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 100</span><span class="score"></span></div>
-            </div>
-        </div>
-
-        <div class="round round-final">
-            <div class="round-title">Final</div>
-            
-            <div class="matchup">
-                <div class="match-info">July 19 - East Rutherford</div>
-                <div class="team-box"><span class="team-name">Winner Match 101</span><span class="score"></span></div>
-                <div class="team-box"><span class="team-name">Winner Match 102</span><span class="score"></span></div>
-            </div>
-
-            <div class="round-third" style="margin-top: 50px;">
-                <div class="round-title" style="margin-bottom: 10px;">Match for third place</div>
-                <div class="matchup">
-                    <div class="match-info">July 18 - Miami Gardens</div>
-                    <div class="team-box"><span class="team-name">Loser Match 101</span><span class="score"></span></div>
-                    <div class="team-box"><span class="team-name">Loser Match 102</span><span class="score"></span></div>
-                </div>
-            </div>
-        </div>
-
+    <div class="pdf-zone">
+        <button class="btn-pdf" onclick="exportToPDF()">📄 Xuất Lịch Thi Đấu (PDF)</button>
     </div>
 
-    <footer style="text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9em;">
-        © 2026 Bản quyền thuộc về <strong>Lê Công Minh</strong> | Thiết kế cho World Cup 2026 ⚽
-    </footer>
-</body>
-</html>
+    <div class="tabs" id="tabs-container">
+        <button class="tab-btn active" onclick="filterGroup('ALL', this)">Tất cả</button>
+        <button class="tab-btn" onclick="filterGroup('A', this)">Bảng A</button>
+        <button class="tab-btn" onclick="filterGroup('B', this)">Bảng B</button>
+        <button class="tab-btn" onclick="filterGroup('C', this)">Bảng C</button>
+        <button class="tab-btn" onclick="filterGroup('D', this)">Bảng D</button>
+        <button class="tab-btn" onclick="filterGroup('E', this)">Bảng E</button>
+        <button class="tab-btn" onclick="filterGroup('F', this)">Bảng F</button>
+        <button class="tab-btn" onclick="filterGroup('G', this)">Bảng G</button>
+        <button class="tab-btn" onclick="filterGroup('H', this)">Bảng H</button>
+        <button class="tab-btn" onclick="filterGroup('I', this)">Bảng I</button>
+        <button class="tab-btn" onclick="filterGroup('J', this)">Bảng J</button>
+        <button class="tab-btn" onclick="filterGroup('K', this)">Bảng K</button>
+        <button class="tab-btn" onclick="filterGroup('L', this)">Bảng L</button>
+        <button class="tab-btn" onclick="filterGroup('HANG_3', this)">BXH Hạng 3</button>
+        <button class="tab-btn" style="max-width:130px;" onclick="filterGroup('BRACKET', this)">🌳 Sơ đồ nhánh</button>
+    </div>
+
+    <div class="standings-container" id="standings-area">
+        <h3 class="standings-title" id="standings-title-text">📊 Bảng xếp hạng</h3>
+        <div class="table-responsive">
+            <table class="standings-table">
+                <thead>
+                    <tr>
+                        <th style="width: 8%">STT</th>
+                        <th style="text-align: left;">Đội Tuyển</th>
+                        <th style="width: 10%">Trận</th>
+                        <th style="width: 10%">Điểm</th>
+                        <th style="width: 10%">HS</th>
+                        <th style="width: 10%">BT</th>
+                    </tr>
+                </thead>
+                <tbody id="standings-body">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="bracket-wrapper" id="bracket-area">
+        <div class="bracket-container" id="bracket-tree">
+            </div>
+    </div>
+
+    <div id="match-list">
+        </div>
+
+    <div class="stats-bar">
+        <div class="stats-item">👁️ Tổng lượt xem: <span id="total-views">0</span></div>
+        <div class="stats-item">🟢 Trực tuyến: <span id="online-count">1</span></div>
+    </div>
+</div>
+
+<script>
+    // Cấu hình Firebase Realtime Database
+    const firebaseConfig = {
+        apiKey: "AIzaSyDfol_cQNPKCBCleaSiv2wnBOEYuMZZdRA",
+        authDomain: "lichthidauwc-2026.firebaseapp.com",
+        databaseURL: "https://lichthidauwc-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "lichthidauwc-2026",
+        storageBucket: "lichthidauwc-2026.firebasestorage.app",
+        messagingSenderId: "856206610008",
+        appId: "1:856206610008:web:c99417cb23003eda470b55"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Bản đồ Flag Code hỗ trợ hiển thị cờ quốc gia từ flagcdn
+    const flagMap = {
+        "Mexico": "mx", "Nam Phi": "za", "Hàn Quốc": "kr", "CH Séc": "cz",
+        "Canada": "ca", "Bosnia và Herz": "ba", "Mỹ": "us", "Paraguay": "py",
+        "Qatar": "qa", "Thụy Sĩ": "ch", "Brazil": "br", "Ma Rốc": "ma", "Ma rốc": "ma",
+        "Haiti": "ht", "Scotland": "gb-sct", "Úc": "au", "Thổ Nhĩ Kỳ": "tr",
+        "Đức": "de", "Curacao": "cw", "Hà Lan": "nl", "Nhật Bản": "jp",
+        "Bờ Biển Ngà": "ci", "Ecuador": "ec", "Thụy Điển": "se", "Tunisia": "tn",
+        "Tây Ban Nha": "es", "Cape Verde": "cv", "Bỉ": "be", "Ai Cập": "eg", "Ai cập": "eg",
+        "Ả Rập Xê Út": "sa", "Uruguay": "uy", "Iran": "ir", "New Zealand": "nz",
+        "Pháp": "fr", "Senegal": "sn", "Iraq": "iq", "Na Uy": "no",
+        "Argentina": "ar", "Algeria": "dz", "Áo": "at", "Jordan": "jo",
+        "Bồ Đào Nha": "pt", "CHDC Congo": "cd", "Congo": "cd", "Anh": "gb-eng", "Croatia": "hr",
+        "Ghana": "gh", "Panama": "pa", "Uzbekistan": "uz", "Colombia": "co"
+    };
+
+    // Mảng dữ liệu 104 trận đấu mẫu sơ khởi (Bao gồm vòng bảng và các vòng Knockout)
+    const initialMatches = [
+        { stt: 1, group: "A", date: "2026-06-12", time: "02:00", team1: "Mexico", team2: "Nam Phi", score1: "", score2: "" },
+        { stt: 2, group: "A", date: "2026-06-12", time: "09:00", team1: "Hàn Quốc", team2: "CH Séc", score1: "", score2: "" },
+        { stt: 3, group: "B", date: "2026-06-13", time: "02:00", team1: "Canada", team2: "Bosnia và Herz", score1: "", score2: "" },
+        { stt: 4, group: "D", date: "2026-06-13", time: "08:00", team1: "Mỹ", team2: "Paraguay", score1: "", score2: "" },
+        { stt: 5, group: "B", date: "2026-06-14", time: "02:00", team1: "Qatar", team2: "Thụy Sĩ", score1: "", score2: "" },
+        { stt: 6, group: "C", date: "2026-06-14", time: "05:00", team1: "Brazil", team2: "Ma Rốc", score1: "", score2: "" },
+        { stt: 7, group: "C", date: "2026-06-14", time: "08:00", team1: "Haiti", team2: "Scotland", score1: "", score2: "" },
+        { stt: 8, group: "D", date: "2026-06-14", time: "11:00", team1: "Úc", team2: "Thổ Nhĩ Kỳ", score1: "", score2: "" },
+        { stt: 9, group: "E", date: "2026-06-15", time: "00:00", team1: "Đức", team2: "Curacao", score1: "", score2: "" },
+        { stt: 10, group: "F", date: "2026-06-15", time: "03:00", team1: "Hà Lan", team2: "Nhật Bản", score1: "", score2: "" },
+        { stt: 11, group: "E", date: "2026-06-15", time: "06:00", team1: "Bờ Biển Ngà", team2: "Ecuador", score1: "", score2: "" },
+        { stt: 12, group: "F", date: "2026-06-15", time: "09:00", team1: "Thụy Điển", team2: "Tunisia", score1: "", score2: "" },
+        { stt: 13, group: "H", date: "2026-06-15", time: "23:00", team1: "Tây Ban Nha", team2: "Cape Verde", score1: "", score2: "" },
+        { stt: 14, group: "G", date: "2026-06-16", time: "02:00", team1: "Bỉ", team2: "Ai Cập", score1: "", score2: "" },
+        { stt: 15, group: "H", date: "2026-06-16", time: "05:00", team1: "Ả Rập Xê Út", team2: "Uruguay", score1: "", score2: "" },
+        { stt: 16, group: "G", date: "2026-06-16", time: "08:00", team1: "Iran", team2: "New Zealand", score1: "", score2: "" },
+        { stt: 17, group: "I", date: "2026-06-17", time: "02:00", team1: "Pháp", team2: "Senegal", score1: "", score2: "" },
+        { stt: 18, group: "I", date: "2026-06-17", time: "05:00", team1: "Iraq", team2: "Na Uy", score1: "", score2: "" },
+        { stt: 19, group: "J", date: "2026-06-17", time: "08:00", team1: "Argentina", team2: "Algeria", score1: "", score2: "" },
+        { stt: 20, group: "J", date: "2026-06-17", time: "11:00", team1: "Áo", team2: "Jordan", score1: "", score2: "" },
+        { stt: 21, group: "K", date: "2026-06-18", time: "00:00", team1: "Bồ Đào Nha", team2: "CHDC Congo", score1: "", score2: "" },
+        { stt: 22, group: "L", date: "2026-06-18", time: "03:00", team1: "Anh", team2: "Croatia", score1: "", score2: "" },
+        { stt: 23, group: "L", date: "2026-06-18", time: "06:00", team1: "Ghana", team2: "Panama", score1: "", score2: "" },
+        { stt: 24, group: "K", date: "2026-06-18", time: "09:00", team1: "Uzbekistan", team2: "Colombia", score1: "", score2: "" },
+        // LƯỢT 2 VÒNG BẢNG
+        { stt: 25, group: "A", date: "2026-06-18", time: "23:00", team1: "CH Séc", team2: "Nam Phi", score1: "", score2: "" },
+        { stt: 26, group: "B", date: "2026-06-19", time: "02:00", team1: "Thụy Sĩ", team2: "Bosnia và Herz", score1: "", score2: "" },
+        { stt: 27, group: "B", date: "2026-06-19", time: "05:00", team1: "Canada", team2: "Qatar", score1: "", score2: "" },
+        { stt: 28, group: "A", date: "2026-06-19", time: "08:00", team1: "Mexico", team2: "Hàn Quốc", score1: "", score2: "" },
+        { stt: 29, group: "D", date: "2026-06-20", time: "02:00", team1: "Mỹ", team2: "Úc", score1: "", score2: "" },
+        { stt: 30, group: "C", date: "2026-06-20", time: "05:00", team1: "Scotland", team2: "Ma Rốc", score1: "", score2: "" },
+        { stt: 31, group: "C", date: "2026-06-20", time: "07:30", team1: "Brazil", team2: "Haiti", score1: "", score2: "" },
+        { stt: 32, group: "D", date: "2026-06-20", time: "10:00", team1: "Thổ Nhĩ Kỳ", team2: "Paraguay", score1: "", score2: "" },
+        { stt: 33, group: "F", date: "2026-06-21", time: "00:00", team1: "Hà Lan", team2: "Thụy Điển", score1: "", score2: "" },
+        { stt: 34, group: "E", date: "2026-06-21", time: "03:00", team1: "Đức", team2: "Bờ Biển Ngà", score1: "", score2: "" },
+        { stt: 35, group: "E", date: "2026-06-21", time: "07:00", team1: "Ecuador", team2: "Curacao", score1: "", score2: "" },
+        { stt: 36, group: "F", date: "2026-06-21", time: "11:00", team1: "Tunisia", team2: "Nhật Bản", score1: "", score2: "" },
+        { stt: 37, group: "H", date: "2026-06-21", time: "23:00", team1: "Tây Ban Nha", team2: "Ả Rập Xê Út", score1: "", score2: "" },
+        { stt: 38, group: "G", date: "2026-06-22", time: "02:00", team1: "Bỉ", team2: "Iran", score1: "", score2: "" },
+        { stt: 39, group: "H", date: "2026-06-22", time: "05:00", team1: "Uruguay", team2: "Cape Verde", score1: "", score2: "" },
+        { stt: 40, group: "G", date: "2026-06-22", time: "08:00", team1: "New Zealand", team2: "Ai Cập", score1: "", score2: "" },
+        { stt: 41, group: "J", date: "2026-06-23", time: "00:00", team1: "Argentina", team2: "Áo", score1: "", score2: "" },
+        { stt: 42, group: "I", date: "2026-06-23", time: "04:00", team1: "Pháp", team2: "Iraq", score1: "", score2: "" },
+        { stt: 43, group: "I", date: "2026-06-23", time: "07:00", team1: "Na Uy", team2: "Senegal", score1: "", score2: "" },
+        { stt: 44, group: "J", date: "2026-06-23", time: "10:00", team1: "Jordan", team2: "Algeria", score1: "", score2: "" },
+        { stt: 45, group: "K", date: "2026-06-24", time: "00:00", team1: "Bồ Đào Nha", team2: "Uzbekistan", score1: "", score2: "" },
+        { stt: 46, group: "L", date: "2026-06-24", time: "03:00", team1: "Anh", team2: "Croatia", score1: "", score2: "" },
+        // LƯỢT 3 VÒNG BẢNG
+        { stt: 49, group: "A", date: "2026-06-25", time: "02:00", team1: "Nam Phi", team2: "Hàn Quốc", score1: "", score2: "" },
+        { stt: 50, group: "A", date: "2026-06-25", time: "02:00", team1: "CH Séc", team2: "Mexico", score1: "", score2: "" },
+        { stt: 51, group: "B", date: "2026-06-25", time: "07:00", team1: "Bosnia và Herz", team2: "Qatar", score1: "", score2: "" },
+        { stt: 52, group: "B", date: "2026-06-25", time: "07:00", team1: "Thụy Sĩ", team2: "Canada", score1: "", score2: "" },
+        { stt: 53, group: "C", date: "2026-06-26", time: "00:00", team1: "Ma Rốc", team2: "Haiti", score1: "", score2: "" },
+        { stt: 54, group: "C", date: "2026-06-26", time: "00:00", team1: "Scotland", team2: "Brazil", score1: "", score2: "" },
+        { stt: 55, group: "E", date: "2026-06-26", time: "03:00", team1: "Curacao", team2: "Bờ Biển Ngà", score1: "", score2: "" },
+        { stt: 56, group: "E", date: "2026-06-26", time: "03:00", team1: "Ecuador", team2: "Đức", score1: "", score2: "" },
+        { stt: 57, group: "F", date: "2026-06-26", time: "06:00", team1: "Nhật Bản", team2: "Thụy Điển", score1: "", score2: "" },
+        { stt: 58, group: "F", date: "2026-06-26", time: "06:00", team1: "Tunisia", team2: "Hà Lan", score1: "", score2: "" },
+        { stt: 59, group: "D", date: "2026-06-26", time: "09:00", team1: "Thổ Nhĩ Kỳ", team2: "Mỹ", score1: "", score2: "" },
+        { stt: 60, group: "D", date: "2026-06-26", time: "09:00", team1: "Paraguay", team2: "Úc", score1: "", score2: "" },
+        { stt: 61, group: "I", date: "2026-06-27", time: "02:00", team1: "Na Uy", team2: "Pháp", score1: "", score2: "" },
+        { stt: 62, group: "I", date: "2026-06-27", time: "02:00", team1: "Senegal", team2: "Iraq", score1: "", score2: "" },
+        { stt: 63, group: "H", date: "2026-06-27", time: "07:00", team1: "Cape Verde", team2: "Ả Rập Xê Út", score1: "", score2: "" },
+        { stt: 64, group: "H", date: "2026-06-27", time: "07:00", team1: "Uruguay", team2: "Tây Ban Nha", score1: "", score2: "" },
+        { stt: 65, group: "G", date: "2026-06-27", time: "10:00", team1: "Ai Cập", team2: "Iran", score1: "", score2: "" },
+        { stt: 66, group: "G", date: "2026-06-27", time: "10:00", team1: "New Zealand", team2: "Bỉ", score1: "", score2: "" },
+        { stt: 67, group: "L", date: "2026-06-28", time: "04:00", team1: "Panama", team2: "Anh", score1: "", score2: "" },
+        { stt: 68, group: "L", date: "2026-06-28", time: "04:00", team1: "Croatia", team2: "Ghana", score1: "", score2: "" },
+        { stt: 69, group: "K", date: "2026-06-28", time: "06:30", team1: "Colombia", team2: "Bồ Đào Nha", score1: "", score2: "" },
+        { stt: 70, group: "K", date: "2026-06-28", time: "06:30", team1: "Congo", team2: "Uzbekistan", score1: "", score2: "" },
+        { stt: 71, group: "J", date: "2026-06-28", time: "09:00", team1: "Algeria", team2: "Áo", score1: "", score2: "" },
+        { stt: 72, group: "J", date: "2026-06-28", time: "09:00", team1: "Jordan", team2: "Argentina", score1: "", score2: "" },
+        // VÒNG TRỰC TIẾP ĐẦU TIÊN (VÒNG 48 ĐỘI)
+        { stt: 73, group: "Knockout", date: "2026-06-29", time: "02:00", team1: "Nhì A", team2: "Nhì B", score1: "", score2: "" },
+        { stt: 74, group: "Knockout", date: "2026-06-30", time: "03:30", team1: "Nhất E", team2: "Ba A/B/C/D/F", score1: "", score2: "" },
+        { stt: 75, group: "Knockout", date: "2026-06-30", time: "08:00", team1: "Nhất F", team2: "Nhì C", score1: "", score2: "" },
+        { stt: 76, group: "Knockout", date: "2026-06-30", time: "00:00", team1: "Nhất C", team2: "Nhì F", score1: "", score2: "" },
+        { stt: 77, group: "Knockout", date: "2026-07-01", time: "04:00", team1: "Nhất I", team2: "Ba C/D/F/G/H", score1: "", score2: "" },
+        { stt: 78, group: "Knockout", date: "2026-07-01", time: "00:00", team1: "Nhì E", team2: "Nhì I", score1: "", score2: "" },
+        { stt: 79, group: "Knockout", date: "2026-07-01", time: "08:00", team1: "Nhất A", team2: "Ba C/E/F/H/I", score1: "", score2: "" },
+        { stt: 80, group: "Knockout", date: "2026-07-01", time: "23:00", team1: "Nhất L", team2: "Ba E/H/I/J/K", score1: "", score2: "" },
+        { stt: 81, group: "Knockout", date: "2026-07-03", time: "06:00", team1: "Nhì K", team2: "Nhì L", score1: "", score2: "" },
+        { stt: 82, group: "Knockout", date: "2026-07-02", time: "07:00", team1: "Nhất D", team2: "Ba B/E/F/I/J", score1: "", score2: "" },
+        { stt: 83, group: "Knockout", date: "2026-07-02", time: "03:00", team1: "Nhất G", team2: "Ba A/E/H/I/J", score1: "", score2: "" },
+        { stt: 84, group: "Knockout", date: "2026-07-03", time: "02:00", team1: "Nhất H", team2: "Nhì J", score1: "", score2: "" },
+        { stt: 85, group: "Knockout", date: "2026-07-03", time: "10:00", team1: "Nhất B", team2: "Ba E/F/G/I/J", score1: "", score2: "" },
+        { stt: 86, group: "Knockout", date: "2026-07-04", time: "05:00", team1: "Nhất J", team2: "Nhì H", score1: "", score2: "" },
+        { stt: 87, group: "Knockout", date: "2026-07-04", time: "08:30", team1: "Nhất K", team2: "Ba D/E/I/J/L", score1: "", score2: "" },
+        { stt: 88, group: "Knockout", date: "2026-07-04", time: "01:00", team1: "Nhì D", team2: "Nhì G", score1: "", score2: "" },
+        // VÒNG 32 ĐỘI TIẾP THEO
+        { stt: 89, group: "Knockout", date: "2026-07-05", time: "04:00", team1: "Thắng 74", team2: "Thắng 77", score1: "", score2: "" },
+        { stt: 90, group: "Knockout", date: "2026-07-05", time: "00:00", team1: "Thắng 73", team2: "Thắng 75", score1: "", score2: "" },
+        { stt: 91, group: "Knockout", date: "2026-07-06", time: "03:00", team1: "Thắng 76", team2: "Thắng 78", score1: "", score2: "" },
+        { stt: 92, group: "Knockout", date: "2026-07-06", time: "07:00", team1: "Thắng 79", team2: "Thắng 80", score1: "", score2: "" },
+        { stt: 93, group: "Knockout", date: "2026-07-07", time: "02:00", team1: "Thắng 83", team2: "Thắng 84", score1: "", score2: "" },
+        { stt: 94, group: "Knockout", date: "2026-07-07", time: "07:00", team1: "Thắng 81", team2: "Thắng 82", score1: "", score2: "" },
+        { stt: 95, group: "Knockout", date: "2026-07-07", time: "23:00", team1: "Thắng 86", team2: "Thắng 88", score1: "", score2: "" },
+        { stt: 96, group: "Knockout", date: "2026-07-08", time: "03:00", team1: "Thắng 85", team2: "Thắng 87", score1: "", score2: "" },
+        // TỨ KẾT
+        { stt: 97, group: "Knockout", date: "2026-07-10", time: "03:00", team1: "Thắng 89", team2: "Thắng 90", score1: "", score2: "" },
+        { stt: 98, group: "Knockout", date: "2026-07-11", time: "02:00", team1: "Thắng 93", team2: "Thắng 94", score1: "", score2: "" },
+        { stt: 99, group: "Knockout", date: "2026-07-12", time: "04:00", team1: "Thắng 91", team2: "Thắng 92", score1: "", score2: "" },
+        { stt: 100, group: "Knockout", date: "2026-07-12", time: "08:00", team1: "Thắng 95", team2: "Thắng 96", score1: "", score2: "" },
+        // BÁN KẾT
+        { stt: 101, group: "Knockout", date: "2026-07-15", time: "02:00", team1: "Thắng 97", team2: "Thắng 98", score1: "", score2: "" },
+        { stt: 102, group: "Knockout", date: "2026-07-16", time: "02:00", team1: "Thắng 99", team2: "Thắng 100", score1: "", score2: "" },
+        // TRANH HẠNG BA VÀ CHUNG KẾT
+        { stt: 103, group: "Knockout", date: "2026-07-19", time: "04:00", team1: "Thua 101", team2: "Thua 102 (Tranh Hạng 3)", score1: "", score2: "" },
+        { stt: 104, group: "Knockout", date: "2026-07-20", time: "02:00", team1: "Thắng 101", team2: "Thắng 102 (CHUNG KẾT)", score1: "", score2: "" }
+    ];
+
+    let currentMatchesData = [];
+    let selectedGroup = 'ALL';
+    const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // Quản lý và theo dõi truy cập qua Firebase
+    const viewsRef = database.ref('stats/totalViews');
+    viewsRef.transaction((v) => (v || 0) + 1);
+    viewsRef.on('value', snap => { document.getElementById('total-views').innerText = snap.val() || 0; });
+
+    const myUserRef = database.ref('stats/onlineUsers').push();
+    myUserRef.onDisconnect().remove();
+    myUserRef.set(true);
+    database.ref('stats/onlineUsers').on('value', snap => {
+        document.getElementById('online-count').innerText = snap.numChildren();
+    });
+
+    // Đồng bộ dữ liệu real-time từ Firebase
+    database.ref('matches').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (!data || data.length === 0) {
+            database.ref('matches').set(initialMatches);
+            return;
+        }
+        currentMatchesData = data;
+        renderMatches(currentMatchesData, selectedGroup);
+        buildBracketDiagram(currentMatchesData);
+        
+        if (selectedGroup === 'HANG_3') {
+            renderThirdPlaceStandings(currentMatchesData);
+        } else {
+            renderStandings(currentMatchesData, selectedGroup);
+        }
+    }, (err) => { console.error("Lỗi Firebase: ", err); });
+
+    function convertGMT7ToLocal(dateStr, timeStr) {
+        const gmt7DateTimeStr = `${dateStr}T${timeStr}:00+07:00`;
+        const dateObj = new Date(gmt7DateTimeStr);
+        return {
+            date: dateObj.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+            time: dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false })
+        };
+    }
+
+    function getTeamFlagHTML(teamName) {
+        let cleanName = teamName.replace(/\s*\(.*\)/g, '').trim();
+        let flagCode = flagMap[cleanName];
+        if (flagCode) {
+            return `<span class="flag-box"><img src="https://flagcdn.com/w40/${flagCode}.png" class="flag-img" alt="${cleanName}"> ${teamName}</span>`;
+        }
+        return `<span class="flag-box">⚽ ${teamName}</span>`;
+    }
+
+    function getGroupWinners(data) {
+        let groupStandings = {};
+        const groupsList = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+        groupsList.forEach(g => { groupStandings[g] = {}; });
+
+        data.forEach(m => {
+            if (!m || m.group === 'Knockout') return;
+            let g = m.group;
+            if (!groupStandings[g]) return;
+
+            if (!groupStandings[g][m.team1]) groupStandings[g][m.team1] = { name: m.team1, pts: 0, gd: 0, gf: 0, pld: 0 };
+            if (!groupStandings[g][m.team2]) groupStandings[g][m.team2] = { name: m.team2, pts: 0, gd: 0, gf: 0, pld: 0 };
+
+            if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
+                const s1 = parseInt(m.score1); const s2 = parseInt(m.score2);
+                groupStandings[g][m.team1].pld += 1; groupStandings[g][m.team2].pld += 1;
+                groupStandings[g][m.team1].gf += s1; groupStandings[g][m.team1].gd += (s1 - s2);
+                groupStandings[g][m.team2].gf += s2; groupStandings[g][m.team2].gd += (s2 - s1);
+                if (s1 > s2) groupStandings[g][m.team1].pts += 3;
+                else if (s1 < s2) groupStandings[g][m.team2].pts += 3;
+                else { groupStandings[g][m.team1].pts += 1; groupStandings[g][m.team2].pts += 1; }
+            }
+        });
+
+        let mapping = {};
+        groupsList.forEach(g => {
+            let sorted = Object.values(groupStandings[g]).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+            let isFinished = sorted.length === 4 && sorted.every(t => t.pld === 3);
+            mapping[`Nhất ${g}`] = isFinished ? sorted[0].name : `Nhất ${g}`;
+            mapping[`Nhì ${g}`] = isFinished ? sorted[1].name : `Nhì ${g}`;
+        });
+        return mapping;
+    }
+
+    function getKnockoutAdvancedMap(data, groupWinnersMap) {
+        let knockoutMap = {};
+        data.forEach(m => {
+            if (!m || m.group !== 'Knockout') return;
+            let currentRealTeam1 = m.team1;
+            let currentRealTeam2 = m.team2;
+
+            if (groupWinnersMap[currentRealTeam1]) currentRealTeam1 = groupWinnersMap[currentRealTeam1];
+            if (groupWinnersMap[currentRealTeam2]) currentRealTeam2 = groupWinnersMap[currentRealTeam2];
+
+            let cleanKey1 = currentRealTeam1.replace(/\s*\(.*\)/g, '').trim();
+            let cleanKey2 = currentRealTeam2.replace(/\s*\(.*\)/g, '').trim();
+            
+            if (knockoutMap[cleanKey1]) currentRealTeam1 = knockoutMap[cleanKey1];
+            if (knockoutMap[cleanKey2]) currentRealTeam2 = knockoutMap[cleanKey2];
+
+            let s1 = m.score1; let s2 = m.score2;
+
+            if (s1 !== "" && s2 !== "" && s1 !== undefined && s2 !== undefined) {
+                let score1 = parseInt(s1); let score2 = parseInt(s2);
+                if (score1 > score2) {
+                    knockoutMap[`Thắng ${m.stt}`] = currentRealTeam1;
+                    knockoutMap[`Thua ${m.stt}`] = currentRealTeam2;
+                } else if (score1 < score2) {
+                    knockoutMap[`Thắng ${m.stt}`] = currentRealTeam2;
+                    knockoutMap[`Thua ${m.stt}`] = currentRealTeam1;
+                } else {
+                    knockoutMap[`Thắng ${m.stt}`] = `Thắng ${m.stt} (Hòa)`;
+                    knockoutMap[`Thua ${m.stt}`] = `Thua ${m.stt}`;
+                }
+            }
+        });
+        return knockoutMap;
+    }
+
+    function renderMatches(data, groupFilter) {
+        const matchListDiv = document.getElementById('match-list');
+        matchListDiv.innerHTML = '';
+        
+        const groupWinnersMap = getGroupWinners(data);
+        const knockoutAdvancedMap = getKnockoutAdvancedMap(data, groupWinnersMap);
+
+        data.forEach((m, index) => {
+            if (!m) return;
+            if (groupFilter === 'HANG_3') { if (m.group === 'Knockout') return; } 
+            else if (groupFilter === 'BRACKET') { return; } 
+            else if (groupFilter !== 'ALL' && m.group !== groupFilter) { return; }
+
+            const card = document.createElement('div');
+            card.className = 'match-card';
+
+            const localDateTime = convertGMT7ToLocal(m.date, m.time);
+            let finalTeam1 = m.team1; let finalTeam2 = m.team2;
+            let isActualT1 = false; let isActualT2 = false;
+
+            if (m.group === 'Knockout') {
+                if (groupWinnersMap[finalTeam1]) { if (groupWinnersMap[finalTeam1] !== finalTeam1) isActualT1 = true; finalTeam1 = groupWinnersMap[finalTeam1]; }
+                if (groupWinnersMap[finalTeam2]) { if (groupWinnersMap[finalTeam2] !== finalTeam2) isActualT2 = true; finalTeam2 = groupWinnersMap[finalTeam2]; }
+
+                let cleanKey1 = finalTeam1.replace(/\s*\(.*\)/g, '').trim();
+                let cleanKey2 = finalTeam2.replace(/\s*\(.*\)/g, '').trim();
+
+                if (knockoutAdvancedMap[cleanKey1]) { finalTeam1 = knockoutAdvancedMap[cleanKey1]; isActualT1 = true; }
+                if (knockoutAdvancedMap[cleanKey2]) {
+                    let baseName = knockoutAdvancedMap[cleanKey2];
+                    if(m.team2.includes("(Tranh Hạng 3)")) { finalTeam2 = baseName + " (Tranh Hạng 3)"; } 
+                    else if(m.team2.includes("(CHUNG KẾT)")) { finalTeam2 = baseName + " (CHUNG KẾT)"; } 
+                    else { finalTeam2 = baseName; }
+                    isActualT2 = true;
+                }
+            }
+
+            let classT1 = isActualT1 ? "team team-1 actual-team" : "team team-1";
+            let classT2 = isActualT2 ? "team team-2 actual-team" : "team team-2";
+
+            card.innerHTML = `
+                <div class="match-info">
+                    <span class="group-tag">Trận ${m.stt} - ${m.group === 'Knockout' ? 'Vòng loại trực tiếp' : 'Bảng ' + m.group}</span>
+                    <div>📅 ${localDateTime.date} - ⏰ ${localDateTime.time}</div>
+                    <div class="timezone-note">🌍 Múi giờ: ${userTimeZone}</div>
+                </div>
+                <div class="match-display">
+                    <div class="${classT1}">${getTeamFlagHTML(finalTeam1)}</div>
+                    <div class="score-zone">
+                        <input type="number" min="0" class="score-input" id="t1-${index}" value="${m.score1 !== undefined ? m.score1 : ''}">
+                        <span>-</span>
+                        <input type="number" min="0" class="score-input" id="t2-${index}" value="${m.score2 !== undefined ? m.score2 : ''}">
+                    </div>
+                    <div class="${classT2}">${getTeamFlagHTML(finalTeam2)}</div>
+                </div>
+                <div class="action-zone">
+                    <button class="btn-update" onclick="updateScore(${index})">Cập nhật</button>
+                </div>
+            `;
+            matchListDiv.appendChild(card);
+        });
+    }
+
+    function updateScore(index) {
+        const s1 = document.getElementById(`t1-${index}`).value.trim();
+        const s2 = document.getElementById(`t2-${index}`).value.trim();
+        
+        if (s1 === "" || s2 === "") {
+            Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng điền đầy đủ tỉ số cả hai đội!' });
+            return;
+        }
+
+        database.ref(`matches/${index}`).update({ score1: s1, score2: s2 })
+            .then(() => { Swal.fire({ icon: 'success', title: 'Thành công', text: 'Tỉ số đã được cập nhật!', timer: 1200, showConfirmButton: false }); })
+            .catch(err => { Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể cập nhật: ' + err.message }); });
+    }
+
+    function renderStandings(data, groupFilter) {
+        const standingsArea = document.getElementById('standings-area');
+        const standingsBody = document.getElementById('standings-body');
+        const titleText = document.getElementById('standings-title-text');
+
+        if (groupFilter === 'ALL' || groupFilter === 'BRACKET') {
+            standingsArea.style.display = 'none';
+            return;
+        }
+        standingsArea.style.display = 'block';
+        titleText.innerText = `📊 Bảng Xếp Hạng - Bảng ${groupFilter}`;
+        standingsBody.innerHTML = '';
+
+        let teams = {};
+        data.forEach(m => {
+            if (!m || m.group !== groupFilter) return;
+            if (!teams[m.team1]) teams[m.team1] = { name: m.team1, pld: 0, pts: 0, gd: 0, gf: 0 };
+            if (!teams[m.team2]) teams[m.team2] = { name: m.team2, pld: 0, pts: 0, gd: 0, gf: 0 };
+
+            if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
+                let s1 = parseInt(m.score1); let s2 = parseInt(m.score2);
+                teams[m.team1].pld++; teams[m.team2].pld++;
+                teams[m.team1].gf += s1; teams[m.team1].gd += (s1 - s2);
+                teams[m.team2].gf += s2; teams[m.team2].gd += (s2 - s1);
+                if (s1 > s2) teams[m.team1].pts += 3;
+                else if (s1 < s2) teams[m.team2].pts += 3;
+                else { teams[m.team1].pts += 1; teams[m.team2].pts += 1; }
+            }
+        });
+
+        let sorted = Object.values(teams).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+        sorted.forEach((team, idx) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${idx + 1}</td>
+                <td class="team-name">${getTeamFlagHTML(team.name)}</td>
+                <td>${team.pld}</td>
+                <td style="color:var(--secondary);font-weight:bold;">${team.pts}</td>
+                <td>${team.gd > 0 ? '+' + team.gd : team.gd}</td>
+                <td>${team.gf}</td>
+            `;
+            standingsBody.appendChild(row);
+        });
+    }
+
+    function renderThirdPlaceStandings(data) {
+        const standingsArea = document.getElementById('standings-area');
+        const standingsBody = document.getElementById('standings-body');
+        document.getElementById('standings-title-text').innerText = `📊 Bảng Xếp Hạng Các Đội Hạng 3`;
+        
+        standingsArea.style.display = 'block';
+        standingsBody.innerHTML = '';
+
+        let groupStandings = {};
+        const groupsList = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+        groupsList.forEach(g => { groupStandings[g] = {}; });
+
+        data.forEach(m => {
+            if (!m || m.group === 'Knockout') return;
+            let g = m.group;
+            if (!groupStandings[g][m.team1]) groupStandings[g][m.team1] = { name: m.team1, pts: 0, gd: 0, gf: 0, pld: 0, group: g };
+            if (!groupStandings[g][m.team2]) groupStandings[g][m.team2] = { name: m.team2, pts: 0, gd: 0, gf: 0, pld: 0, group: g };
+
+            if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
+                let s1 = parseInt(m.score1); let s2 = parseInt(m.score2);
+                groupStandings[g][m.team1].pld++; groupStandings[g][m.team2].pld++;
+                groupStandings[g][m.team1].gf += s1; groupStandings[g][m.team1].gd += (s1 - s2);
+                groupStandings[g][m.team2].gf += s2; groupStandings[g][m.team2].gd += (s2 - s1);
+                if (s1 > s2) groupStandings[g][m.team1].pts += 3;
+                else if (s1 < s2) groupStandings[g][m.team2].pts += 3;
+                else { groupStandings[g][m.team1].pts += 1; groupStandings[g][m.team2].pts += 1; }
+            }
+        });
+
+        let thirdPlaceTeams = [];
+        groupsList.forEach(g => {
+            let sortedGroup = Object.values(groupStandings[g]).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+            if (sortedGroup[2]) thirdPlaceTeams.push(sortedGroup[2]);
+        });
+
+        thirdPlaceTeams.sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+
+        thirdPlaceTeams.forEach((team, idx) => {
+            const row = document.createElement('tr');
+            if (idx < 8) row.className = 'top-8-di-tiep';
+            else row.className = 'bi-loai';
+            row.innerHTML = `
+                <td>${idx + 1}</td>
+                <td class="team-name">${getTeamFlagHTML(team.name)} <small style="color:#718096">(Bảng ${team.group})</small></td>
+                <td>${team.pld}</td>
+                <td style="font-weight:bold;">${team.pts}</td>
+                <td>${team.gd > 0 ? '+' + team.gd : team.gd}</td>
+                <td>${team.gf}</td>
+            `;
+            standingsBody.appendChild(row);
+        });
+    }
+
+    function buildBracketDiagram(data) {
+        const treeContainer = document.getElementById('bracket-tree');
+        treeContainer.innerHTML = '';
+
+        const groupWinnersMap = getGroupWinners(data);
+        const knockoutAdvancedMap = getKnockoutAdvancedMap(data, groupWinnersMap);
+
+        const roundConfig = [
+            { title: "Vòng 32 đội", matches: [89, 90, 91, 92, 93, 94, 95, 96] },
+            { title: "Tứ kết", matches: [97, 98, 99, 100] },
+            { title: "Bán kết", matches: [101, 102] },
+            { title: "Chung kết & Trạng hạng 3", matches: [104, 103] }
+        ];
+
+        roundConfig.forEach(round => {
+            const roundUl = document.createElement('ul');
+            roundUl.className = 'bracket-round';
+            
+            const rTitle = document.createElement('div');
+            rTitle.className = 'bracket-round-title';
+            rTitle.innerText = round.title;
+            roundUl.appendChild(rTitle);
+
+            round.matches.forEach(matchStt => {
+                const m = data.find(match => match && match.stt === matchStt);
+                if (!m) return;
+
+                let t1 = m.team1; let t2 = m.team2;
+                if (groupWinnersMap[t1]) t1 = groupWinnersMap[t1];
+                if (groupWinnersMap[t2]) t2 = groupWinnersMap[t2];
+
+                let cleanKey1 = t1.replace(/\s*\(.*\)/g, '').trim();
+                let cleanKey2 = t2.replace(/\s*\(.*\)/g, '').trim();
+
+                if (knockoutAdvancedMap[cleanKey1]) t1 = knockoutAdvancedMap[cleanKey1];
+                if (knockoutAdvancedMap[cleanKey2]) t2 = knockoutAdvancedMap[cleanKey2];
+
+                let s1 = m.score1; let s2 = m.score2;
+                let isW1 = false; let isW2 = false;
+
+                if (s1 !== "" && s2 !== "" && s1 !== undefined && s2 !== undefined) {
+                    if (parseInt(s1) > parseInt(s2)) isW1 = true;
+                    else if (parseInt(s1) < parseInt(s2)) isW2 = true;
+                }
+
+                const matchupDiv = document.createElement('li');
+                matchupDiv.className = 'bracket-matchup';
+                matchupDiv.innerHTML = `
+                    <div class="bracket-match-meta">Trận ${m.stt} - 📅 ${m.date}</div>
+                    <div class="bracket-team-row ${isW1 ? 'winner' : ''}">
+                        <div class="bracket-team-name">${getTeamFlagHTML(t1)}</div>
+                        <div class="bracket-team-score">${s1 !== "" ? s1 : '-'}</div>
+                    </div>
+                    <div class="bracket-team-row ${isW2 ? 'winner' : ''}">
+                        <div class="bracket-team-name">${getTeamFlagHTML(t2)}</div>
