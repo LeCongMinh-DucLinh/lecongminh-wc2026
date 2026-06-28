@@ -593,4 +593,152 @@
                 <td>${t.pld}</td>
                 <td style="color:var(--secondary); font-weight:bold;">${t.pts}</td>
                 <td>${t.gd > 0 ? '+' + t.gd : t.gd}</td>
-                <td>${
+                <td>${t.gf}</td>
+            `;
+            body.appendChild(tr);
+        });
+    }
+
+    function renderThirdPlaceStandings(data) {
+        const area = document.getElementById('standings-area');
+        const body = document.getElementById('standings-body');
+        area.style.display = 'block';
+        document.getElementById('standings-title-text').innerText = `📊 Bảng xếp hạng các đội hạng 3 tốt nhất`;
+        body.innerHTML = '';
+
+        const groupsList = ['A','B','C','D','E','F','G','H','I','J','K','L'];
+        let thirdPlaceTeams = [];
+
+        groupsList.forEach(g => {
+            let teams = {};
+            data.forEach(m => {
+                if (!m || m.group !== g) return;
+                if (!teams[m.team1]) teams[m.team1] = { name: m.team1, pld: 0, pts: 0, gd: 0, gf: 0, group: g };
+                if (!teams[m.team2]) teams[m.team2] = { name: m.team2, pld: 0, pts: 0, gd: 0, gf: 0, group: g };
+
+                if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
+                    const s1 = parseInt(m.score1); const s2 = parseInt(m.score2);
+                    teams[m.team1].pld += 1; teams[m.team2].pld += 1;
+                    teams[m.team1].gf += s1; teams[m.team1].gd += (s1 - s2);
+                    teams[m.team2].gf += s2; teams[m.team2].gd += (s2 - s1);
+                    if (s1 > s2) teams[m.team1].pts += 3;
+                    else if (s1 < s2) teams[m.team2].pts += 3;
+                    else { teams[m.team1].pts += 1; teams[m.team2].pts += 1; }
+                }
+            });
+            let sorted = Object.values(teams).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+            if (sorted[2]) thirdPlaceTeams.push(sorted[2]);
+        });
+
+        thirdPlaceTeams.sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+
+        thirdPlaceTeams.forEach((t, i) => {
+            const tr = document.createElement('tr');
+            if (i < 8) tr.className = 'top-8-di-tiep';
+            else tr.className = 'bi-loai';
+            tr.innerHTML = `
+                <td>${i+1}</td>
+                <td class="team-name">${getTeamFlagHTML(t.name)} <small style="color:#718096">(Bảng ${t.group})</small></td>
+                <td>${t.pld}</td>
+                <td style="font-weight:bold;">${t.pts}</td>
+                <td>${t.gd > 0 ? '+' + t.gd : t.gd}</td>
+                <td>${t.gf}</td>
+            `;
+            body.appendChild(tr);
+        });
+    }
+
+    function buildBracketDiagram(data) {
+        const treeContainer = document.getElementById('bracket-tree');
+        treeContainer.innerHTML = '';
+
+        const groupWinnersMap = getGroupWinners(data);
+        const knockoutAdvancedMap = getKnockoutAdvancedMap(data, groupWinnersMap);
+
+        // Định nghĩa cấu trúc các trận đấu lớn theo STT sơ đồ cây
+        const roundsDef = [
+            { title: "Vòng 32 đội", matches: [89, 90, 91, 92, 93, 94, 95, 96] },
+            { title: "Tứ kết", matches: [97, 98, 99, 100] },
+            { title: "Bán kết", matches: [101, 102] },
+            { title: "Chung kết", matches: [104] }
+        ];
+
+        roundsDef.forEach(round => {
+            const roundCol = document.createElement('ul');
+            roundCol.className = 'bracket-round';
+            roundCol.innerHTML = `<div class="bracket-round-title">${round.title}</div>`;
+
+            round.matches.forEach(mStt => {
+                const m = data.find(item => item && item.stt === mStt);
+                if (!m) return;
+
+                let t1 = m.team1; let t2 = m.team2;
+                if (groupWinnersMap[t1]) t1 = groupWinnersMap[t1];
+                if (groupWinnersMap[t2]) t2 = groupWinnersMap[t2];
+                if (knockoutAdvancedMap[t1]) t1 = knockoutAdvancedMap[t1];
+                if (knockoutAdvancedMap[t2]) t2 = knockoutAdvancedMap[t2];
+
+                const s1 = m.score1; const s2 = m.score2;
+                let w1 = false; let w2 = false;
+                if (s1 !== "" && s2 !== "" && s1 !== undefined && s2 !== undefined) {
+                    if (parseInt(s1) > parseInt(s2)) w1 = true;
+                    else if (parseInt(s2) > parseInt(s1)) w2 = true;
+                }
+
+                const matchBox = document.createElement('li');
+                matchBox.className = 'bracket-matchup';
+                matchBox.innerHTML = `
+                    <div class="bracket-match-meta">Trận ${m.stt} - ${m.time} ${m.date.split('-')[2]}/${m.date.split('-')[1]}</div>
+                    <div class="bracket-team-row ${w1 ? 'winner' : ''}">
+                        <span class="bracket-team-name">${getTeamFlagHTML(t1)}</span>
+                        <span class="bracket-team-score">${s1}</span>
+                    </div>
+                    <div class="bracket-team-row ${w2 ? 'winner' : ''}">
+                        <span class="bracket-team-name">${getTeamFlagHTML(t2)}</span>
+                        <span class="bracket-team-score">${s2}</span>
+                    </div>
+                `;
+                roundCol.appendChild(matchBox);
+            });
+            treeContainer.appendChild(roundCol);
+        });
+    }
+
+    function filterGroup(groupCode, btnElement) {
+        selectedGroup = groupCode;
+        
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btnElement.classList.add('active');
+
+        const bracketArea = document.getElementById('bracket-area');
+        if (groupCode === 'BRACKET') {
+            bracketArea.style.display = 'block';
+            document.getElementById('standings-area').style.display = 'none';
+            document.getElementById('match-list').style.display = 'none';
+        } else {
+            bracketArea.style.display = 'none';
+            document.getElementById('match-list').style.display = 'block';
+            renderMatches(currentMatchesData, selectedGroup);
+            if (groupCode === 'HANG_3') {
+                renderThirdPlaceStandings(currentMatchesData);
+            } else {
+                renderStandings(currentMatchesData, selectedGroup);
+            }
+        }
+    }
+
+    function exportToPDF() {
+        const element = document.getElementById('match-list');
+        const opt = {
+            margin: 10,
+            filename: `Lich-Thi-Dau-WorldCup-2026-${selectedGroup}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        Swal.fire({ title: 'Đang khởi tạo PDF...', text: 'Vui lòng chờ trong giây lát', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
+        html2pdf().set(opt).from(element).save().then(() => { Swal.close(); });
+    }
+</script>
+</body>
+</html>
