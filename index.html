@@ -77,17 +77,17 @@
         const database = firebase.database();
 
         const flagMap = {
-            "Mexico": "mx", "Nam Phi": "za", "Hàn Qu?c": "kr", "CH Séc": "cz",
-            "Canada": "ca", "Bosnia và Herz": "ba", "M?": "us", "Paraguay": "py",
-            "Qatar": "qa", "Th?y Si": "ch", "Brazil": "br", "Ma r?c": "ma",
-            "Haiti": "ht", "Scotland": "gb-sct", "Úc": "au", "Th? Nhi K?": "tr",
-            "Ð?c": "de", "Curacao": "cw", "Hà Lan": "nl", "Nh?t B?n": "jp",
-            "B? Bi?n Ngà": "ci", "Ecuador": "ec", "Th?y Ði?n": "se", "Tunisia": "tn",
-            "Tây Ban Nha": "es", "Cape Verde": "cv", "B?": "be", "Ai c?p": "eg",
-            "? r?p xê út": "sa", "Uruguay": "uy", "Iran": "ir", "New Zealand": "nz",
+            "Mexico": "mx", "Nam Phi": "za", "Hàn Quốc": "kr", "CH Séc": "cz",
+            "Canada": "ca", "Bosnia và Herz": "ba", "Mỹ": "us", "Paraguay": "py",
+            "Qatar": "qa", "Thụy Sĩ": "ch", "Brazil": "br", "Ma Rốc": "ma",
+            "Haiti": "ht", "Scotland": "gb-sct", "Úc": "au", "Thổ Nhĩ Kì": "tr",
+            "Đức": "de", "Curacao": "cw", "Hà Lan": "nl", "Nhật Bản": "jp",
+            "Bờ Biển Ngà": "ci", "Ecuador": "ec", "Thụy Điển": "se", "Tunisia": "tn",
+            "Tây Ban Nha": "es", "Cape Verde": "cv", "B?": "be", "Ai Cập": "eg",
+            "Ả Rập Xê Út": "sa", "Uruguay": "uy", "Iran": "ir", "New Zealand": "nz",
             "Pháp": "fr", "Senegal": "sn", "Iraq": "iq", "Na Uy": "no",
             "Argentina": "ar", "Algeria": "dz", "Áo": "at", "Jordan": "jo",
-            "B? Ðào Nha": "pt", "Congo": "cd", "Anh": "gb-eng", "Croatia": "hr",
+            "Bồ Ðào Nha": "pt", "Congo": "cd", "Anh": "gb-eng", "Croatia": "hr",
             "Ghana": "gh", "Panama": "pa", "Uzbekistan": "uz", "Colombia": "co"
         };
 
@@ -389,7 +389,7 @@
 
                 card.innerHTML = `
                     <div class="match-info">
-                        <span class="group-tag">Tr?n ${m.stt} - ${m.group === 'Knockout' ? 'Vòng Tr?c Ti?p' : 'B?ng ' + m.group}</span>
+                        <span class="group-tag">Trận ${m.stt} - ${m.group === 'Knockout' ? 'Vòng trực tiếp' : 'Bảng ' + m.group}</span>
                         <div>?? ${localDateTime.date} - ? ${localDateTime.time}</div>
                         <div class="timezone-note">?? Múi gi?: ${userTimeZone}</div>
                     </div>
@@ -519,7 +519,7 @@
                 });
 
                 if (sorted.length >= 3) {
-                    let t3 = sorted[2]; // L?y d?i th? 3 c?a b?ng
+                    let t3 = sorted[2]; // L?y d?i th? 3 c?a bảng
                     thirdPlaceTeams.push({
                         groupName: g,
                         name: t3.name,
@@ -547,7 +547,7 @@
                 
                 tr.innerHTML = `
                     <td><b>${rank}</b></td>
-                    <td>B?ng ${team.groupName}</td>
+                    <td>Bảng ${team.groupName}</td>
                     <td class="team-name">${getTeamFlagHTML(team.name)}</td>
                     <td>${team.pld}</td>
                     <td>${team.gf}-${team.ga}</td>
@@ -613,24 +613,24 @@
 
     <div class="tabs">
         <button class="tab-btn active" onclick="filterGroup('ALL')">L?ch Thi d?u</button>
-        <button class="tab-btn" onclick="filterGroup('A')">B?ng A</button>
-        <button class="tab-btn" onclick="filterGroup('B')">B?ng B</button>
-        <button class="tab-btn" onclick="filterGroup('C')">B?ng C</button>
-        <button class="tab-btn" onclick="filterGroup('D')">B?ng D</button>
-        <button class="tab-btn" onclick="filterGroup('E')">B?ng E</button>
-        <button class="tab-btn" onclick="filterGroup('F')">B?ng F</button>
-        <button class="tab-btn" onclick="filterGroup('G')">B?ng G</button>
-        <button class="tab-btn" onclick="filterGroup('H')">B?ng H</button>
-        <button class="tab-btn" onclick="filterGroup('I')">B?ng I</button>
-        <button class="tab-btn" onclick="filterGroup('J')">B?ng J</button>
-        <button class="tab-btn" onclick="filterGroup('K')">B?ng K</button>
-        <button class="tab-btn" onclick="filterGroup('L')">B?ng L</button>
-        <button class="tab-btn" style="background: #feebc8; color: #c05621;" onclick="filterGroup('HANG_3')">?? Ð?I H?NG 3</button>
-        <button class="tab-btn" onclick="filterGroup('Knockout')">VÒNG TR?C TI?P</button>
+        <button class="tab-btn" onclick="filterGroup('A')">Bảng A</button>
+        <button class="tab-btn" onclick="filterGroup('B')">Bảng B</button>
+        <button class="tab-btn" onclick="filterGroup('C')">Bảng C</button>
+        <button class="tab-btn" onclick="filterGroup('D')">Bảng D</button>
+        <button class="tab-btn" onclick="filterGroup('E')">Bảng E</button>
+        <button class="tab-btn" onclick="filterGroup('F')">Bảng F</button>
+        <button class="tab-btn" onclick="filterGroup('G')">Bảng G</button>
+        <button class="tab-btn" onclick="filterGroup('H')">Bảng H</button>
+        <button class="tab-btn" onclick="filterGroup('I')">Bảngg I</button>
+        <button class="tab-btn" onclick="filterGroup('J')">Bảng J</button>
+        <button class="tab-btn" onclick="filterGroup('K')">Bảng K</button>
+        <button class="tab-btn" onclick="filterGroup('L')">Bảng L</button>
+        <button class="tab-btn" style="background: #feebc8; color: #c05621;" onclick="filterGroup('HANG_3')">ĐỘI HẠNG 3</button>
+        <button class="tab-btn" onclick="filterGroup('Knockout')">VÒNG TRỰC TIẾP</button>
     </div>
 
     <div class="standings-container" id="standings-box">
-        <h3 class="standings-title">?? X?p h?ng - B?ng <span id="current-group-name">A</span></h3>
+        <h3 class="standings-title">xếp hạng - Bảng <span id="current-group-name">A</span></h3>
         <table class="standings-table">
             <thead>
                 <tr>
@@ -650,18 +650,18 @@
     </div>
 
     <div class="standings-container" id="third-place-box">
-        <h3 class="standings-title" style="color: #c05621;">?? B?NG X?P H?NG CÁC Ð?I H?NG BA T?T NH?T</h3>
-        <div class="ghi-chu-h3">(* 8 d?i có n?n màu xanh lá cây s? giành vé v?t vào vòng 32 d?i)</div>
+        <h3 class="standings-title" style="color: #c05621;">BẢNG XẾP HẠNG CÁC ĐỘI HẠNG 3 TỐT NHẤT</h3>
+        <div class="ghi-chu-h3">(* 8 đội màu xanh lá cây sẽ giành vé vớt vào vòng 32 đội)</div>
         <table class="standings-table">
             <thead>
                 <tr>
                     <th>STT</th>
-                    <th>B?ng</th>
-                    <th>Ð?i Tuy?n</th>
-                    <th>Tr?n</th>
-                    <th>Bàn Th?ng/B?i</th>
-                    <th>Hi?u S?</th>
-                    <th>Ði?m</th>
+                    <th>Bảng</th>
+                    <th>Đội tuyển</th>
+                    <th>Trận</th>
+                    <th>Bàn Thắng/B?i</th>
+                    <th>Hiệu số</th>
+                    <th>Ðiểm</th>
                 </tr>
             </thead>
             <tbody id="third-place-body"></tbody>
