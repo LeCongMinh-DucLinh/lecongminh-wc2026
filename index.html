@@ -267,7 +267,7 @@
         "Ghana": "gh", "Panama": "pa", "Uzbekistan": "uz", "Colombia": "co"
     };
 
-    // Mảng dữ liệu 104 trận đấu mẫu sơ khởi
+    // Mảng dữ liệu 104 trận đấu mẫu chuẩn FIFA 2026
     const initialMatches = [
         { stt: 1, group: "A", date: "2026-06-12", time: "02:00", team1: "Mexico", team2: "Nam Phi", score1: "", score2: "" },
         { stt: 2, group: "A", date: "2026-06-12", time: "09:00", team1: "Hàn Quốc", team2: "CH Séc", score1: "", score2: "" },
@@ -316,6 +316,8 @@
         { stt: 44, group: "J", date: "2026-06-23", time: "10:00", team1: "Jordan", team2: "Algeria", score1: "", score2: "" },
         { stt: 45, group: "K", date: "2026-06-24", time: "00:00", team1: "Bồ Đào Nha", team2: "Uzbekistan", score1: "", score2: "" },
         { stt: 46, group: "L", date: "2026-06-24", time: "03:00", team1: "Anh", team2: "Croatia", score1: "", score2: "" },
+        { stt: 47, group: "L", date: "2026-06-24", time: "06:00", team1: "Ghana", team2: "Panama", score1: "", score2: "" },
+        { stt: 48, group: "K", date: "2026-06-24", time: "09:00", team1: "Uzbekistan", team2: "Colombia", score1: "", score2: "" },
         
         { stt: 49, group: "A", date: "2026-06-25", time: "02:00", team1: "Nam Phi", team2: "Hàn Quốc", score1: "", score2: "" },
         { stt: 50, group: "A", date: "2026-06-25", time: "02:00", team1: "CH Séc", team2: "Mexico", score1: "", score2: "" },
@@ -342,10 +344,11 @@
         { stt: 71, group: "J", date: "2026-06-28", time: "09:00", team1: "Algeria", team2: "Áo", score1: "", score2: "" },
         { stt: 72, group: "J", date: "2026-06-28", time: "09:00", team1: "Jordan", team2: "Argentina", score1: "", score2: "" },
         
+        // --- VÒNG 32 ĐỘI (ROUND OF 32) THEO NHÁNH CHUẨN SƠ ĐỒ FIFA ---
         { stt: 73, group: "Knockout", date: "2026-06-29", time: "02:00", team1: "Nhì A", team2: "Nhì B", score1: "", score2: "" },
-        { stt: 74, group: "Knockout", date: "2026-07-30", time: "03:30", team1: "Nhất E", team2: "Ba A/B/C/D/F", score1: "", score2: "" },
-        { stt: 75, group: "Knockout", date: "2026-07-30", time: "08:00", team1: "Nhất F", team2: "Nhì C", score1: "", score2: "" },
-        { stt: 76, group: "Knockout", date: "2026-07-30", time: "00:00", team1: "Nhất C", team2: "Nhì F", score1: "", score2: "" },
+        { stt: 74, group: "Knockout", date: "2026-06-30", time: "03:30", team1: "Nhất E", team2: "Ba A/B/C/D/F", score1: "", score2: "" },
+        { stt: 75, group: "Knockout", date: "2026-06-30", time: "08:00", team1: "Nhất F", team2: "Nhì C", score1: "", score2: "" },
+        { stt: 76, group: "Knockout", date: "2026-06-30", time: "00:00", team1: "Nhất C", team2: "Nhì F", score1: "", score2: "" },
         { stt: 77, group: "Knockout", date: "2026-07-01", time: "04:00", team1: "Nhất I", team2: "Ba C/D/F/G/H", score1: "", score2: "" },
         { stt: 78, group: "Knockout", date: "2026-07-01", time: "00:00", team1: "Nhì E", team2: "Nhì I", score1: "", score2: "" },
         { stt: 79, group: "Knockout", date: "2026-07-01", time: "08:00", team1: "Nhất A", team2: "Ba C/E/F/H/I", score1: "", score2: "" },
@@ -359,6 +362,7 @@
         { stt: 87, group: "Knockout", date: "2026-07-04", time: "08:30", team1: "Nhất K", team2: "Ba D/E/I/J/L", score1: "", score2: "" },
         { stt: 88, group: "Knockout", date: "2026-07-04", time: "01:00", team1: "Nhì D", team2: "Nhì G", score1: "", score2: "" },
         
+        // --- VÒNG 16 ĐỘI (ROUND OF 16) ---
         { stt: 89, group: "Knockout", date: "2026-07-05", time: "04:00", team1: "Thắng 74", team2: "Thắng 77", score1: "", score2: "" },
         { stt: 90, group: "Knockout", date: "2026-07-05", time: "00:00", team1: "Thắng 73", team2: "Thắng 75", score1: "", score2: "" },
         { stt: 91, group: "Knockout", date: "2026-07-06", time: "03:00", team1: "Thắng 76", team2: "Thắng 78", score1: "", score2: "" },
@@ -368,14 +372,17 @@
         { stt: 95, group: "Knockout", date: "2026-07-07", time: "23:00", team1: "Thắng 86", team2: "Thắng 88", score1: "", score2: "" },
         { stt: 96, group: "Knockout", date: "2026-07-08", time: "03:00", team1: "Thắng 85", team2: "Thắng 87", score1: "", score2: "" },
         
+        // --- VÒNG TỨ KẾT (QUARTER-FINALS) ---
         { stt: 97, group: "Knockout", date: "2026-07-10", time: "03:00", team1: "Thắng 89", team2: "Thắng 90", score1: "", score2: "" },
         { stt: 98, group: "Knockout", date: "2026-07-11", time: "02:00", team1: "Thắng 93", team2: "Thắng 94", score1: "", score2: "" },
         { stt: 99, group: "Knockout", date: "2026-07-12", time: "04:00", team1: "Thắng 91", team2: "Thắng 92", score1: "", score2: "" },
         { stt: 100, group: "Knockout", date: "2026-07-12", time: "08:00", team1: "Thắng 95", team2: "Thắng 96", score1: "", score2: "" },
         
-        { stt: 101, group: "Knockout", date: "2026-07-15", time: "02:00", team1: "Thắng 97", team2: "Thắng 98", score1: "", score2: "" },
-        { stt: 102, group: "Knockout", date: "2026-07-16", time: "02:00", team1: "Thắng 99", team2: "Thắng 100", score1: "", score2: "" },
+        // --- VÒNG BÁN KẾT (SEMI-FINALS) ---
+        { stt: 101, group: "Knockout", date: "2026-07-15", time: "02:00", team1: "Thắng 97", team2: "Thắng 99", score1: "", score2: "" },
+        { stt: 102, group: "Knockout", date: "2026-07-16", time: "02:00", team1: "Thắng 98", team2: "Thắng 100", score1: "", score2: "" },
         
+        // --- TRANH HẠNG 3 VÀ CHUNG KẾT ---
         { stt: 103, group: "Knockout", date: "2026-07-19", time: "04:00", team1: "Thua 101", team2: "Thua 102 (Tranh Hạng 3)", score1: "", score2: "" },
         { stt: 104, group: "Knockout", date: "2026-07-20", time: "02:00", team1: "Thắng 101", team2: "Thắng 102 (CHUNG KẾT)", score1: "", score2: "" }
     ];
@@ -468,7 +475,6 @@
     function getKnockoutAdvancedMap(data, groupWinnersMap) {
         let knockoutMap = {};
         
-        // Thống kê người thắng các trận trực tiếp để điền vào vòng kế tiếp
         data.forEach(m => {
             if (!m || m.group !== 'Knockout' || m.score1 === "" || m.score2 === "" || m.score1 === undefined || m.score2 === undefined) return;
             const s1 = parseInt(m.score1);
@@ -492,91 +498,189 @@
         return knockoutMap;
     }
 
-    function renderMatches(data, groupFilter) {
-        const listContainer = document.getElementById('match-list');
-        listContainer.innerHTML = '';
-        if (groupFilter === 'BRACKET') return;
+    // --- HIỂN THỊ DANH SÁCH TRẬN ĐẤU CÓ SỐ THỨ TỰ TRẬN ---
+    function renderMatches(data, filter) {
+        const listDiv = document.getElementById('match-list');
+        listDiv.innerHTML = '';
 
         const groupWinnersMap = getGroupWinners(data);
-        const knockoutAdvancedMap = getKnockoutAdvancedMap(data, groupWinnersMap);
+        const knockoutMap = getKnockoutAdvancedMap(data, groupWinnersMap);
 
         data.forEach((m, index) => {
             if (!m) return;
-            if (groupFilter !== 'ALL' && groupFilter !== 'HANG_3' && m.group !== groupFilter) return;
-            if (groupFilter === 'HANG_3' && m.group === 'Knockout') return;
+            if (filter !== 'ALL' && filter !== 'Knockout' && m.group !== filter) return;
+            if (filter === 'Knockout' && m.group !== 'Knockout') return;
 
-            let displayTeam1 = m.team1;
-            let displayTeam2 = m.team2;
+            let t1 = m.team1;
+            let t2 = m.team2;
             let isActualTeam1 = false;
             let isActualTeam2 = false;
 
-            if (groupWinnersMap[displayTeam1]) { displayTeam1 = groupWinnersMap[displayTeam1]; isActualTeam1 = true; }
-            if (groupWinnersMap[displayTeam2]) { displayTeam2 = groupWinnersMap[displayTeam2]; isActualTeam2 = true; }
-            
-            if (knockoutAdvancedMap[displayTeam1]) { displayTeam1 = knockoutAdvancedMap[displayTeam1]; isActualTeam1 = true; }
-            if (knockoutAdvancedMap[displayTeam2]) { displayTeam2 = knockoutAdvancedMap[displayTeam2]; isActualTeam2 = true; }
+            if (m.group === 'Knockout') {
+                if (groupWinnersMap[t1]) { t1 = groupWinnersMap[t1]; isActualTeam1 = true; }
+                else if (knockoutMap[t1]) { t1 = knockoutMap[t1]; isActualTeam1 = true; }
+                
+                if (groupWinnersMap[t2]) { t2 = groupWinnersMap[t2]; isActualTeam2 = true; }
+                else if (knockoutMap[t2]) { t2 = knockoutMap[t2]; isActualTeam2 = true; }
+            } else {
+                isActualTeam1 = true;
+                isActualTeam2 = true;
+            }
 
             const localDT = convertGMT7ToLocal(m.date, m.time);
+            
+            // Xây dựng nhãn hiển thị số thứ tự trận rõ ràng
+            let groupLabel = m.group === 'Knockout' ? `Trận ${m.stt} (Vòng loại trực tiếp)` : `Bảng ${m.group} - Trận ${m.stt}`;
 
             const card = document.createElement('div');
             card.className = 'match-card';
             card.innerHTML = `
                 <div class="match-info">
-                    <span class="group-tag">${m.group === 'Knockout' ? 'Vòng loại trực tiếp' : 'Bảng ' + m.group}</span>
-                    <div>📅 ${localDT.date} - ⏰ ${localDT.time}</div>
+                    <span class="group-tag">${groupLabel}</span>
+                    <div>📅 ${localDT.date} - 🕒 ${localDT.time}</div>
                     <div class="timezone-note">(Giờ Việt Nam)</div>
                 </div>
                 <div class="match-display">
-                    <div class="team team-1 ${isActualTeam1 ? 'actual-team' : ''}">${getTeamFlagHTML(displayTeam1)}</div>
+                    <div class="team team-1 ${isActualTeam1 ? 'actual-team' : ''}">${getTeamFlagHTML(t1)}</div>
                     <div class="score-zone">
-                        <input type="number" class="score-input" id="s1-${index}" value="${m.score1}">
-                        <span>-</span>
-                        <input type="number" class="score-input" id="s2-${index}" value="${m.score2}">
+                        <input type="number" class="score-input" id="score1-${index}" value="${m.score1}">
+                        <span>:</span>
+                        <input type="number" class="score-input" id="score2-${index}" value="${m.score2}">
                     </div>
-                    <div class="team team-2 ${isActualTeam2 ? 'actual-team' : ''}">${getTeamFlagHTML(displayTeam2)}</div>
+                    <div class="team team-2 ${isActualTeam2 ? 'actual-team' : ''}">${getTeamFlagHTML(t2)}</div>
                 </div>
                 <div class="action-zone">
-                    <button class="btn-update" onclick="updateScore(${index})">Cập nhật</button>
+                    <button class="btn-update" onclick="updateMatchScore(${index}, ${m.stt})">Cập nhật</button>
                 </div>
             `;
-            listContainer.appendChild(card);
+            listDiv.appendChild(card);
         });
     }
 
-    function updateScore(index) {
-        const s1 = document.getElementById(`s1-${index}`).value;
-        const s2 = document.getElementById(`s2-${index}`).value;
-        
-        database.ref(`matches/${index}`).update({
-            score1: s1 === "" ? "" : parseInt(s1),
-            score2: s2 === "" ? "" : parseInt(s2)
-        }).then(() => {
-            Swal.fire({ title: 'Thành công!', text: 'Đã cập nhật tỷ số trận đấu!', icon: 'success', timer: 1500, showConfirmButton: false });
-        }).catch(err => {
-            Swal.fire('Lỗi!', 'Không thể lưu tỷ số: ' + err.message, 'error');
-        });
-    }
+    // --- HÀM CẬP NHẬT TỶ SỐ VÀ TỰ ĐỘNG ĐẨY ĐỘI THẮNG VÀO VÒNG TRONG ---
+    function updateMatchScore(matchIndex, matchStt) {
+        const s1 = document.getElementById(`score1-${matchIndex}`).value;
+        const s2 = document.getElementById(`score2-${matchIndex}`).value;
 
-    function renderStandings(data, groupFilter) {
-        const area = document.getElementById('standings-area');
-        const body = document.getElementById('standings-body');
-        if (groupFilter === 'ALL' || groupFilter === 'Knockout' || groupFilter === 'BRACKET' || groupFilter === 'HANG_3') {
-            area.style.display = 'none';
+        if (s1 === "" || s2 === "") {
+            Swal.fire('Thất bại', 'Vui lòng điền đầy đủ tỷ số!', 'error');
             return;
         }
-        area.style.display = 'block';
-        document.getElementById('standings-title-text').innerText = `📊 Bảng xếp hạng - Bảng ${groupFilter}`;
-        body.innerHTML = '';
 
+        if (parseInt(s1) === parseInt(s2) && currentMatchesData[matchIndex].group === 'Knockout') {
+            Swal.fire('Thông báo', 'Vòng Knockout phải phân định thắng thua (điền tỷ số penalty nếu có)!', 'warning');
+            return;
+        }
+
+        // Lưu tỷ số trận đấu hiện tại lên Firebase
+        database.ref(`matches/${matchIndex}/score1`).set(s1);
+        database.ref(`matches/${matchIndex}/score2`).set(s2).then(() => {
+            
+            // Nếu là trận Knockout, kích hoạt logic đẩy đội thắng đi tiếp tự động
+            if (currentMatchesData[matchIndex].group === 'Knockout') {
+                const groupWinnersMap = getGroupWinners(currentMatchesData);
+                const knockoutMap = getKnockoutAdvancedMap(currentMatchesData, groupWinnersMap);
+
+                let realTeam1 = currentMatchesData[matchIndex].team1;
+                let realTeam2 = currentMatchesData[matchIndex].team2;
+                if (groupWinnersMap[realTeam1]) realTeam1 = groupWinnersMap[realTeam1];
+                else if (knockoutMap[realTeam1]) realTeam1 = knockoutMap[realTeam1];
+                if (groupWinnersMap[realTeam2]) realTeam2 = groupWinnersMap[realTeam2];
+                else if (knockoutMap[realTeam2]) realTeam2 = knockoutMap[realTeam2];
+
+                let winner = parseInt(s1) > parseInt(s2) ? realTeam1 : realTeam2;
+                let loser = parseInt(s1) > parseInt(s2) ? realTeam2 : realTeam1;
+
+                // Sơ đồ luân chuyển các đội thắng vòng 32 đội -> 16 đội -> Tứ Kết -> Bán Kết theo chuẩn FIFA 2026
+                const nextRoundMap = {
+                    74: { nextStt: 89, slot: 'team1' }, 77: { nextStt: 89, slot: 'team2' },
+                    73: { nextStt: 90, slot: 'team1' }, 75: { nextStt: 90, slot: 'team2' },
+                    76: { nextStt: 91, slot: 'team1' }, 78: { nextStt: 91, slot: 'team2' },
+                    79: { nextStt: 92, slot: 'team1' }, 80: { nextStt: 92, slot: 'team2' },
+                    83: { nextStt: 93, slot: 'team1' }, 84: { nextStt: 93, slot: 'team2' },
+                    81: { nextStt: 94, slot: 'team1' }, 82: { nextStt: 94, slot: 'team2' },
+                    86: { nextStt: 95, slot: 'team1' }, 88: { nextStt: 95, slot: 'team2' },
+                    85: { nextStt: 96, slot: 'team1' }, 87: { nextStt: 96, slot: 'team2' },
+                    
+                    // Vòng 16 đội vào Tứ Kết
+                    89: { nextStt: 97, slot: 'team1' }, 90: { nextStt: 97, slot: 'team2' },
+                    93: { nextStt: 98, slot: 'team1' }, 94: { nextStt: 98, slot: 'team2' },
+                    91: { nextStt: 99, slot: 'team1' }, 92: { nextStt: 99, slot: 'team2' },
+                    95: { nextStt: 100, slot: 'team1' }, 96: { nextStt: 100, slot: 'team2' },
+                    
+                    // Tứ Kết vào Bán Kết
+                    97: { nextStt: 101, slot: 'team1' }, 99: { nextStt: 101, slot: 'team2' },
+                    98: { nextStt: 102, slot: 'team1' }, 100: { nextStt: 102, slot: 'team2' }
+                };
+
+                const target = nextRoundMap[matchStt];
+                if (target) {
+                    let nextIdx = currentMatchesData.findIndex(m => m.stt === target.nextStt);
+                    if (nextIdx !== -1) {
+                        database.ref(`matches/${nextIdx}/${target.slot}`).set(winner);
+                    }
+                }
+                
+                // Đặc cách riêng dành cho vòng Bán Kết chuyển sang trận Tranh hạng 3 và Chung kết
+                if (matchStt === 101) {
+                    let idx103 = currentMatchesData.findIndex(m => m.stt === 103);
+                    let idx104 = currentMatchesData.findIndex(m => m.stt === 104);
+                    if (idx103 !== -1) database.ref(`matches/${idx103}/team1`).set(loser);
+                    if (idx104 !== -1) database.ref(`matches/${idx104}/team1`).set(winner);
+                }
+                if (matchStt === 102) {
+                    let idx103 = currentMatchesData.findIndex(m => m.stt === 103);
+                    let idx104 = currentMatchesData.findIndex(m => m.stt === 104);
+                    if (idx103 !== -1) database.ref(`matches/${idx103}/team2`).set(loser);
+                    if (idx104 !== -1) database.ref(`matches/${idx104}/team2`).set(winner);
+                }
+            }
+
+            Swal.fire('Thành công', 'Đã cập nhật tỷ số và sơ đồ vòng kế tiếp thành công!', 'success');
+        });
+    }
+
+    function filterGroup(groupName, btn) {
+        selectedGroup = groupName;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.remove('active'); btn.classList.add('active');
+
+        const standingsArea = document.getElementById('standings-area');
+        const bracketArea = document.getElementById('bracket-area');
+
+        if (groupName === 'BRACKET') {
+            standingsArea.style.display = 'none';
+            bracketArea.style.display = 'block';
+            document.getElementById('match-list').innerHTML = '';
+        } else if (groupName === 'HANG_3') {
+            bracketArea.style.display = 'none';
+            standingsArea.style.display = 'block';
+            document.getElementById('standings-title-text').innerText = "📊 Bảng xếp hạng các đội hạng 3 bảng tốt nhất";
+            renderThirdPlaceStandings(currentMatchesData);
+            renderMatches(currentMatchesData, 'ALL');
+        } else if (groupName === 'ALL' || groupName === 'Knockout') {
+            bracketArea.style.display = 'none';
+            standingsArea.style.display = 'none';
+            renderMatches(currentMatchesData, groupName);
+        } else {
+            bracketArea.style.display = 'none';
+            standingsArea.style.display = 'block';
+            document.getElementById('standings-title-text').innerText = `📊 Bảng xếp hạng - Bảng ${groupName}`;
+            renderStandings(currentMatchesData, groupName);
+            renderMatches(currentMatchesData, groupName);
+        }
+    }
+
+    function renderStandings(data, group) {
         let teams = {};
         data.forEach(m => {
-            if (!m || m.group !== groupFilter) return;
+            if (!m || m.group !== group) return;
             if (!teams[m.team1]) teams[m.team1] = { name: m.team1, pld: 0, pts: 0, gd: 0, gf: 0 };
             if (!teams[m.team2]) teams[m.team2] = { name: m.team2, pld: 0, pts: 0, gd: 0, gf: 0 };
 
             if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
                 const s1 = parseInt(m.score1); const s2 = parseInt(m.score2);
-                teams[m.team1].pld += 1; teams[m.team2].pld += 1;
+                teams[m.team1].pld++; teams[m.team2].pld++;
                 teams[m.team1].gf += s1; teams[m.team1].gd += (s1 - s2);
                 teams[m.team2].gf += s2; teams[m.team2].gd += (s2 - s1);
                 if (s1 > s2) teams[m.team1].pts += 3;
@@ -586,66 +690,65 @@
         });
 
         let sorted = Object.values(teams).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+        const tbody = document.getElementById('standings-body');
+        tbody.innerHTML = '';
         sorted.forEach((t, i) => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${i+1}</td>
-                <td class="team-name">${getTeamFlagHTML(t.name)}</td>
-                <td>${t.pld}</td>
-                <td style="color:var(--secondary); font-weight:bold;">${t.pts}</td>
-                <td>${t.gd > 0 ? '+' + t.gd : t.gd}</td>
-                <td>${t.gf}</td>
+            tbody.innerHTML += `
+                <tr>
+                    <td>${i+1}</td>
+                    <td class="team-name">${getTeamFlagHTML(t.name)}</td>
+                    <td>${t.pld}</td>
+                    <td style="color:blue; font-weight:bold;">${t.pts}</td>
+                    <td>${t.gd > 0 ? '+' + t.gd : t.gd}</td>
+                    <td>${t.gf}</td>
+                </tr>
             `;
-            body.appendChild(tr);
         });
     }
 
     function renderThirdPlaceStandings(data) {
-        const area = document.getElementById('standings-area');
-        const body = document.getElementById('standings-body');
-        area.style.display = 'block';
-        document.getElementById('standings-title-text').innerText = `📊 Bảng xếp hạng các đội hạng 3 tốt nhất`;
-        body.innerHTML = '';
-
+        let thirdTeams = {};
         const groupsList = ['A','B','C','D','E','F','G','H','I','J','K','L'];
-        let thirdPlaceTeams = [];
-
+        
         groupsList.forEach(g => {
-            let teams = {};
+            let groupTeams = {};
             data.forEach(m => {
                 if (!m || m.group !== g) return;
-                if (!teams[m.team1]) teams[m.team1] = { name: m.team1, pld: 0, pts: 0, gd: 0, gf: 0, group: g };
-                if (!teams[m.team2]) teams[m.team2] = { name: m.team2, pld: 0, pts: 0, gd: 0, gf: 0, group: g };
+                if (!groupTeams[m.team1]) groupTeams[m.team1] = { name: m.team1, pld: 0, pts: 0, gd: 0, gf: 0 };
+                if (!groupTeams[m.team2]) groupTeams[m.team2] = { name: m.team2, pld: 0, pts: 0, gd: 0, gf: 0 };
 
                 if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
                     const s1 = parseInt(m.score1); const s2 = parseInt(m.score2);
-                    teams[m.team1].pld += 1; teams[m.team2].pld += 1;
-                    teams[m.team1].gf += s1; teams[m.team1].gd += (s1 - s2);
-                    teams[m.team2].gf += s2; teams[m.team2].gd += (s2 - s1);
-                    if (s1 > s2) teams[m.team1].pts += 3;
-                    else if (s1 < s2) teams[m.team2].pts += 3;
-                    else { teams[m.team1].pts += 1; teams[m.team2].pts += 1; }
+                    groupTeams[m.team1].pld++; groupTeams[m.team2].pld++;
+                    groupTeams[m.team1].gf += s1; groupTeams[m.team1].gd += (s1 - s2);
+                    groupTeams[m.team2].gf += s2; groupTeams[m.team2].gd += (s2 - s1);
+                    if (s1 > s2) groupTeams[m.team1].pts += 3;
+                    else if (s1 < s2) groupTeams[m.team2].pts += 3;
+                    else { groupTeams[m.team1].pts += 1; groupTeams[m.team2].pts += 1; }
                 }
             });
-            let sorted = Object.values(teams).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
-            if (sorted[2]) thirdPlaceTeams.push(sorted[2]);
+            let sortedG = Object.values(groupTeams).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+            if (sortedG.length >= 3) {
+                let t3 = sortedG[2];
+                thirdTeams[t3.name] = { ...t3, groupOrigin: g };
+            }
         });
 
-        thirdPlaceTeams.sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
-
-        thirdPlaceTeams.forEach((t, i) => {
-            const tr = document.createElement('tr');
-            if (i < 8) tr.className = 'top-8-di-tiep';
-            else tr.className = 'bi-loai';
-            tr.innerHTML = `
-                <td>${i+1}</td>
-                <td class="team-name">${getTeamFlagHTML(t.name)} <small style="color:#718096">(Bảng ${t.group})</small></td>
-                <td>${t.pld}</td>
-                <td style="font-weight:bold;">${t.pts}</td>
-                <td>${t.gd > 0 ? '+' + t.gd : t.gd}</td>
-                <td>${t.gf}</td>
+        let sortedThird = Object.values(thirdTeams).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+        const tbody = document.getElementById('standings-body');
+        tbody.innerHTML = '';
+        sortedThird.forEach((t, i) => {
+            let rowClass = i < 8 ? 'top-8-di-tiep' : 'bi-loai';
+            tbody.innerHTML += `
+                <tr class="${rowClass}">
+                    <td>${i+1} (Bảng ${t.groupOrigin})</td>
+                    <td class="team-name">${getTeamFlagHTML(t.name)}</td>
+                    <td>${t.pld}</td>
+                    <td style="font-weight:bold;">${t.pts}</td>
+                    <td>${t.gd > 0 ? '+' + t.gd : t.gd}</td>
+                    <td>${t.gf}</td>
+                </tr>
             `;
-            body.appendChild(tr);
         });
     }
 
@@ -654,91 +757,71 @@
         treeContainer.innerHTML = '';
 
         const groupWinnersMap = getGroupWinners(data);
-        const knockoutAdvancedMap = getKnockoutAdvancedMap(data, groupWinnersMap);
+        const knockoutMap = getKnockoutAdvancedMap(data, groupWinnersMap);
 
-        // Định nghĩa cấu trúc các trận đấu lớn theo STT sơ đồ cây
-        const roundsDef = [
-            { title: "Vòng 32 đội", matches: [89, 90, 91, 92, 93, 94, 95, 96] },
-            { title: "Tứ kết", matches: [97, 98, 99, 100] },
-            { title: "Bán kết", matches: [101, 102] },
-            { title: "Chung kết", matches: [104] }
+        const getRealName = (t) => {
+            if (groupWinnersMap[t]) return groupWinnersMap[t];
+            if (knockoutMap[t]) return knockoutMap[t];
+            return t;
+        };
+
+        const getMatchDataByStt = (stt) => data.find(m => m && m.stt === stt) || { team1: `Thua/Thắng ${stt}`, team2: `Thua/Thắng ${stt}`, score1: "", score2: "" };
+
+        // Xây dựng sơ đồ khối cây giải đấu trực quan cho người xem
+        const roundStructures = [
+            { title: "Vòng 32 đội", matches: [74, 77, 73, 75, 76, 78, 79, 80, 83, 84, 81, 82, 86, 88, 85, 87] },
+            { title: "Vòng 16 đội", matches: [89, 90, 91, 92, 93, 94, 95, 96] },
+            { title: "Tứ Kết", matches: [97, 99, 98, 100] },
+            { title: "Bán Kết", matches: [101, 102] },
+            { title: "Chung Kết & Tranh Hạng 3", matches: [104, 103] }
         ];
 
-        roundsDef.forEach(round => {
-            const roundCol = document.createElement('ul');
-            roundCol.className = 'bracket-round';
-            roundCol.innerHTML = `<div class="bracket-round-title">${round.title}</div>`;
+        roundStructures.forEach(round => {
+            const roundUl = document.createElement('ul');
+            roundUl.className = 'bracket-round';
+            
+            const rTitle = document.createElement('div');
+            rTitle.className = 'bracket-round-title';
+            rTitle.innerText = round.title;
+            roundUl.appendChild(rTitle);
 
-            round.matches.forEach(mStt => {
-                const m = data.find(item => item && item.stt === mStt);
-                if (!m) return;
+            round.matches.forEach(stt => {
+                const m = getMatchDataByStt(stt);
+                const rt1 = getRealName(m.team1);
+                const rt2 = getRealName(m.team2);
 
-                let t1 = m.team1; let t2 = m.team2;
-                if (groupWinnersMap[t1]) t1 = groupWinnersMap[t1];
-                if (groupWinnersMap[t2]) t2 = groupWinnersMap[t2];
-                if (knockoutAdvancedMap[t1]) t1 = knockoutAdvancedMap[t1];
-                if (knockoutAdvancedMap[t2]) t2 = knockoutAdvancedMap[t2];
+                const s1 = m.score1 !== "" ? parseInt(m.score1) : -1;
+                const s2 = m.score2 !== "" ? parseInt(m.score2) : -1;
 
-                const s1 = m.score1; const s2 = m.score2;
-                let w1 = false; let w2 = false;
-                if (s1 !== "" && s2 !== "" && s1 !== undefined && s2 !== undefined) {
-                    if (parseInt(s1) > parseInt(s2)) w1 = true;
-                    else if (parseInt(s2) > parseInt(s1)) w2 = true;
-                }
-
-                const matchBox = document.createElement('li');
-                matchBox.className = 'bracket-matchup';
-                matchBox.innerHTML = `
-                    <div class="bracket-match-meta">Trận ${m.stt} - ${m.time} ${m.date.split('-')[2]}/${m.date.split('-')[1]}</div>
-                    <div class="bracket-team-row ${w1 ? 'winner' : ''}">
-                        <span class="bracket-team-name">${getTeamFlagHTML(t1)}</span>
-                        <span class="bracket-team-score">${s1}</span>
+                const li = document.createElement('li');
+                li.className = 'bracket-matchup';
+                li.innerHTML = `
+                    <div class="bracket-match-meta">TRẬN ${stt}</div>
+                    <div class="bracket-team-row ${s1 > s2 ? 'winner' : ''}">
+                        <span class="bracket-team-name">${getTeamFlagHTML(rt1)}</span>
+                        <span class="bracket-team-score">${s1 !== -1 ? s1 : ''}</span>
                     </div>
-                    <div class="bracket-team-row ${w2 ? 'winner' : ''}">
-                        <span class="bracket-team-name">${getTeamFlagHTML(t2)}</span>
-                        <span class="bracket-team-score">${s2}</span>
+                    <div class="bracket-team-row ${s2 > s1 ? 'winner' : ''}">
+                        <span class="bracket-team-name">${getTeamFlagHTML(rt2)}</span>
+                        <span class="bracket-team-score">${s2 !== -1 ? s2 : ''}</span>
                     </div>
                 `;
-                roundCol.appendChild(matchBox);
+                roundUl.appendChild(li);
             });
-            treeContainer.appendChild(roundCol);
+            treeContainer.appendChild(roundUl);
         });
-    }
-
-    function filterGroup(groupCode, btnElement) {
-        selectedGroup = groupCode;
-        
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btnElement.classList.add('active');
-
-        const bracketArea = document.getElementById('bracket-area');
-        if (groupCode === 'BRACKET') {
-            bracketArea.style.display = 'block';
-            document.getElementById('standings-area').style.display = 'none';
-            document.getElementById('match-list').style.display = 'none';
-        } else {
-            bracketArea.style.display = 'none';
-            document.getElementById('match-list').style.display = 'block';
-            renderMatches(currentMatchesData, selectedGroup);
-            if (groupCode === 'HANG_3') {
-                renderThirdPlaceStandings(currentMatchesData);
-            } else {
-                renderStandings(currentMatchesData, selectedGroup);
-            }
-        }
     }
 
     function exportToPDF() {
         const element = document.getElementById('match-list');
         const opt = {
             margin: 10,
-            filename: `Lich-Thi-Dau-WorldCup-2026-${selectedGroup}.pdf`,
+            filename: 'Lich_Thi_Dau_WorldCup_2026.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
-        Swal.fire({ title: 'Đang khởi tạo PDF...', text: 'Vui lòng chờ trong giây lát', allowOutsideClick: false, didOpen: () => { Swal.showLoading(); } });
-        html2pdf().set(opt).from(element).save().then(() => { Swal.close(); });
+        html2pdf().set(opt).from(element).save();
     }
 </script>
     <footer style="text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9em;">
