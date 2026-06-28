@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sơ Đồ Nhánh Đấu World Cup 2026</title>
     <style>
-        /* CSS GIAO DIỆN CHUẨN TRỰC QUAN */
+        /* CSS GIAO DIỆN HIỂN THỊ TRỰC QUAN & CHUYÊN NGHIỆP */
         body {
             font-family: Arial, sans-serif;
             background-color: #f7f9fa;
@@ -16,60 +16,74 @@
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 30px;
         }
 
-        /* Khung chứa toàn bộ sơ đồ (Cuộn ngang tốt trên điện thoại) */
+        /* Khung chứa toàn bộ sơ đồ nhánh đấu (Cuộn ngang tốt trên thiết bị di động) */
         .tournament-container {
             display: flex;
             overflow-x: auto;
-            padding: 40px 10px;
-            gap: 20px;
+            padding: 20px 10px 40px 10px;
+            gap: 30px;
+            align-items: flex-start;
         }
 
         /* Định dạng từng cột vòng đấu */
         .round {
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
             width: 220px;
             flex-shrink: 0;
         }
 
+        /* Tiêu đề cố định phía trên mỗi vòng đấu giống image_091a55.png */
         .round-title {
             text-align: center;
             font-weight: bold;
             padding: 8px;
             background-color: #fff;
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
+            border: 1px solid #ccd1d9;
+            margin-bottom: 25px;
             border-radius: 4px;
+            color: #4a5568;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
         /* Khung chứa một cặp đấu */
         .matchup {
             display: flex;
             flex-direction: column;
-            margin: 15px 0;
             position: relative;
         }
+
+        /* Cấu hình khoảng cách giãn đều các trận theo từng vòng đấu để nhánh nối chuẩn khít */
+        .round-32 .matchup { margin: 12px 0; height: 70px; }
+        .round-16 .matchup { margin: 59px 0; height: 70px; }
+        .round-qf .matchup { margin: 153px 0; height: 70px; }
+        .round-sf .matchup { margin: 341px 0; height: 70px; }
+        .round-final .matchup { margin: 717px 0; height: 70px; }
+        .round-third .matchup { margin: 20px 0; height: 70px; }
 
         .match-info {
             font-size: 11px;
             color: #0056b3;
-            margin-bottom: 4px;
-            padding-left: 5px;
+            margin-bottom: 3px;
+            padding-left: 2px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
         }
 
-        /* Định dạng thanh hiển thị đội bóng */
+        /* Định dạng thanh hiển thị thông tin đội bóng */
         .team-box {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #ffffff;
             border: 1px solid #ccd1d9;
-            padding: 6px 10px;
+            padding: 4px 8px;
             font-size: 13px;
-            height: 28px;
+            height: 24px;
         }
 
         .team-box:first-of-type {
@@ -86,8 +100,9 @@
         .team-name {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             font-weight: 500;
+            color: #2d3748;
         }
 
         .score {
@@ -96,99 +111,51 @@
             text-align: center;
             border-left: 1px solid #e6e9ed;
             padding-left: 5px;
+            color: #1a202c;
         }
 
-        /* ĐƯỜNG KẺ NHÁNH NỐI TỰ ĐỘNG (DỰA THEO IMAGE_091A55.PNG) */
+        /* HỆ THỐNG ĐƯỜNG KẺ NHÁNH NỐI TỰ ĐỘNG CHUẨN XÁC */
+        
+        /* Nhánh từ Vòng 32 ra */
         .round-32 .matchup::after {
-            content: "";
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            width: 20px;
-            height: 50%;
-            border-right: 2px solid #a0a0a0;
+            content: ""; position: absolute; right: -30px; top: 41px; width: 30px; height: 47px; border-right: 1px solid #4a5568;
         }
-        .round-32 .matchup:nth-child(even)::after {
-            top: 0;
-            height: 50%;
-            border-top: 2px solid #a0a0a0;
-        }
-        .round-32 .matchup:nth-child(odd)::after {
-            border-bottom: 2px solid #a0a0a0;
-        }
+        .round-32 .matchup:nth-child(odd)::after { border-bottom: 1px solid #4a5568; }
+        .round-32 .matchup:nth-child(even)::after { top: -6px; border-top: 1px solid #4a5568; }
 
+        /* Nhánh vào và ra của Vòng 16 */
         .round-16 .matchup::before {
-            content: "";
-            position: absolute;
-            left: -20px;
-            top: 50%;
-            width: 20px;
-            border-top: 2px solid #a0a0a0;
+            content: ""; position: absolute; left: -30px; top: 41px; width: 30px; border-top: 1px solid #4a5568;
         }
         .round-16 .matchup::after {
-            content: "";
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            height: 100%;
-            border-right: 2px solid #a0a0a0;
+            content: ""; position: absolute; right: -30px; top: 41px; width: 30px; height: 94px; border-right: 1px solid #4a5568;
         }
-        .round-16 .matchup:nth-child(odd)::after {
-            border-bottom: 2px solid #a0a0a0;
-        }
-        .round-16 .matchup:nth-child(even)::after {
-            top: -50%;
-            border-top: 2px solid #a0a0a0;
-        }
+        .round-16 .matchup:nth-child(odd)::after { border-bottom: 1px solid #4a5568; }
+        .round-16 .matchup:nth-child(even)::after { top: -53px; border-top: 1px solid #4a5568; }
 
+        /* Nhánh vào và ra của Vòng Tứ kết (Quarterfinals) */
         .round-qf .matchup::before {
-            content: "";
-            position: absolute;
-            left: -20px;
-            top: 50%;
-            width: 20px;
-            border-top: 2px solid #a0a0a0;
+            content: ""; position: absolute; left: -30px; top: 41px; width: 30px; border-top: 1px solid #4a5568;
         }
         .round-qf .matchup::after {
-            content: "";
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            height: 200%;
-            border-right: 2px solid #a0a0a0;
+            content: ""; position: absolute; right: -30px; top: 41px; width: 30px; height: 188px; border-right: 1px solid #4a5568;
         }
-        .round-qf .matchup:nth-child(odd)::after {
-            border-bottom: 2px solid #a0a0a0;
-        }
-        .round-qf .matchup:nth-child(even)::after {
-            top: -150%;
-            border-top: 2px solid #a0a0a0;
-        }
+        .round-qf .matchup:nth-child(odd)::after { border-bottom: 1px solid #4a5568; }
+        .round-qf .matchup:nth-child(even)::after { top: -147px; border-top: 1px solid #4a5568; }
 
+        /* Nhánh vào và ra của Vòng Bán kết (Semifinals) */
         .round-sf .matchup::before {
-            content: "";
-            position: absolute;
-            left: -20px;
-            top: 50%;
-            width: 20px;
-            border-top: 2px solid #a0a0a0;
+            content: ""; position: absolute; left: -30px; top: 41px; width: 30px; border-top: 1px solid #4a5568;
         }
         .round-sf .matchup::after {
-            content: "";
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            width: 20px;
-            border-top: 2px solid #a0a0a0;
+            content: ""; position: absolute; right: -30px; top: 41px; width: 30px; height: 376px; border-right: 1px solid #4a5568;
         }
+        .round-sf .matchup:nth-child(odd)::after { border-bottom: 1px solid #4a5568; }
+        .round-sf .matchup:nth-child(even)::after { top: -335px; border-top: 1px solid #4a5568; }
 
+        /* Nhánh vào trận Chung kết */
         .round-final .matchup::before {
-            content: "";
-            position: absolute;
-            left: -20px;
-            top: 50%;
-            width: 20px;
-            border-top: 2px solid #a0a0a0;
+            content: ""; position: absolute; left: -30px; top: 41px; width: 30px; border-top: 1px solid #4a5568;
         }
     </style>
 </head>
@@ -198,42 +165,106 @@
 
     <div class="tournament-container">
         
-        <!-- VÒNG 32 ĐỘI -->
         <div class="round round-32">
             <div class="round-title">Round of 32</div>
             
-            <!-- Trận 1 -->
             <div class="matchup">
                 <div class="match-info">June 29 - Foxborough</div>
-                <div class="team-box"><span class="team-name">🇩🇪 Germany</span><span class="score">-</span></div>
-                <div class="team-box"><span class="team-name">🇵🇾 Paraguay</span><span class="score">-</span></div>
+                <div class="team-box"><span class="team-name">🇩🇪 Germany</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇵🇾 Paraguay</span><span class="score"></span></div>
             </div>
 
-            <!-- Trận 2 -->
             <div class="matchup">
                 <div class="match-info">June 30 - East Rutherford</div>
-                <div class="team-box"><span class="team-name">🇫🇷 France</span><span class="score">-</span></div>
-                <div class="team-box"><span class="team-name">🇸🇪 Sweden</span><span class="score">-</span></div>
+                <div class="team-box"><span class="team-name">🇫🇷 France</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇸🇪 Sweden</span><span class="score"></span></div>
             </div>
 
-            <!-- Trận 3 -->
             <div class="matchup">
                 <div class="match-info">June 28 - Inglewood</div>
-                <div class="team-box"><span class="team-name">🇿🇦 South Africa</span><span class="score">-</span></div>
-                <div class="team-box"><span class="team-name">🇨🇦 Canada</span><span class="score">-</span></div>
+                <div class="team-box"><span class="team-name">🇿🇦 South Africa</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇨🇦 Canada</span><span class="score"></span></div>
             </div>
 
-            <!-- Trận 4 -->
             <div class="matchup">
                 <div class="match-info">June 29 - Guadalupe</div>
-                <div class="team-box"><span class="team-name">🇳🇱 Netherlands</span><span class="score">-</span></div>
-                <div class="team-box"><span class="team-name">🇲🇦 Morocco</span><span class="score">-</span></div>
+                <div class="team-box"><span class="team-name">🇳🇱 Netherlands</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇲🇦 Morocco</span><span class="score"></span></div>
             </div>
-            
-            <!-- (Anh có thể copy lặp lại cấu trúc .matchup này cho đủ 16 trận của Vòng 32) -->
+
+            <div class="matchup">
+                <div class="match-info">July 2 - Toronto</div>
+                <div class="team-box"><span class="team-name">🇵🇹 Portugal</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇭🇷 Croatia</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 2 - Inglewood</div>
+                <div class="team-box"><span class="team-name">🇪🇸 Spain</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇦🇹 Austria</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 1 - Santa Clara</div>
+                <div class="team-box"><span class="team-name">🇺🇸 United States</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇧🇦 Bosnia and Herz.</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 1 - Seattle</div>
+                <div class="team-box"><span class="team-name">🇧🇪 Belgium</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇸🇳 Senegal</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">June 29 - Houston</div>
+                <div class="team-box"><span class="team-name">🇧🇷 Brazil</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇯🇵 Japan</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">June 30 - Arlington</div>
+                <div class="team-box"><span class="team-name">🇨🇮 Ivory Coast</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇳🇴 Norway</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">June 30 - Mexico City</div>
+                <div class="team-box"><span class="team-name">🇲🇽 Mexico</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇪🇨 Ecuador</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 1 - Atlanta</div>
+                <div class="team-box"><span class="team-name">🏴󠁧󠁢󠁥󠁮󠁧󠁿 England</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇨🇩 DR Congo</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 3 - Miami Gardens</div>
+                <div class="team-box"><span class="team-name">🇦🇷 Argentina</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇨🇻 Cape Verde</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 3 - Arlington</div>
+                <div class="team-box"><span class="team-name">🇦🇺 Australia</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇪🇬 Egypt</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 2 - Vancouver</div>
+                <div class="team-box"><span class="team-name">🇨🇭 Switzerland</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇩🇿 Algeria</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 3 - Kansas City</div>
+                <div class="team-box"><span class="team-name">🇨🇴 Colombia</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">🇬🇭 Ghana</span><span class="score"></span></div>
+            </div>
         </div>
 
-        <!-- VÒNG 16 ĐỘI -->
         <div class="round round-16">
             <div class="round-title">Round of 16</div>
             
@@ -248,9 +279,44 @@
                 <div class="team-box"><span class="team-name">Winner Match 73</span><span class="score"></span></div>
                 <div class="team-box"><span class="team-name">Winner Match 75</span><span class="score"></span></div>
             </div>
+
+            <div class="matchup">
+                <div class="match-info">July 6 - Arlington</div>
+                <div class="team-box"><span class="team-name">Winner Match 83</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">Winner Match 84</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 6 - Seattle</div>
+                <div class="team-box"><span class="team-name">Winner Match 81</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">Winner Match 82</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 5 - East Rutherford</div>
+                <div class="team-box"><span class="team-name">Winner Match 76</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">Winner Match 78</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 5 - Mexico City</div>
+                <div class="team-box"><span class="team-name">Winner Match 79</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">Winner Match 80</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 7 - Atlanta</div>
+                <div class="team-box"><span class="team-name">Winner Match 86</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">Winner Match 88</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 7 - Vancouver</div>
+                <div class="team-box"><span class="team-name">Winner Match 85</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">Winner Match 87</span><span class="score"></span></div>
+            </div>
         </div>
 
-        <!-- VÒNG TỨ KẾT -->
         <div class="round round-qf">
             <div class="round-title">Quarterfinals</div>
             
@@ -259,9 +325,26 @@
                 <div class="team-box"><span class="team-name">Winner Match 89</span><span class="score"></span></div>
                 <div class="team-box"><span class="team-name">Winner Match 90</span><span class="score"></span></div>
             </div>
+
+            <div class="matchup">
+                <div class="match-info">July 10 - Inglewood</div>
+                <div class="team-box"><span class="team-name">Winner Match 93</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">Winner Match 94</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 11 - Miami Gardens</div>
+                <div class="team-box"><span class="team-name">Winner Match 91</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">Winner Match 92</span><span class="score"></span></div>
+            </div>
+
+            <div class="matchup">
+                <div class="match-info">July 11 - Kansas City</div>
+                <div class="team-box"><span class="team-name">Winner Match 95</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">Winner Match 96</span><span class="score"></span></div>
+            </div>
         </div>
 
-        <!-- VÒNG BÁN KẾT -->
         <div class="round round-sf">
             <div class="round-title">Semifinals</div>
             
@@ -270,9 +353,14 @@
                 <div class="team-box"><span class="team-name">Winner Match 97</span><span class="score"></span></div>
                 <div class="team-box"><span class="team-name">Winner Match 98</span><span class="score"></span></div>
             </div>
+
+            <div class="matchup">
+                <div class="match-info">July 15 - Atlanta</div>
+                <div class="team-box"><span class="team-name">Winner Match 99</span><span class="score"></span></div>
+                <div class="team-box"><span class="team-name">Winner Match 100</span><span class="score"></span></div>
+            </div>
         </div>
 
-        <!-- TRẬN CHUNG KẾT -->
         <div class="round round-final">
             <div class="round-title">Final</div>
             
@@ -281,11 +369,21 @@
                 <div class="team-box"><span class="team-name">Winner Match 101</span><span class="score"></span></div>
                 <div class="team-box"><span class="team-name">Winner Match 102</span><span class="score"></span></div>
             </div>
+
+            <div class="round-third" style="margin-top: 50px;">
+                <div class="round-title" style="margin-bottom: 10px;">Match for third place</div>
+                <div class="matchup">
+                    <div class="match-info">July 18 - Miami Gardens</div>
+                    <div class="team-box"><span class="team-name">Loser Match 101</span><span class="score"></span></div>
+                    <div class="team-box"><span class="team-name">Loser Match 102</span><span class="score"></span></div>
+                </div>
+            </div>
         </div>
 
     </div>
-<footer style="text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9em;">
-    © 2026 Bản quyền thuộc về <strong>Lê Công Minh</strong> | Thiết kế cho World Cup 2026 ⚽
-</footer>
+
+    <footer style="text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9em;">
+        © 2026 Bản quyền thuộc về <strong>Lê Công Minh</strong> | Thiết kế cho World Cup 2026 ⚽
+    </footer>
 </body>
 </html>
