@@ -290,7 +290,7 @@
             groupsList.forEach(g => {
                 let sorted = Object.values(groupStandings[g]).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
                 let isFinished = sorted.length === 4 && sorted.every(team => team.pld === 3);
-                mapping[`Nh?t ${g}`] = isFinished ? sorted[0].name : `Nh?t ${g}`;
+                mapping[`Nhất ${g}`] = isFinished ? sorted[0].name : `Nhất ${g}`;
                 mapping[`Nhì ${g}`] = isFinished ? sorted[1].name : `Nhì ${g}`;
             });
             return mapping;
@@ -317,13 +317,13 @@
                 if (s1 !== "" && s2 !== "" && s1 !== undefined && s2 !== undefined) {
                     let score1 = parseInt(s1); let score2 = parseInt(s2);
                     if (score1 > score2) {
-                        knockoutMap[`Th?ng ${m.stt}`] = currentRealTeam1;
+                        knockoutMap[`Thắng ${m.stt}`] = currentRealTeam1;
                         knockoutMap[`Thua ${m.stt}`] = currentRealTeam2;
                     } else if (score1 < score2) {
-                        knockoutMap[`Th?ng ${m.stt}`] = currentRealTeam2;
+                        knockoutMap[`Thắng ${m.stt}`] = currentRealTeam2;
                         knockoutMap[`Thua ${m.stt}`] = currentRealTeam1;
                     } else {
-                        knockoutMap[`Th?ng ${m.stt}`] = `Th?ng ${m.stt} (Chua phân PK)`;
+                        knockoutMap[`Thắng ${m.stt}`] = `Thắng ${m.stt} (Chua phân PK)`;
                         knockoutMap[`Thua ${m.stt}`] = `Thua ${m.stt}`;
                     }
                 }
