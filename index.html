@@ -22,7 +22,6 @@
         .standings-table tr:hover { background-color: #f8fafc; }
         .standings-table td.team-name { text-align: left; font-weight: bold; }
         
-        /* C?u trúc hi?n th? c? h?p lý */
         .flag-box { display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
         .flag-img { width: 24px; height: 16px; object-fit: cover; border: 1px solid #cbd5e0; border-radius: 2px; }
 
@@ -42,10 +41,14 @@
         .btn-update { background: #48bb78; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
         .btn-update:hover { background: #38a169; }
 
-        /* CSS b? sung cho BXH Ð?i h?ng 3 */
         .top-8-di-tiep { background-color: #d4edda !important; color: #155724; }
         .bi-loai { background-color: #f8d7da !important; color: #721c24; }
         .ghi-chu-h3 { font-size: 0.85em; color: #718096; margin-top: -10px; margin-bottom: 15px; font-style: italic; }
+        
+        /* CSS cho nút Xuất PDF */
+        .pdf-zone { text-align: center; margin-bottom: 20px; }
+        .btn-pdf { background: #e53e3e; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.95em; transition: background 0.2s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .btn-pdf:hover { background: #c53030; }
         
         @media (max-width: 768px) {
             .match-card { flex-direction: column; text-align: center; gap: 15px; }
@@ -59,8 +62,8 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -80,14 +83,14 @@
             "Mexico": "mx", "Nam Phi": "za", "Hàn Quốc": "kr", "CH Séc": "cz",
             "Canada": "ca", "Bosnia và Herz": "ba", "Mỹ": "us", "Paraguay": "py",
             "Qatar": "qa", "Thụy Sĩ": "ch", "Brazil": "br", "Ma Rốc": "ma",
-            "Haiti": "ht", "Scotland": "gb-sct", "Úc": "au", "Thổ Nhĩ Kì": "tr",
+            "Haiti": "ht", "Scotland": "gb-sct", "Úc": "au", "Thổ Nhĩ Kỳ": "tr",
             "Đức": "de", "Curacao": "cw", "Hà Lan": "nl", "Nhật Bản": "jp",
             "Bờ Biển Ngà": "ci", "Ecuador": "ec", "Thụy Điển": "se", "Tunisia": "tn",
-            "Tây Ban Nha": "es", "Cape Verde": "cv", "B?": "be", "Ai Cập": "eg",
+            "Tây Ban Nha": "es", "Cape Verde": "cv", "Bỉ": "be", "Ai Cập": "eg",
             "Ả Rập Xê Út": "sa", "Uruguay": "uy", "Iran": "ir", "New Zealand": "nz",
             "Pháp": "fr", "Senegal": "sn", "Iraq": "iq", "Na Uy": "no",
             "Argentina": "ar", "Algeria": "dz", "Áo": "at", "Jordan": "jo",
-            "Bồ Ðào Nha": "pt", "Congo": "cd", "Anh": "gb-eng", "Croatia": "hr",
+            "Bồ Đào Nha": "pt", "CHDC Congo": "cd", "Anh": "gb-eng", "Croatia": "hr",
             "Ghana": "gh", "Panama": "pa", "Uzbekistan": "uz", "Colombia": "co"
         };
 
@@ -97,13 +100,13 @@
             if (flagCode) {
                 return `<span class="flag-box"><img src="https://flagcdn.com/w40/${flagCode}.png" class="flag-img" alt="${cleanName}"> ${teamName}</span>`;
             }
-            return `<span class="flag-box">? ${teamName}</span>`;
+            return `<span class="flag-box">⚽ ${teamName}</span>`;
         }
 
         const initialMatches = [
             // LƯỢT 1-VÒNG BẢNG
             { stt: 1, group: "A", date: "2026-06-12", time: "02:00", team1: "Mexico", team2: "Nam Phi", score1: "", score2: "" },
-            { stt: 2, group: "A", date: "2026-06-12", time: "09:00", team1: "H", team2: "CH Séc", score1: "", score2: "" },
+            { stt: 2, group: "A", date: "2026-06-12", time: "09:00", team1: "Hàn Quốc", team2: "CH Séc", score1: "", score2: "" },
             { stt: 3, group: "B", date: "2026-06-13", time: "02:00", team1: "Canada", team2: "Bosnia và Herz", score1: "", score2: "" },
             { stt: 4, group: "D", date: "2026-06-13", time: "08:00", team1: "Mỹ", team2: "Paraguay", score1: "", score2: "" },
             { stt: 5, group: "B", date: "2026-06-14", time: "02:00", team1: "Qatar", team2: "Thụy Sĩ", score1: "", score2: "" },
@@ -116,13 +119,13 @@
             { stt: 12, group: "F", date: "2026-06-15", time: "09:00", team1: "Thụy Điển", team2: "Tunisia", score1: "", score2: "" },
             { stt: 13, group: "H", date: "2026-06-15", time: "23:00", team1: "Tây Ban Nha", team2: "Cape Verde", score1: "", score2: "" },
             { stt: 14, group: "G", date: "2026-06-16", time: "02:00", team1: "Bỉ", team2: "Ai Cập", score1: "", score2: "" },
-            { stt: 15, group: "H", date: "2026-06-16", time: "05:00", team1: "Ả rập Xê Út", team2: "Uruguay", score1: "", score2: "" },
+            { stt: 15, group: "H", date: "2026-06-16", time: "05:00", team1: "Ả Rập Xê Út", team2: "Uruguay", score1: "", score2: "" },
             { stt: 16, group: "G", date: "2026-06-16", time: "08:00", team1: "Iran", team2: "New Zealand", score1: "", score2: "" },
             { stt: 17, group: "I", date: "2026-06-17", time: "02:00", team1: "Pháp", team2: "Senegal", score1: "", score2: "" },
             { stt: 18, group: "I", date: "2026-06-17", time: "05:00", team1: "Iraq", team2: "Na Uy", score1: "", score2: "" },
             { stt: 19, group: "J", date: "2026-06-17", time: "08:00", team1: "Argentina", team2: "Algeria", score1: "", score2: "" },
             { stt: 20, group: "J", date: "2026-06-17", time: "11:00", team1: "Áo", team2: "Jordan", score1: "", score2: "" },
-            { stt: 21, group: "K", date: "2026-06-18", time: "00:00", team1: "Bồ Ðào Nha", team2: "Congo", score1: "", score2: "" },
+            { stt: 21, group: "K", date: "2026-06-18", time: "00:00", team1: "Bồ Đào Nha", team2: "CHDC Congo", score1: "", score2: "" },
             { stt: 22, group: "L", date: "2026-06-18", time: "03:00", team1: "Anh", team2: "Croatia", score1: "", score2: "" },
             { stt: 23, group: "L", date: "2026-06-18", time: "06:00", team1: "Ghana", team2: "Panama", score1: "", score2: "" },
             { stt: 24, group: "K", date: "2026-06-18", time: "09:00", team1: "Uzbekistan", team2: "Colombia", score1: "", score2: "" },
@@ -135,9 +138,9 @@
             { stt: 29, group: "D", date: "2026-06-20", time: "02:00", team1: "Mỹ", team2: "Úc", score1: "", score2: "" },
             { stt: 30, group: "C", date: "2026-06-20", time: "05:00", team1: "Scotland", team2: "Ma Rốc", score1: "", score2: "" },
             { stt: 31, group: "C", date: "2026-06-20", time: "07:30", team1: "Brazil", team2: "Haiti", score1: "", score2: "" },
-            { stt: 32, group: "D", date: "2026-06-20", time: "10:00", team1: "Thổ Nhĩ Kì", team2: "Paraguay", score1: "", score2: "" },
+            { stt: 32, group: "D", date: "2026-06-20", time: "10:00", team1: "Thổ Nhĩ Kỳ", team2: "Paraguay", score1: "", score2: "" },
             { stt: 33, group: "F", date: "2026-06-21", time: "00:00", team1: "Hà Lan", team2: "Thụy Điển", score1: "", score2: "" },
-            { stt: 34, group: "E", date: "2026-06-21", time: "03:00", team1: "Ðức", team2: "Bờ Biển Ngà", score1: "", score2: "" },
+            { stt: 34, group: "E", date: "2026-06-21", time: "03:00", team1: "Đức", team2: "Bờ Biển Ngà", score1: "", score2: "" },
             { stt: 35, group: "E", date: "2026-06-21", time: "07:00", team1: "Ecuador", team2: "Curacao", score1: "", score2: "" },
             { stt: 36, group: "F", date: "2026-06-21", time: "11:00", team1: "Tunisia", team2: "Nhật Bản", score1: "", score2: "" },
             { stt: 37, group: "H", date: "2026-06-21", time: "23:00", team1: "Tây Ban Nha", team2: "Ả Rập Xê Út", score1: "", score2: "" },
@@ -148,7 +151,7 @@
             { stt: 42, group: "I", date: "2026-06-23", time: "04:00", team1: "Pháp", team2: "Iraq", score1: "", score2: "" },
             { stt: 43, group: "I", date: "2026-06-23", time: "07:00", team1: "Na Uy", team2: "Senegal", score1: "", score2: "" },
             { stt: 44, group: "J", date: "2026-06-23", time: "10:00", team1: "Jordan", team2: "Algeria", score1: "", score2: "" },
-            { stt: 45, group: "K", date: "2026-06-24", time: "00:00", team1: "Bồ Ðào Nha", team2: "Uzbekistan", score1: "", score2: "" },
+            { stt: 45, group: "K", date: "2026-06-24", time: "00:00", team1: "Bồ Đào Nha", team2: "Uzbekistan", score1: "", score2: "" },
             { stt: 46, group: "L", date: "2026-06-24", time: "03:00", team1: "Anh", team2: "Croatia", score1: "", score2: "" },
 
             // LƯỢT 3 VÒNG BẢNG
@@ -159,10 +162,10 @@
             { stt: 53, group: "C", date: "2026-06-26", time: "00:00", team1: "Ma Rốc", team2: "Haiti", score1: "", score2: "" },
             { stt: 54, group: "C", date: "2026-06-26", time: "00:00", team1: "Scotland", team2: "Brazil", score1: "", score2: "" },
             { stt: 55, group: "E", date: "2026-06-26", time: "03:00", team1: "Curacao", team2: "Bờ Biển Ngà", score1: "", score2: "" },
-            { stt: 56, group: "E", date: "2026-06-26", time: "03:00", team1: "Ecuador", team2: "Ðức", score1: "", score2: "" },
-            { stt: 57, group: "F", date: "2026-06-26", time: "06:00", team1: "Nhật bản", team2: "Thụy Điển", score1: "", score2: "" },
+            { stt: 56, group: "E", date: "2026-06-26", time: "03:00", team1: "Ecuador", team2: "Đức", score1: "", score2: "" },
+            { stt: 57, group: "F", date: "2026-06-26", time: "06:00", team1: "Nhật Bản", team2: "Thụy Điển", score1: "", score2: "" },
             { stt: 58, group: "F", date: "2026-06-26", time: "06:00", team1: "Tunisia", team2: "Hà Lan", score1: "", score2: "" },
-            { stt: 59, group: "D", date: "2026-06-26", time: "09:00", team1: "Thổ Nhĩ Kì", team2: "Mỹ", score1: "", score2: "" },
+            { stt: 59, group: "D", date: "2026-06-26", time: "09:00", team1: "Thổ Nhĩ Kỳ", team2: "Mỹ", score1: "", score2: "" },
             { stt: 60, group: "D", date: "2026-06-26", time: "09:00", team1: "Paraguay", team2: "Úc", score1: "", score2: "" },
             { stt: 61, group: "I", date: "2026-06-27", time: "02:00", team1: "Na Uy", team2: "Pháp", score1: "", score2: "" },
             { stt: 62, group: "I", date: "2026-06-27", time: "02:00", team1: "Senegal", team2: "Iraq", score1: "", score2: "" },
@@ -172,12 +175,12 @@
             { stt: 66, group: "G", date: "2026-06-27", time: "10:00", team1: "New Zealand", team2: "Bỉ", score1: "", score2: "" },
             { stt: 67, group: "L", date: "2026-06-28", time: "04:00", team1: "Panama", team2: "Anh", score1: "", score2: "" },
             { stt: 68, group: "L", date: "2026-06-28", time: "04:00", team1: "Croatia", team2: "Ghana", score1: "", score2: "" },
-            { stt: 69, group: "K", date: "2026-06-28", time: "06:30", team1: "Colombia", team2: "Bồ Ðào Nha", score1: "", score2: "" },
+            { stt: 69, group: "K", date: "2026-06-28", time: "06:30", team1: "Colombia", team2: "Bồ Đào Nha", score1: "", score2: "" },
             { stt: 70, group: "K", date: "2026-06-28", time: "06:30", team1: "Congo", team2: "Uzbekistan", score1: "", score2: "" },
             { stt: 71, group: "J", date: "2026-06-28", time: "09:00", team1: "Algeria", team2: "Áo", score1: "", score2: "" },
             { stt: 72, group: "J", date: "2026-06-28", time: "09:00", team1: "Jordan", team2: "Argentina", score1: "", score2: "" },
 
-            // VÒNG LOẠI TRỰC TIẾP ĐẦU TIÊN (VÒNG 48 Ð?I)
+            // VÒNG LOẠI TRỰC TIẾP ĐẦU TIÊN (VÒNG 48 ĐỘI)
             { stt: 73, group: "Knockout", date: "2026-06-29", time: "02:00", team1: "Nhì A", team2: "Nhì B", score1: "", score2: "" },
             { stt: 74, group: "Knockout", date: "2026-06-30", time: "03:30", team1: "Nhất E", team2: "Ba A/B/C/D/F", score1: "", score2: "" },
             { stt: 75, group: "Knockout", date: "2026-06-30", time: "08:00", team1: "Nhất F", team2: "Nhì C", score1: "", score2: "" },
@@ -195,7 +198,7 @@
             { stt: 87, group: "Knockout", date: "2026-07-04", time: "08:30", team1: "Nhất K", team2: "Ba D/E/I/J/L", score1: "", score2: "" },
             { stt: 88, group: "Knockout", date: "2026-07-04", time: "01:00", team1: "Nhì D", team2: "Nhì G", score1: "", score2: "" },
 
-            // VÒNG 32 Ð?I TI?P THEO
+            // VÒNG 32 ĐỘI TIẾP THEO
             { stt: 89, group: "Knockout", date: "2026-07-05", time: "04:00", team1: "Thắng 74", team2: "Thắng 77", score1: "", score2: "" },
             { stt: 90, group: "Knockout", date: "2026-07-05", time: "00:00", team1: "Thắng 73", team2: "Thắng 75", score1: "", score2: "" },
             { stt: 91, group: "Knockout", date: "2026-07-06", time: "03:00", team1: "Thắng 76", team2: "Thắng 78", score1: "", score2: "" },
@@ -205,474 +208,8 @@
             { stt: 95, group: "Knockout", date: "2026-07-07", time: "23:00", team1: "Thắng 86", team2: "Thắng 88", score1: "", score2: "" },
             { stt: 96, group: "Knockout", date: "2026-07-08", time: "03:00", team1: "Thắng 85", team2: "Thắng 87", score1: "", score2: "" },
 
-            // T? K?T
+            // TỨ KẾT
             { stt: 97, group: "Knockout", date: "2026-07-10", time: "03:00", team1: "Thắng 89", team2: "Thắng 90", score1: "", score2: "" },
             { stt: 98, group: "Knockout", date: "2026-07-11", time: "02:00", team1: "Thắng 93", team2: "Thắng 94", score1: "", score2: "" },
             { stt: 99, group: "Knockout", date: "2026-07-12", time: "04:00", team1: "Thắng 91", team2: "Thắng 92", score1: "", score2: "" },
-            { stt: 100, group: "Knockout", date: "2026-07-12", time: "08:00", team1: "Thắng 95", team2: "Thắng 96", score1: "", score2: "" },
-
-            // BÁN K?T
-            { stt: 101, group: "Knockout", date: "2026-07-15", time: "02:00", team1: "Thắng 97", team2: "Thắng 98", score1: "", score2: "" },
-            { stt: 102, group: "Knockout", date: "2026-07-16", time: "02:00", team1: "Thắng 99", team2: "Thắng 100", score1: "", score2: "" },
-
-            // TRANH H?NG BA VÀ CHUNG K?T
-            { stt: 103, group: "Knockout", date: "2026-07-19", time: "04:00", team1: "Thua 101", team2: "Thua 102 (Tranh H?ng 3)", score1: "", score2: "" },
-            { stt: 104, group: "Knockout", date: "2026-07-20", time: "02:00", team1: "Thắng 101", team2: "Thắng 102 (CHUNG K?T)", score1: "", score2: "" }
-        ];
-
-        let currentMatchesData = [];
-        let selectedGroup = 'ALL';
-
-        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-        const viewsRef = database.ref('stats/totalViews');
-        viewsRef.transaction((currentValue) => { return (currentValue || 0) + 1; });
-        viewsRef.on('value', (snapshot) => { document.getElementById('total-views').innerText = snapshot.val() || 0; });
-
-        const myUserRef = database.ref('stats/onlineUsers').push();
-        myUserRef.onDisconnect().remove();
-        myUserRef.set(true);
-
-        database.ref('stats/onlineUsers').on('value', (snapshot) => {
-            document.getElementById('online-count').innerText = snapshot.numChildren();
-        });
-
-        database.ref('matches').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (!data || data.length === 0) {
-                database.ref('matches').set(initialMatches);
-                return;
-            }
-            currentMatchesData = data;
-            renderMatches(currentMatchesData, selectedGroup);
-            if (selectedGroup === 'HANG_3') {
-                renderThirdPlaceStandings(currentMatchesData);
-            } else {
-                renderStandings(currentMatchesData, selectedGroup);
-            }
-        }, (error) => {
-            console.error("L?i d?ng b? Firebase: ", error);
-        });
-
-        function convertGMT7ToLocal(dateStr, timeStr) {
-            const gmt7DateTimeStr = `${dateStr}T${timeStr}:00+07:00`;
-            const dateObj = new Date(gmt7DateTimeStr);
-            const localDate = dateObj.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            const localTime = dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', hour12: false });
-            return { date: localDate, time: localTime };
-        }
-
-        function getGroupWinners(data) {
-            let groupStandings = {};
-            const groupsList = ['A','B','C','D','E','F','G','H','I','J','K','L'];
-            groupsList.forEach(g => { groupStandings[g] = {}; });
-
-            data.forEach(m => {
-                if (!m || m.group === 'Knockout') return;
-                let g = m.group;
-                if (!groupStandings[g]) return;
-
-                if (!groupStandings[g][m.team1]) groupStandings[g][m.team1] = { name: m.team1, pts: 0, gd: 0, gf: 0, pld: 0 };
-                if (!groupStandings[g][m.team2]) groupStandings[g][m.team2] = { name: m.team2, pts: 0, gd: 0, gf: 0, pld: 0 };
-
-                if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
-                    const s1 = parseInt(m.score1); const s2 = parseInt(m.score2);
-                    groupStandings[g][m.team1].pld += 1; groupStandings[g][m.team2].pld += 1;
-                    groupStandings[g][m.team1].gf += s1; groupStandings[g][m.team1].gd += (s1 - s2);
-                    groupStandings[g][m.team2].gf += s2; groupStandings[g][m.team2].gd += (s2 - s1);
-                    if (s1 > s2) groupStandings[g][m.team1].pts += 3;
-                    else if (s1 < s2) groupStandings[g][m.team2].pts += 3;
-                    else { groupStandings[g][m.team1].pts += 1; groupStandings[g][m.team2].pts += 1; }
-                }
-            });
-
-            let mapping = {};
-            groupsList.forEach(g => {
-                let sorted = Object.values(groupStandings[g]).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
-                let isFinished = sorted.length === 4 && sorted.every(team => team.pld === 3);
-                mapping[`Nhất ${g}`] = isFinished ? sorted[0].name : `Nhất ${g}`;
-                mapping[`Nhì ${g}`] = isFinished ? sorted[1].name : `Nhì ${g}`;
-            });
-            return mapping;
-        }
-
-        function getKnockoutAdvancedMap(data, groupWinnersMap) {
-            let knockoutMap = {};
-            data.forEach(m => {
-                if (!m || m.group !== 'Knockout') return;
-                let currentRealTeam1 = m.team1;
-                let currentRealTeam2 = m.team2;
-
-                if (groupWinnersMap[currentRealTeam1]) currentRealTeam1 = groupWinnersMap[currentRealTeam1];
-                if (groupWinnersMap[currentRealTeam2]) currentRealTeam2 = groupWinnersMap[currentRealTeam2];
-
-                let cleanKey1 = currentRealTeam1.replace(/\s*\(.*\)/g, '').trim();
-                let cleanKey2 = currentRealTeam2.replace(/\s*\(.*\)/g, '').trim();
-                
-                if (knockoutMap[cleanKey1]) currentRealTeam1 = knockoutMap[cleanKey1];
-                if (knockoutMap[cleanKey2]) currentRealTeam2 = knockoutMap[cleanKey2];
-
-                let s1 = m.score1; let s2 = m.score2;
-
-                if (s1 !== "" && s2 !== "" && s1 !== undefined && s2 !== undefined) {
-                    let score1 = parseInt(s1); let score2 = parseInt(s2);
-                    if (score1 > score2) {
-                        knockoutMap[`Thắng ${m.stt}`] = currentRealTeam1;
-                        knockoutMap[`Thua ${m.stt}`] = currentRealTeam2;
-                    } else if (score1 < score2) {
-                        knockoutMap[`Thắng ${m.stt}`] = currentRealTeam2;
-                        knockoutMap[`Thua ${m.stt}`] = currentRealTeam1;
-                    } else {
-                        knockoutMap[`Thắng ${m.stt}`] = `Thắng ${m.stt} (Chua phân PK)`;
-                        knockoutMap[`Thua ${m.stt}`] = `Thua ${m.stt}`;
-                    }
-                }
-            });
-            return knockoutMap;
-        }
-
-        function renderMatches(data, groupFilter) {
-            const matchListDiv = document.getElementById('match-list');
-            matchListDiv.innerHTML = '';
-            
-            const groupWinnersMap = getGroupWinners(data);
-            const knockoutAdvancedMap = getKnockoutAdvancedMap(data, groupWinnersMap);
-
-            data.forEach((m, index) => {
-                if (!m) return;
-                
-                // N?u dang l?c xem 'HANG_3', danh sách tr?n d?u bên du?i s? hi?n th? toàn b? vòng b?ng
-                if (groupFilter === 'HANG_3') {
-                    if (m.group === 'Knockout') return;
-                } else if (groupFilter !== 'ALL' && m.group !== groupFilter) {
-                    return;
-                }
-
-                const card = document.createElement('div');
-                card.className = 'match-card';
-
-                const localDateTime = convertGMT7ToLocal(m.date, m.time);
-
-                let finalTeam1 = m.team1;
-                let finalTeam2 = m.team2;
-                let isActualT1 = false;
-                let isActualT2 = false;
-
-                if (m.group === 'Knockout') {
-                    if (groupWinnersMap[finalTeam1]) {
-                        if (groupWinnersMap[finalTeam1] !== finalTeam1) isActualT1 = true;
-                        finalTeam1 = groupWinnersMap[finalTeam1];
-                    }
-                    if (groupWinnersMap[finalTeam2]) {
-                        if (groupWinnersMap[finalTeam2] !== finalTeam2) isActualT2 = true;
-                        finalTeam2 = groupWinnersMap[finalTeam2];
-                    }
-
-                    let cleanKey1 = finalTeam1.replace(/\s*\(.*\)/g, '').trim();
-                    let cleanKey2 = finalTeam2.replace(/\s*\(.*\)/g, '').trim();
-
-                    if (knockoutAdvancedMap[cleanKey1]) {
-                        finalTeam1 = knockoutAdvancedMap[cleanKey1];
-                        isActualT1 = true;
-                    }
-                    if (knockoutAdvancedMap[cleanKey2]) {
-                        let baseName = knockoutAdvancedMap[cleanKey2];
-                        if(m.team2.includes("(Tranh H?ng 3)")) { finalTeam2 = baseName + " (Tranh H?ng 3)"; } 
-                        else if(m.team2.includes("(CHUNG K?T)")) { finalTeam2 = baseName + " (CHUNG K?T)"; } 
-                        else { finalTeam2 = baseName; }
-                        isActualT2 = true;
-                    }
-                }
-
-                let classT1 = isActualT1 ? "team team-1 actual-team" : "team team-1";
-                let classT2 = isActualT2 ? "team team-2 actual-team" : "team team-2";
-
-                card.innerHTML = `
-                    <div class="match-info">
-                        <span class="group-tag">Trận ${m.stt} - ${m.group === 'Knockout' ? 'Vòng trực tiếp' : 'Bảng ' + m.group}</span>
-                        <div>?? ${localDateTime.date} - ? ${localDateTime.time}</div>
-                        <div class="timezone-note">?? Múi gi?: ${userTimeZone}</div>
-                    </div>
-                    <div class="match-display">
-                        <div class="${classT1}">${getTeamFlagHTML(finalTeam1)}</div>
-                        <div class="score-zone">
-                            <input type="number" min="0" class="score-input" id="t1-${index}" value="${m.score1 !== undefined ? m.score1 : ''}">
-                            <span>-</span>
-                            <input type="number" min="0" class="score-input" id="t2-${index}" value="${m.score2 !== undefined ? m.score2 : ''}">
-                        </div>
-                        <div class="${classT2}">${getTeamFlagHTML(finalTeam2)}</div>
-                    </div>
-                    <div>
-                        <button class="btn-update" onclick="updateScore(${index})">Luu</button>
-                    </div>
-                `;
-                matchListDiv.appendChild(card);
-            });
-
-            if(matchListDiv.innerHTML === '') {
-                matchListDiv.innerHTML = '<p style="text-align: center; color: #a0aec0; padding: 20px;">Không có tr?n d?u nào.</p>';
-            }
-        }
-
-        function renderStandings(data, groupFilter) {
-            const standingsContainer = document.getElementById('standings-box');
-            const thirdPlaceContainer = document.getElementById('third-place-box');
-            const tbody = document.getElementById('standings-body');
-            const groupNameSpan = document.getElementById('current-group-name');
-            
-            thirdPlaceContainer.style.display = 'none';
-
-            if (groupFilter === 'ALL' || groupFilter === 'Knockout' || groupFilter === 'HANG_3') {
-                standingsContainer.style.display = 'none';
-                return;
-            }
-
-            standingsContainer.style.display = 'block';
-            groupNameSpan.innerText = groupFilter;
-            tbody.innerHTML = '';
-
-            let teamsData = {};
-
-            data.forEach(m => {
-                if (!m || m.group !== groupFilter) return;
-
-                if (!teamsData[m.team1]) teamsData[m.team1] = { name: m.team1, pld: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
-                if (!teamsData[m.team2]) teamsData[m.team2] = { name: m.team2, pld: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 };
-
-                if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
-                    const s1 = parseInt(m.score1); const s2 = parseInt(m.score2);
-                    teamsData[m.team1].pld += 1; teamsData[m.team2].pld += 1;
-                    teamsData[m.team1].gf += s1; teamsData[m.team1].ga += s2;
-                    teamsData[m.team2].gf += s2; teamsData[m.team2].ga += s1;
-
-                    if (s1 > s2) {
-                        teamsData[m.team1].w += 1; teamsData[m.team1].pts += 3; teamsData[m.team2].l += 1;
-                    } else if (s1 < s2) {
-                        teamsData[m.team2].w += 1; teamsData[m.team2].pts += 3; teamsData[m.team1].l += 1;
-                    } else {
-                        teamsData[m.team1].d += 1; teamsData[m.team1].pts += 1;
-                        teamsData[m.team2].d += 1; teamsData[m.team2].pts += 1;
-                    }
-                }
-            });
-
-            let sortedTeams = Object.values(teamsData).sort((a, b) => {
-                if (b.pts !== a.pts) return b.pts - a.pts;
-                let gdA = a.gf - a.ga; let gdB = b.gf - b.ga;
-                if (gdB !== gdA) return gdB - gdA;
-                return b.gf - a.gf;
-            });
-
-            sortedTeams.forEach((team, idx) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><b>${idx + 1}</b></td>
-                    <td class="team-name">${getTeamFlagHTML(team.name)}</td>
-                    <td>${team.pld}</td>
-                    <td>${team.w}</td>
-                    <td>${team.d}</td>
-                    <td>${team.l}</td>
-                    <td>${team.gf}-${team.ga}</td>
-                    <td>${team.gf - team.ga >= 0 ? '+' + (team.gf - team.ga) : team.gf - team.ga}</td>
-                    <td><b>${team.pts}</b></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // --- HÀM T? Ð?NG TÍNH TOÁN & X?P H?NG 12 Ð?I H?NG BA ---
-        function renderThirdPlaceStandings(data) {
-            const standingsContainer = document.getElementById('standings-box');
-            const thirdPlaceContainer = document.getElementById('third-place-box');
-            const tbody = document.getElementById('third-place-body');
-            
-            standingsContainer.style.display = 'none';
-            thirdPlaceContainer.style.display = 'block';
-            tbody.innerHTML = '';
-
-            const groupsList = ['A','B','C','D','E','F','G','H','I','J','K','L'];
-            let thirdPlaceTeams = [];
-
-            groupsList.forEach(g => {
-                let teamsData = {};
-                data.forEach(m => {
-                    if (!m || m.group !== g) return;
-                    if (!teamsData[m.team1]) teamsData[m.team1] = { name: m.team1, pld: 0, gf: 0, ga: 0, pts: 0 };
-                    if (!teamsData[m.team2]) teamsData[m.team2] = { name: m.team2, pld: 0, gf: 0, ga: 0, pts: 0 };
-
-                    if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
-                        const s1 = parseInt(m.score1); const s2 = parseInt(m.score2);
-                        teamsData[m.team1].pld += 1; teamsData[m.team2].pld += 1;
-                        teamsData[m.team1].gf += s1; teamsData[m.team1].ga += s2;
-                        teamsData[m.team2].gf += s2; teamsData[m.team2].ga += s1;
-                        if (s1 > s2) teamsData[m.team1].pts += 3;
-                        else if (s1 < s2) teamsData[m.team2].pts += 3;
-                        else { teamsData[m.team1].pts += 1; teamsData[m.team2].pts += 1; }
-                    }
-                });
-
-                let sorted = Object.values(teamsData).sort((a, b) => {
-                    if (b.pts !== a.pts) return b.pts - a.pts;
-                    let gdA = a.gf - a.ga; let gdB = b.gf - b.ga;
-                    if (gdB !== gdA) return gdB - gdA;
-                    return b.gf - a.gf;
-                });
-
-                if (sorted.length >= 3) {
-                    let t3 = sorted[2]; // L?y d?i th? 3 c?a bảng
-                    thirdPlaceTeams.push({
-                        groupName: g,
-                        name: t3.name,
-                        pld: t3.pld,
-                        gf: t3.gf,
-                        ga: t3.ga,
-                        gd: t3.gf - t3.ga,
-                        pts: t3.pts
-                    });
-                }
-            });
-
-            // S?p x?p th? h?ng t?ng gi?a 12 d?i h?ng ba theo tiêu chí FIFA
-            thirdPlaceTeams.sort((a, b) => {
-                if (b.pts !== a.pts) return b.pts - a.pts;
-                if (b.gd !== a.gd) return b.gd - a.gd;
-                return b.gf - a.gf;
-            });
-
-            thirdPlaceTeams.forEach((team, idx) => {
-                const tr = document.createElement('tr');
-                let rank = idx + 1;
-                // Khung 8 d?i d?u b?ng di ti?p s? có màu xanh lá (top-8-di-tiep), còn l?i màu d? nh?t (bi-loai)
-                tr.className = (rank <= 8) ? "top-8-di-tiep" : "bi-loai";
-                
-                tr.innerHTML = `
-                    <td><b>${rank}</b></td>
-                    <td>Bảng ${team.groupName}</td>
-                    <td class="team-name">${getTeamFlagHTML(team.name)}</td>
-                    <td>${team.pld}</td>
-                    <td>${team.gf}-${team.ga}</td>
-                    <td>${team.gd >= 0 ? '+' + team.gd : team.gd}</td>
-                    <td><b>${team.pts}</b></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function filterGroup(group) {
-            selectedGroup = group;
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            renderMatches(currentMatchesData, selectedGroup);
-            if (selectedGroup === 'HANG_3') {
-                renderThirdPlaceStandings(currentMatchesData);
-            } else {
-                renderStandings(currentMatchesData, selectedGroup);
-            }
-        }
-
-        function updateScore(index) {
-            const s1 = document.getElementById(`t1-${index}`).value;
-            const s2 = document.getElementById(`t2-${index}`).value;
-
-            currentMatchesData[index].score1 = s1 === "" ? "" : parseInt(s1);
-            currentMatchesData[index].score2 = s2 === "" ? "" : parseInt(s2);
-
-            database.ref('matches').set(currentMatchesData)
-                .then(() => {
-                    Swal.fire({
-                        title: 'Thông báo',
-                        text: 'Đã lưu tỷ số trận đấu',
-                        icon: 'success',
-                        confirmButtonText: 'Đồng ý',
-                        confirmButtonColor: '#3085d6'
-                    });
-                })
-                .catch((error) => {
-                    Swal.fire({
-                        title: 'Th?t b?i',
-                        text: 'L?i khi c?p nh?t d? li?u: ' + error.message,
-                        icon: 'error',
-                        confirmButtonText: 'Ðóng'
-                    });
-                });
-        }
-    </script>
-</head>
-<body>
-
-<div class="container">
-    <h1>CẬP NHẬT KẾT QUẢ & BẢNG XẾP HẠNG WORLD CUP 2026</h1>
-     <p style="text-align: center; color: #4a5568; font-style: italic; margin-top: -20px; margin-bottom: 30px;">
-        Người dùng cập nhật kết quả trận đấu - hệ thống tự động xếp hạng
-    </p>
-    <div style="text-align: center; margin-bottom: 20px; font-weight: bold; font-size: 0.95em; color: #4a5568;">
-        ?? Tổng lượt truy cập: <span id="total-views" style="color: #2b6cb0;">0</span> 
-        | ?? Đang trực tuyến: <span id="online-count" style="color: #48bb78;">0</span>
-    </div>
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="filterGroup('ALL')">L?ch Thi d?u</button>
-        <button class="tab-btn" onclick="filterGroup('A')">Bảng A</button>
-        <button class="tab-btn" onclick="filterGroup('B')">Bảng B</button>
-        <button class="tab-btn" onclick="filterGroup('C')">Bảng C</button>
-        <button class="tab-btn" onclick="filterGroup('D')">Bảng D</button>
-        <button class="tab-btn" onclick="filterGroup('E')">Bảng E</button>
-        <button class="tab-btn" onclick="filterGroup('F')">Bảng F</button>
-        <button class="tab-btn" onclick="filterGroup('G')">Bảng G</button>
-        <button class="tab-btn" onclick="filterGroup('H')">Bảng H</button>
-        <button class="tab-btn" onclick="filterGroup('I')">Bảngg I</button>
-        <button class="tab-btn" onclick="filterGroup('J')">Bảng J</button>
-        <button class="tab-btn" onclick="filterGroup('K')">Bảng K</button>
-        <button class="tab-btn" onclick="filterGroup('L')">Bảng L</button>
-        <button class="tab-btn" style="background: #feebc8; color: #c05621;" onclick="filterGroup('HANG_3')">ĐỘI HẠNG 3</button>
-        <button class="tab-btn" onclick="filterGroup('Knockout')">VÒNG TRỰC TIẾP</button>
-    </div>
-
-    <div class="standings-container" id="standings-box">
-        <h3 class="standings-title">xếp hạng - Bảng <span id="current-group-name">A</span></h3>
-        <table class="standings-table">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Ð?i Tuy?n</th>
-                    <th>Tr?n</th>
-                    <th>T</th>
-                    <th>H</th>
-                    <th>B</th>
-                    <th>Hi?u S?</th>
-                    <th>HS</th>
-                    <th>Ði?m</th>
-                </tr>
-            </thead>
-            <tbody id="standings-body"></tbody>
-        </table>
-    </div>
-
-    <div class="standings-container" id="third-place-box">
-        <h3 class="standings-title" style="color: #c05621;">BẢNG XẾP HẠNG CÁC ĐỘI HẠNG 3 TỐT NHẤT</h3>
-        <div class="ghi-chu-h3">(* 8 đội màu xanh lá cây sẽ giành vé vớt vào vòng 32 đội)</div>
-        <table class="standings-table">
-            <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Bảng</th>
-                    <th>Đội tuyển</th>
-                    <th>Trận</th>
-                    <th>Bàn Thắng/B?i</th>
-                    <th>Hiệu số</th>
-                    <th>Ðiểm</th>
-                </tr>
-            </thead>
-            <tbody id="third-place-body"></tbody>
-        </table>
-    </div>
-
-    <div id="match-list"></div>
-</div>
-<!-- Ph?n Footer c?a b?n -->
-    <footer style="text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9em;">
-        © 2026 Bản quyền thuộc về <strong>Lê Công Minh</strong> | Thiết kế cho World Cup 2026 ?
-    </footer>
-</body>
-</html>
+            { stt: 100, group: "Knockout", date: "2026-07-12", time: "08:00", team1: "Thắng 95", team2: "Thắng 96
