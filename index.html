@@ -809,44 +809,68 @@
         });
     }
 
-   function exportToPDF() {
-    // 1. Lấy phần tử chứa lịch thi đấu và phần tử chứa bảng xếp hạng
-    const matchesArea = document.getElementById('matches-container'); // Thay bằng ID chuẩn của vùng chứa các trận đấu bên bác
+  function exportToPDF() {
+    // 1. Lấy chính xác 2 vùng dữ liệu dựa trên mã nguồn của bác
     const standingsArea = document.getElementById('standings-area');
+    const matchesArea = document.getElementById('match-list');
 
-    // 2. Tạo một thẻ div tạm thời để gom hai nội dung này lại
+    // 2. Tạo một thẻ div tạm thời để gom cả 2 nội dung vào một trang
     const elementToPrint = document.createElement('div');
     elementToPrint.style.padding = '20px';
-    elementToPrint.style.backgroundColor = '#fff';
+    elementToPrint.style.backgroundColor = '#ffffff';
 
-    // 3. Sao chép nội dung hiện tại (đã bao gồm các trận đã lọc) vào div tạm
-    if (matchesArea) {
-        const matchesClone = matchesArea.cloneNode(true);
-        // Loại bỏ các nút "Cập nhật" trong file PDF để nhìn chuyên nghiệp hơn (nếu cần)
-        matchesClone.querySelectorAll('.btn-update, button').forEach(btn => btn.remove());
-        elementToPrint.appendChild(matchesClone);
-    }
-    
-    // Thêm một khoảng cách nhỏ giữa lịch thi đấu và bảng xếp hạng
-    const spacer = document.createElement('div');
-    spacer.style.height = '30px';
-    elementToPrint.appendChild(spacer);
+    // Tiêu đề trang trọng cho tệp PDF
+    const pdfTitle = document.createElement('h2');
+    pdfTitle.innerText = "WORLD CUP 2026 - THÔNG TIN BẢNG ĐẤU";
+    pdfTitle.style.textAlign = 'center';
+    pdfTitle.style.color = '#1a365d';
+    pdfTitle.style.marginBottom = '25px';
+    elementToPrint.appendChild(pdfTitle);
 
-    if (standingsArea) {
+    // 3. Gom Bảng xếp hạng (nếu đang hiển thị)
+    if (standingsArea && standingsArea.style.display !== 'none') {
         const standingsClone = standingsArea.cloneNode(true);
         elementToPrint.appendChild(standingsClone);
+        
+        // Tạo khoảng cách giữa Bảng xếp hạng và Lịch thi đấu
+        const spacer = document.createElement('div');
+        spacer.style.height = '30px';
+        spacer.style.borderBottom = '2px dashed #cbd5e0';
+        spacer.style.marginBottom = '20px';
+        elementToPrint.appendChild(spacer);
     }
 
-    // 4. Cấu hình và xuất PDF từ thẻ div tạm này
+    // 4. Gom Danh sách trận đấu tương ứng
+    if (matchesArea) {
+        const matchesClone = matchesArea.cloneNode(true);
+        
+        // Xóa bỏ tất cả các nút "Cập nhật" để file PDF nhìn gọn gàng, sạch sẽ
+        matchesClone.querySelectorAll('.action-zone, button').forEach(el => el.remove());
+        
+        // Cấu hình lại giao diện các ô trận đấu để khi vào PDF không bị lỗi tràn dòng
+        matchesClone.querySelectorAll('.match-card').forEach(card => {
+            card.style.border = '1px solid #e2e8f0';
+            card.style.marginBottom = '10px';
+            card.style.padding = '12px';
+            card.style.display = 'flex';
+            card.style.flexDirection = 'row';
+            card.style.justifyContent = 'space-between';
+            card.style.alignItems = 'center';
+        });
+        
+        elementToPrint.appendChild(matchesClone);
+    }
+
+    // 5. Tiến hành xuất tệp PDF chất lượng cao
     const opt = {
         margin:       [10, 10, 10, 10],
-        filename:     'Lich_Thi_Dau_Va_Bang_Xep_Hang.pdf',
+        filename:     'Lich_Thi_Dau_Va_Bang_Xep_Hang_WC2026.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // Chạy lệnh xuất PDF (Ví dụ dùng html2pdf)
+    // Chạy lệnh lưu file
     html2pdf().set(opt).from(elementToPrint).save();
 }
 </script>
