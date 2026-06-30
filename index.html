@@ -810,68 +810,81 @@
     }
 
   function exportToPDF() {
-    // 1. Lấy chính xác 2 vùng dữ liệu dựa trên mã nguồn của bác
+    // 1. Lấy chính xác 2 vùng dữ liệu thực tế trên trang
     const standingsArea = document.getElementById('standings-area');
     const matchesArea = document.getElementById('match-list');
 
-    // 2. Tạo một thẻ div tạm thời để gom cả 2 nội dung vào một trang
+    // 2. Kiểm tra xem các vùng dữ liệu này có tồn tại không
+    if (!standingsArea && !matchesArea) {
+        alert("Không tìm thấy dữ liệu để xuất PDF!");
+        return;
+    }
+
+    // 3. Tạo một thẻ div chứa thực tế và tạm thời gắn nó vào cuối trang web (để tránh lỗi chặn quyền trình duyệt)
     const elementToPrint = document.createElement('div');
-    elementToPrint.style.padding = '20px';
+    elementToPrint.id = "pdf-temp-container";
+    elementToPrint.style.position = "absolute";
+    elementToPrint.style.left = "-9999px"; // Đẩy ra ngoài màn hình để người dùng không nhìn thấy loằng ngoằng
+    elementToPrint.style.top = "0";
+    elementToPrint.style.width = "790px"; // Cố định chiều rộng chuẩn trang A4
+    elementToPrint.style.padding = '25px';
     elementToPrint.style.backgroundColor = '#ffffff';
 
-    // Tiêu đề trang trọng cho tệp PDF
+    // Thêm tiêu đề cho tệp PDF
     const pdfTitle = document.createElement('h2');
-    pdfTitle.innerText = "WORLD CUP 2026 - THÔNG TIN BẢNG ĐẤU";
+    pdfTitle.innerText = "THÔNG TIN CHI TIẾT BẢNG ĐẤU - WORLD CUP 2026";
     pdfTitle.style.textAlign = 'center';
     pdfTitle.style.color = '#1a365d';
     pdfTitle.style.marginBottom = '25px';
+    pdfTitle.style.fontFamily = 'Arial, sans-serif';
     elementToPrint.appendChild(pdfTitle);
 
-    // 3. Gom Bảng xếp hạng (nếu đang hiển thị)
-    if (standingsArea && standingsArea.style.display !== 'none') {
+    // 4. Gom Bảng xếp hạng vào vùng in
+    if (standingsArea) {
         const standingsClone = standingsArea.cloneNode(true);
+        // Đảm bảo bảng xếp hạng hiển thị rõ ràng trong PDF
+        standingsClone.style.display = 'block'; 
         elementToPrint.appendChild(standingsClone);
         
-        // Tạo khoảng cách giữa Bảng xếp hạng và Lịch thi đấu
+        // Đường gạch ngang phân cách
         const spacer = document.createElement('div');
-        spacer.style.height = '30px';
+        spacer.style.height = '20px';
         spacer.style.borderBottom = '2px dashed #cbd5e0';
-        spacer.style.marginBottom = '20px';
+        spacer.style.marginBottom = '25px';
         elementToPrint.appendChild(spacer);
     }
 
-    // 4. Gom Danh sách trận đấu tương ứng
+    // 5. Gom Danh sách trận đấu tương ứng vào vùng in
     if (matchesArea) {
         const matchesClone = matchesArea.cloneNode(true);
         
-        // Xóa bỏ tất cả các nút "Cập nhật" để file PDF nhìn gọn gàng, sạch sẽ
-        matchesClone.querySelectorAll('.action-zone, button').forEach(el => el.remove());
-        
-        // Cấu hình lại giao diện các ô trận đấu để khi vào PDF không bị lỗi tràn dòng
-        matchesClone.querySelectorAll('.match-card').forEach(card => {
-            card.style.border = '1px solid #e2e8f0';
-            card.style.marginBottom = '10px';
-            card.style.padding = '12px';
-            card.style.display = 'flex';
-            card.style.flexDirection = 'row';
-            card.style.justifyContent = 'space-between';
-            card.style.alignItems = 'center';
-        });
+        // Loại bỏ các nút bấm "Cập nhật" để PDF sạch đẹp
+        matchesClone.querySelectorAll('.action-zone, button, .btn-update').forEach(el => el.remove());
         
         elementToPrint.appendChild(matchesClone);
     }
 
-    // 5. Tiến hành xuất tệp PDF chất lượng cao
+    // 6. Gắn vùng tạm này vào body của trang web để trình duyệt cấp quyền hợp pháp
+    document.body.appendChild(elementToPrint);
+
+    // 7. Cấu hình xuất tệp PDF
     const opt = {
-        margin:       [10, 10, 10, 10],
-        filename:     'Lich_Thi_Dau_Va_Bang_Xep_Hang_WC2026.pdf',
+        margin:       [12, 12, 12, 12],
+        filename:     'Thong_Tin_Bang_Dau_WorldCup_2026.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
-    // Chạy lệnh lưu file
-    html2pdf().set(opt).from(elementToPrint).save();
+    // 8. Chạy lệnh xuất và tự động dọn dẹp vùng tạm sau khi tải xong
+    html2pdf().set(opt).from(elementToPrint).save().then(() => {
+        // Xóa vùng in tạm thời khỏi hệ thống sau khi đã tải file về máy thành công
+        elementToPrint.remove();
+    }).catch((error) => {
+        console.error("Lỗi xuất PDF:", error);
+        // Nếu vẫn bị chặn, chuyển hướng mở tab in trực tiếp của trình duyệt làm phương án dự phòng
+        elementToPrint.remove();
+    });
 }
 </script>
     <footer style="text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9em;">
