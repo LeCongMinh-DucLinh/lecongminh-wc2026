@@ -809,17 +809,46 @@
         });
     }
 
-    function exportToPDF() {
-        const element = document.getElementById('match-list');
-        const opt = {
-            margin: 10,
-            filename: 'Lich_Thi_Dau_WorldCup_2026.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-        html2pdf().set(opt).from(element).save();
+   function exportToPDF() {
+    // 1. Lấy phần tử chứa lịch thi đấu và phần tử chứa bảng xếp hạng
+    const matchesArea = document.getElementById('matches-container'); // Thay bằng ID chuẩn của vùng chứa các trận đấu bên bác
+    const standingsArea = document.getElementById('standings-area');
+
+    // 2. Tạo một thẻ div tạm thời để gom hai nội dung này lại
+    const elementToPrint = document.createElement('div');
+    elementToPrint.style.padding = '20px';
+    elementToPrint.style.backgroundColor = '#fff';
+
+    // 3. Sao chép nội dung hiện tại (đã bao gồm các trận đã lọc) vào div tạm
+    if (matchesArea) {
+        const matchesClone = matchesArea.cloneNode(true);
+        // Loại bỏ các nút "Cập nhật" trong file PDF để nhìn chuyên nghiệp hơn (nếu cần)
+        matchesClone.querySelectorAll('.btn-update, button').forEach(btn => btn.remove());
+        elementToPrint.appendChild(matchesClone);
     }
+    
+    // Thêm một khoảng cách nhỏ giữa lịch thi đấu và bảng xếp hạng
+    const spacer = document.createElement('div');
+    spacer.style.height = '30px';
+    elementToPrint.appendChild(spacer);
+
+    if (standingsArea) {
+        const standingsClone = standingsArea.cloneNode(true);
+        elementToPrint.appendChild(standingsClone);
+    }
+
+    // 4. Cấu hình và xuất PDF từ thẻ div tạm này
+    const opt = {
+        margin:       [10, 10, 10, 10],
+        filename:     'Lich_Thi_Dau_Va_Bang_Xep_Hang.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // Chạy lệnh xuất PDF (Ví dụ dùng html2pdf)
+    html2pdf().set(opt).from(elementToPrint).save();
+}
 </script>
     <footer style="text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9em;">
     © 2026 Bản quyền thuộc về <strong>Lê Công Minh</strong> | Thiết kế cho World Cup 2026 ⚽
