@@ -819,24 +819,27 @@
         return;
     }
 
-    // 2. Tạo thẻ div chứa tạm thời
+    // 2. Tạo thẻ div chứa tạm thời (Gắn trực tiếp vào body để tránh lỗi trắng trang)
     const elementToPrint = document.createElement('div');
     elementToPrint.id = "pdf-temp-container";
-    elementToPrint.style.position = "absolute";
-    elementToPrint.style.left = "-9999px";
+    
+    // Mẹo mới: Cho hiển thị ở lớp dưới cùng (zIndex âm) và mờ đi, không đẩy ra ngoài màn hình nữa
+    elementToPrint.style.position = "fixed";
     elementToPrint.style.top = "0";
-    elementToPrint.style.width = "750px"; // Thu nhỏ nhẹ chiều rộng để vừa khít lề A4
-    elementToPrint.style.padding = '15px'; // Giảm padding để tiết kiệm không gian trang
+    elementToPrint.style.left = "0";
+    elementToPrint.style.width = "790px"; // Chiều rộng chuẩn để render nét
+    elementToPrint.style.opacity = "0.01";
+    elementToPrint.style.zIndex = "-9999";
+    elementToPrint.style.padding = '20px';
     elementToPrint.style.backgroundColor = '#ffffff';
-    elementToPrint.style.fontSize = '13px'; // Cố định cỡ chữ vừa vặn
 
-    // Tiêu đề thu nhỏ lại một chút để không chiếm dòng
+    // Tiêu đề tệp PDF
     const pdfTitle = document.createElement('h3');
     pdfTitle.innerText = "THÔNG TIN CHI TIẾT BẢNG ĐẤU - WORLD CUP 2026";
     pdfTitle.style.textAlign = 'center';
     pdfTitle.style.color = '#1a365d';
     pdfTitle.style.margin = '0 0 15px 0';
-    pdfTitle.style.textTransform = 'uppercase';
+    pdfTitle.style.fontFamily = 'Arial, sans-serif';
     elementToPrint.appendChild(pdfTitle);
 
     // 3. Gom Bảng xếp hạng vào vùng in
@@ -845,14 +848,14 @@
         standingsClone.style.display = 'block'; 
         standingsClone.style.marginBottom = '15px';
         
-        // Thu nhỏ font chữ của bảng xếp hạng một chút
+        // Thu nhỏ nhẹ chữ trong bảng để tiết kiệm dòng
         standingsClone.querySelectorAll('table, th, td').forEach(el => {
             el.style.fontSize = '12px';
-            el.style.padding = '6px 4px';
+            el.style.padding = '5px 4px';
         });
         elementToPrint.appendChild(standingsClone);
         
-        // Đường gạch ngang mỏng phân cách
+        // Đường gạch ngang phân cách mỏng
         const spacer = document.createElement('div');
         spacer.style.borderBottom = '1px dashed #cbd5e0';
         spacer.style.marginBottom = '15px';
@@ -866,12 +869,12 @@
         // Loại bỏ các nút bấm "Cập nhật"
         matchesClone.querySelectorAll('.action-zone, button, .btn-update').forEach(el => el.remove());
         
-        // Tối ưu hóa các card trận đấu thành dạng danh sách dòng mỏng để tiết kiệm diện tích
+        // Định dạng các trận đấu gọn gàng, sát nhau hơn để vừa 1 trang
         matchesClone.querySelectorAll('.match-card').forEach(card => {
             card.style.border = '1px solid #e2e8f0';
             card.style.borderRadius = '6px';
-            card.style.marginBottom = '6px'; // Thu hẹp khoảng cách giữa các trận
-            card.style.padding = '8px 12px';  // Giảm padding trong mỗi trận
+            card.style.marginBottom = '5px'; 
+            card.style.padding = '6px 12px';  
             card.style.display = 'flex';
             card.style.flexDirection = 'row';
             card.style.justifyContent = 'space-between';
@@ -885,14 +888,13 @@
     // 5. Gắn vùng tạm này vào body
     document.body.appendChild(elementToPrint);
 
-    // 6. Cấu hình xuất tệp PDF (Sử dụng chế độ 'avoid-all' để ép gom trang thông minh)
+    // 6. Cấu hình xuất tệp PDF 
     const opt = {
-        margin:       [10, 10, 10, 10],
-        filename:     'Thong_Tin_Bang_Dau_WorldCup_2026.pdf',
+        margin:       [8, 10, 8, 10], // Thu hẹp lề trên dưới để có thêm chỗ chứa dữ liệu
+        filename:     'WorldCup_2026.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true, logging: false },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: 'avoid-all' } // Ngăn chặn việc tự động ngắt dòng nhảy sang trang 2 vô lý
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     // 7. Chạy lệnh xuất và tự động dọn dẹp vùng tạm
