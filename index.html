@@ -201,7 +201,13 @@
         <button class="tab-btn" onclick="filterGroup('K', this)">Bảng K</button>
         <button class="tab-btn" onclick="filterGroup('L', this)">Bảng L</button>
         <button class="tab-btn" onclick="filterGroup('HANG_3', this)">BXH Hạng 3</button>
-        <button class="tab-btn" style="max-width:140px;" onclick="filterGroup('Knockout', this)">🔥 Vòng knock-out</button>
+        
+        <!-- Đã bổ sung chia nhỏ 4 Vòng trực tiếp ở đây -->
+        <button class="tab-btn" style="max-width:140px; background-color: #fffaf0; border: 1px solid #fbd38d;" onclick="filterGroup('KO_32', this)">1/16 (Xong)</button>
+        <button class="tab-btn" style="max-width:140px; background-color: #ebf8ff; border: 1px solid #90cdf4;" onclick="filterGroup('KO_16', this)">1/8 (Còn 2tr)</button>
+        <button class="tab-btn" style="max-width:140px; background-color: #f0fff4; border: 1px solid #9ae6b4;" onclick="filterGroup('KO_8', this)">Tứ kết</button>
+        <button class="tab-btn" style="max-width:140px; background-color: #fff5f5; border: 1px solid #feb2b2;" onclick="filterGroup('KO_4', this)">Bán kết & CK</button>
+        
         <button class="tab-btn" style="max-width:130px;" onclick="filterGroup('BRACKET', this)">🌳 Sơ đồ nhánh</button>
     </div>
 
@@ -481,15 +487,9 @@
             const s2 = parseInt(m.score2);
             let winner = "";
             let loser = "";
-            
-            let t1 = m.team1;
-            let t2 = m.team2;
-            if (groupWinnersMap[t1]) t1 = groupWinnersMap[t1];
-            if (groupWinnersMap[t2]) t2 = groupWinnersMap[t2];
+            if (s1 > s2) { winner = m.team1; loser = m.team2; }
+            else if (s1 < s2) { winner = m.team2; loser = m.team1; }
 
-            if (s1 > s2) { winner = t1; loser = t2; }
-            else if (s2 > s1) { winner = t2; loser = t1; }
-            
             if (winner) {
                 knockoutMap[`Thắng ${m.stt}`] = winner;
                 knockoutMap[`Thua ${m.stt}`] = loser;
@@ -498,177 +498,159 @@
         return knockoutMap;
     }
 
-    // --- HIỂN THỊ DANH SÁCH TRẬN ĐẤU CÓ SỐ THỨ TỰ TRẬN ---
+    function filterGroup(groupName, element) {
+        selectedGroup = groupName;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        element.classList.remove('active');
+        element.classList.add('active');
+
+        // Điều chỉnh ẩn hiện vùng bảng xếp hạng hoặc sơ đồ cây
+        if (groupName === 'BRACKET') {
+            document.getElementById('standings-area').style.display = 'none';
+            document.getElementById('bracket-area').style.display = 'block';
+            document.getElementById('match-list').innerHTML = '';
+        } else if (groupName === 'ALL' || groupName.startsWith('KO_')) {
+            document.getElementById('standings-area').style.display = 'none';
+            document.getElementById('bracket-area').style.display = 'none';
+            renderMatches(currentMatchesData, groupName);
+        } else {
+            document.getElementById('standings-area').style.display = 'block';
+            document.getElementById('bracket-area').style.display = 'none';
+            renderMatches(currentMatchesData, groupName);
+            if (groupName === 'HANG_3') {
+                renderThirdPlaceStandings(currentMatchesData);
+            } else {
+                renderStandings(currentMatchesData, groupName);
+            }
+        }
+    }
+
     function renderMatches(data, filter) {
-        const listDiv = document.getElementById('match-list');
-        listDiv.innerHTML = '';
+        const listContainer = document.getElementById('match-list');
+        listContainer.innerHTML = '';
 
         const groupWinnersMap = getGroupWinners(data);
-        const knockoutMap = getKnockoutAdvancedMap(data, groupWinnersMap);
+        const knockoutAdvMap = getKnockoutAdvancedMap(data, groupWinnersMap);
 
-        data.forEach((m, index) => {
-            if (!m) return;
-            if (filter !== 'ALL' && filter !== 'Knockout' && m.group !== filter) return;
-            if (filter === 'Knockout' && m.group !== 'Knockout') return;
+        data.forEach((match) => {
+            if (!match) return;
 
-            let t1 = m.team1;
-            let t2 = m.team2;
+            // Xử lý bộ lọc thông minh mới cho các Vòng Knock-out dựa trên số STT trận đấu
+            if (filter !== 'ALL') {
+                if (filter === 'KO_32' && (match.group !== 'Knockout' || match.stt < 73 || match.stt > 88)) return;
+                if (filter === 'KO_16' && (match.group !== 'Knockout' || match.stt < 89 || match.stt > 96)) return;
+                if (filter === 'KO_8' && (match.group !== 'Knockout' || match.stt < 97 || match.stt > 100)) return;
+                if (filter === 'KO_4' && (match.group !== 'Knockout' || match.stt < 101 || match.stt > 104)) return;
+                if (!filter.startsWith('KO_') && match.group !== filter) return;
+            }
+
+            let displayTeam1 = match.team1;
+            let displayTeam2 = match.team2;
             let isActualTeam1 = false;
             let isActualTeam2 = false;
 
-            if (m.group === 'Knockout') {
-                if (groupWinnersMap[t1]) { t1 = groupWinnersMap[t1]; isActualTeam1 = true; }
-                else if (knockoutMap[t1]) { t1 = knockoutMap[t1]; isActualTeam1 = true; }
-                
-                if (groupWinnersMap[t2]) { t2 = groupWinnersMap[t2]; isActualTeam2 = true; }
-                else if (knockoutMap[t2]) { t2 = knockoutMap[t2]; isActualTeam2 = true; }
-            } else {
-                isActualTeam1 = true;
-                isActualTeam2 = true;
+            if (match.group === 'Knockout') {
+                if (groupWinnersMap[match.team1]) displayTeam1 = groupWinnersMap[match.team1];
+                if (groupWinnersMap[match.team2]) displayTeam2 = groupWinnersMap[match.team2];
+                if (knockoutAdvMap[displayTeam1]) displayTeam1 = knockoutAdvMap[displayTeam1];
+                if (knockoutAdvMap[displayTeam2]) displayTeam2 = knockoutAdvMap[displayTeam2];
+
+                if (displayTeam1 !== match.team1 && !displayTeam1.startsWith('Thắng') && !displayTeam1.startsWith('Nhất') && !displayTeam1.startsWith('Nhì')) isActualTeam1 = true;
+                if (displayTeam2 !== match.team2 && !displayTeam2.startsWith('Thắng') && !displayTeam2.startsWith('Nhất') && !displayTeam2.startsWith('Nhì')) isActualTeam2 = true;
             }
 
-            const localDT = convertGMT7ToLocal(m.date, m.time);
+            const localDT = convertGMT7ToLocal(match.date, match.time);
             
-            // Xây dựng nhãn hiển thị số thứ tự trận rõ ràng
-            let groupLabel = m.group === 'Knockout' ? `Trận ${m.stt} (Vòng loại trực tiếp)` : `Bảng ${m.group} - Trận ${m.stt}`;
+            // Xác định text hiển thị Vòng đấu cụ thể cho thẻ card trận
+            let groupTagText = `Bảng ${match.group}`;
+            if (match.group === 'Knockout') {
+                if (match.stt >= 73 && match.stt <= 88) groupTagText = "Vòng loại trực tiếp (1/16)";
+                else if (match.stt >= 89 && match.stt <= 96) groupTagText = "Vòng loại trực tiếp (1/8)";
+                else if (match.stt >= 97 && match.stt <= 100) groupTagText = "Vòng Tứ kết";
+                else if (match.stt >= 101 && match.stt <= 102) groupTagText = "Vòng Bán kết";
+                else if (match.stt === 103) groupTagText = "Tranh Hạng 3";
+                else if (match.stt === 104) groupTagText = "CHUNG KẾT";
+            }
 
             const card = document.createElement('div');
             card.className = 'match-card';
             card.innerHTML = `
                 <div class="match-info">
-                    <span class="group-tag">${groupLabel}</span>
-                    <div>📅 ${localDT.date} - 🕒 ${localDT.time}</div>
+                    <span class="group-tag">${groupTagText}</span><br>
+                    <strong>Trận ${match.stt}</strong> | 📅 ${localDT.date} - 🕒 ${localDT.time}
                     <div class="timezone-note">(Giờ Việt Nam)</div>
                 </div>
                 <div class="match-display">
-                    <div class="team team-1 ${isActualTeam1 ? 'actual-team' : ''}">${getTeamFlagHTML(t1)}</div>
+                    <div class="team team-1 ${isActualTeam1 ? 'actual-team' : ''}">${getTeamFlagHTML(displayTeam1)}</div>
                     <div class="score-zone">
-                        <input type="number" class="score-input" id="score1-${index}" value="${m.score1}">
+                        <input type="number" class="score-input" id="score1-${match.stt}" value="${match.score1}" min="0">
                         <span>:</span>
-                        <input type="number" class="score-input" id="score2-${index}" value="${m.score2}">
+                        <input type="number" class="score-input" id="score2-${match.stt}" value="${match.score2}" min="0">
                     </div>
-                    <div class="team team-2 ${isActualTeam2 ? 'actual-team' : ''}">${getTeamFlagHTML(t2)}</div>
+                    <div class="team team-2 ${isActualTeam2 ? 'actual-team' : ''}">${getTeamFlagHTML(displayTeam2)}</div>
                 </div>
                 <div class="action-zone">
-                    <button class="btn-update" onclick="updateMatchScore(${index}, ${m.stt})">Cập nhật</button>
+                    <button class="btn-update" onclick="updateScore(${match.stt})">Cập nhật</button>
                 </div>
             `;
-            listDiv.appendChild(card);
+            listContainer.appendChild(card);
         });
     }
 
-    // --- HÀM CẬP NHẬT TỶ SỐ VÀ TỰ ĐỘNG ĐẨY ĐỘI THẮNG VÀO VÒNG TRONG ---
-    function updateMatchScore(matchIndex, matchStt) {
-        const s1 = document.getElementById(`score1-${matchIndex}`).value;
-        const s2 = document.getElementById(`score2-${matchIndex}`).value;
+    function updateScore(stt) {
+        const s1 = document.getElementById(`score1-${stt}`).value;
+        const s2 = document.getElementById(`score2-${stt}`).value;
 
-       
-
-        if (parseInt(s1) === parseInt(s2) && currentMatchesData[matchIndex].group === 'Knockout') {
-            Swal.fire('Thông báo', 'Vòng Knockout phải phân định thắng thua (điền tỷ số penalty nếu có)!', 'warning');
+        if (s1 === "" || s2 === "") {
+            Swal.fire('Chú ý', 'Vui lòng nhập đầy đủ tỷ số cả 2 đội!', 'warning');
             return;
         }
 
-        // Lưu tỷ số trận đấu hiện tại lên Firebase
-        database.ref(`matches/${matchIndex}/score1`).set(s1);
-        database.ref(`matches/${matchIndex}/score2`).set(s2).then(() => {
-            
-            // Nếu là trận Knockout, kích hoạt logic đẩy đội thắng đi tiếp tự động
-            if (currentMatchesData[matchIndex].group === 'Knockout') {
-                const groupWinnersMap = getGroupWinners(currentMatchesData);
-                const knockoutMap = getKnockoutAdvancedMap(currentMatchesData, groupWinnersMap);
-
-                let realTeam1 = currentMatchesData[matchIndex].team1;
-                let realTeam2 = currentMatchesData[matchIndex].team2;
-                if (groupWinnersMap[realTeam1]) realTeam1 = groupWinnersMap[realTeam1];
-                else if (knockoutMap[realTeam1]) realTeam1 = knockoutMap[realTeam1];
-                if (groupWinnersMap[realTeam2]) realTeam2 = groupWinnersMap[realTeam2];
-                else if (knockoutMap[realTeam2]) realTeam2 = knockoutMap[realTeam2];
-
-                let winner = parseInt(s1) > parseInt(s2) ? realTeam1 : realTeam2;
-                let loser = parseInt(s1) > parseInt(s2) ? realTeam2 : realTeam1;
-
-                // Sơ đồ luân chuyển các đội thắng vòng 32 đội -> 16 đội -> Tứ Kết -> Bán Kết theo chuẩn FIFA 2026
-                const nextRoundMap = {
-                    74: { nextStt: 89, slot: 'team1' }, 77: { nextStt: 89, slot: 'team2' },
-                    73: { nextStt: 90, slot: 'team1' }, 75: { nextStt: 90, slot: 'team2' },
-                    76: { nextStt: 91, slot: 'team1' }, 78: { nextStt: 91, slot: 'team2' },
-                    79: { nextStt: 92, slot: 'team1' }, 80: { nextStt: 92, slot: 'team2' },
-                    83: { nextStt: 93, slot: 'team1' }, 84: { nextStt: 93, slot: 'team2' },
-                    81: { nextStt: 94, slot: 'team1' }, 82: { nextStt: 94, slot: 'team2' },
-                    86: { nextStt: 95, slot: 'team1' }, 88: { nextStt: 95, slot: 'team2' },
-                    85: { nextStt: 96, slot: 'team1' }, 87: { nextStt: 96, slot: 'team2' },
-                    
-                    // Vòng 16 đội vào Tứ Kết
-                    89: { nextStt: 97, slot: 'team1' }, 90: { nextStt: 97, slot: 'team2' },
-                    93: { nextStt: 98, slot: 'team1' }, 94: { nextStt: 98, slot: 'team2' },
-                    91: { nextStt: 99, slot: 'team1' }, 92: { nextStt: 99, slot: 'team2' },
-                    95: { nextStt: 100, slot: 'team1' }, 96: { nextStt: 100, slot: 'team2' },
-                    
-                    // Tứ Kết vào Bán Kết
-                    97: { nextStt: 101, slot: 'team1' }, 99: { nextStt: 101, slot: 'team2' },
-                    98: { nextStt: 102, slot: 'team1' }, 100: { nextStt: 102, slot: 'team2' }
-                };
-
-                const target = nextRoundMap[matchStt];
-                if (target) {
-                    let nextIdx = currentMatchesData.findIndex(m => m.stt === target.nextStt);
-                    if (nextIdx !== -1) {
-                        database.ref(`matches/${nextIdx}/${target.slot}`).set(winner);
-                    }
+        if (parseInt(s1) === parseInt(s2) && stt >= 73) {
+            Swal.fire({
+                title: 'Trận đấu có Penalty?',
+                text: "Vòng knock-out không thể có tỷ số hòa. Đội nào thắng Penalty để đi tiếp?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Đội 1 (Bên trái) thắng Penalty',
+                cancelButtonText: 'Đội 2 (Bên phải) thắng Penalty'
+            }).then((result) => {
+                let finalS1 = s1;
+                let finalS2 = s2;
+                if (result.isConfirmed) {
+                    finalS1 = (parseInt(s1) + 0.1).toFixed(1);
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    finalS2 = (parseInt(s2) + 0.1).toFixed(1);
                 }
-                
-                // Đặc cách riêng dành cho vòng Bán Kết chuyển sang trận Tranh hạng 3 và Chung kết
-                if (matchStt === 101) {
-                    let idx103 = currentMatchesData.findIndex(m => m.stt === 103);
-                    let idx104 = currentMatchesData.findIndex(m => m.stt === 104);
-                    if (idx103 !== -1) database.ref(`matches/${idx103}/team1`).set(loser);
-                    if (idx104 !== -1) database.ref(`matches/${idx104}/team1`).set(winner);
-                }
-                if (matchStt === 102) {
-                    let idx103 = currentMatchesData.findIndex(m => m.stt === 103);
-                    let idx104 = currentMatchesData.findIndex(m => m.stt === 104);
-                    if (idx103 !== -1) database.ref(`matches/${idx103}/team2`).set(loser);
-                    if (idx104 !== -1) database.ref(`matches/${idx104}/team2`).set(winner);
-                }
-            }
-
-            Swal.fire('Thành công', 'Đã cập nhật tỷ số và sơ đồ vòng kế tiếp thành công!', 'success');
-        });
-    }
-
-    function filterGroup(groupName, btn) {
-        selectedGroup = groupName;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.remove('active'); btn.classList.add('active');
-
-        const standingsArea = document.getElementById('standings-area');
-        const bracketArea = document.getElementById('bracket-area');
-
-        if (groupName === 'BRACKET') {
-            standingsArea.style.display = 'none';
-            bracketArea.style.display = 'block';
-            document.getElementById('match-list').innerHTML = '';
-        } else if (groupName === 'HANG_3') {
-            bracketArea.style.display = 'none';
-            standingsArea.style.display = 'block';
-            document.getElementById('standings-title-text').innerText = "📊 Bảng xếp hạng các đội hạng 3 bảng tốt nhất";
-            renderThirdPlaceStandings(currentMatchesData);
-            renderMatches(currentMatchesData, 'ALL');
-        } else if (groupName === 'ALL' || groupName === 'Knockout') {
-            bracketArea.style.display = 'none';
-            standingsArea.style.display = 'none';
-            renderMatches(currentMatchesData, groupName);
+                saveToFirebase(stt, finalS1, finalS2);
+            });
         } else {
-            bracketArea.style.display = 'none';
-            standingsArea.style.display = 'block';
-            document.getElementById('standings-title-text').innerText = `📊 Bảng xếp hạng - Bảng ${groupName}`;
-            renderStandings(currentMatchesData, groupName);
-            renderMatches(currentMatchesData, groupName);
+            saveToFirebase(stt, s1, s2);
         }
     }
 
+    function saveToFirebase(stt, s1, s2) {
+        const idx = stt - 1;
+        database.ref(`matches/${idx}`).update({
+            score1: s1,
+            score2: s2
+        }).then(() => {
+            Swal.fire('Thành công', `Đã cập nhật tỷ số trận ${stt}!`, 'success');
+        }).catch(err => {
+            Swal.fire('Lỗi', 'Không thể ghi dữ liệu: ' + err.message, 'error');
+        });
+    }
+
     function renderStandings(data, group) {
+        const body = document.getElementById('standings-body');
+        body.innerHTML = '';
+        document.getElementById('standings-title-text').innerText = `📊 Bảng xếp hạng - Bảng ${group}`;
+        
+        if (group === 'ALL') {
+            document.getElementById('standings-area').style.display = 'none';
+            return;
+        }
+
         let teams = {};
         data.forEach(m => {
             if (!m || m.group !== group) return;
@@ -687,65 +669,54 @@
         });
 
         let sorted = Object.values(teams).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
-        const tbody = document.getElementById('standings-body');
-        tbody.innerHTML = '';
+        
         sorted.forEach((t, i) => {
-            tbody.innerHTML += `
-                <tr>
-                    <td>${i+1}</td>
-                    <td class="team-name">${getTeamFlagHTML(t.name)}</td>
-                    <td>${t.pld}</td>
-                    <td style="color:blue; font-weight:bold;">${t.pts}</td>
-                    <td>${t.gd > 0 ? '+' + t.gd : t.gd}</td>
-                    <td>${t.gf}</td>
-                </tr>
-            `;
+            const row = document.createElement('tr');
+            if (i < 2) row.className = 'top-8-di-tiep';
+            body.appendChild(row);
+            row.innerHTML = `<td>${i+1}</td><td class="team-name">${getTeamFlagHTML(t.name)}</td><td>${t.pld}</td><td><strong>${t.pts}</strong></td><td>${t.gd}</td><td>${t.gf}</td>`;
         });
     }
 
     function renderThirdPlaceStandings(data) {
+        const body = document.getElementById('standings-body');
+        body.innerHTML = '';
+        document.getElementById('standings-title-text').innerText = `📊 Bảng xếp hạng các đội hạng 3 (Lấy Top 8 đội đi tiếp)`;
+
         let thirdTeams = {};
         const groupsList = ['A','B','C','D','E','F','G','H','I','J','K','L'];
         
         groupsList.forEach(g => {
-            let groupTeams = {};
+            let gTeams = {};
             data.forEach(m => {
                 if (!m || m.group !== g) return;
-                if (!groupTeams[m.team1]) groupTeams[m.team1] = { name: m.team1, pld: 0, pts: 0, gd: 0, gf: 0 };
-                if (!groupTeams[m.team2]) groupTeams[m.team2] = { name: m.team2, pld: 0, pts: 0, gd: 0, gf: 0 };
+                if (!gTeams[m.team1]) gTeams[m.team1] = { name: m.team1, pld: 0, pts: 0, gd: 0, gf: 0 };
+                if (!gTeams[m.team2]) gTeams[m.team2] = { name: m.team2, pld: 0, pts: 0, gd: 0, gf: 0 };
 
                 if (m.score1 !== "" && m.score2 !== "" && m.score1 !== undefined && m.score2 !== undefined) {
                     const s1 = parseInt(m.score1); const s2 = parseInt(m.score2);
-                    groupTeams[m.team1].pld++; groupTeams[m.team2].pld++;
-                    groupTeams[m.team1].gf += s1; groupTeams[m.team1].gd += (s1 - s2);
-                    groupTeams[m.team2].gf += s2; groupTeams[m.team2].gd += (s2 - s1);
-                    if (s1 > s2) groupTeams[m.team1].pts += 3;
-                    else if (s1 < s2) groupTeams[m.team2].pts += 3;
-                    else { groupTeams[m.team1].pts += 1; groupTeams[m.team2].pts += 1; }
+                    gTeams[m.team1].pld++; gTeams[m.team2].pld++;
+                    gTeams[m.team1].gf += s1; gTeams[m.team1].gd += (s1 - s2);
+                    gTeams[m.team2].gf += s2; gTeams[m.team2].gd += (s2 - s1);
+                    if (s1 > s2) gTeams[m.team1].pts += 3;
+                    else if (s1 < s2) gTeams[m.team2].pts += 3;
+                    else { gTeams[m.team1].pts += 1; gTeams[m.team2].pts += 1; }
                 }
             });
-            let sortedG = Object.values(groupTeams).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
-            if (sortedG.length >= 3) {
-                let t3 = sortedG[2];
-                thirdTeams[t3.name] = { ...t3, groupOrigin: g };
+            let sortedG = Object.values(gTeams).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
+            if (sortedG[2]) {
+                thirdTeams[sortedG[2].name] = sortedG[2];
             }
         });
 
         let sortedThird = Object.values(thirdTeams).sort((a,b) => (b.pts !== a.pts) ? b.pts - a.pts : (b.gd !== a.gd) ? b.gd - a.gd : b.gf - a.gf);
-        const tbody = document.getElementById('standings-body');
-        tbody.innerHTML = '';
+        
         sortedThird.forEach((t, i) => {
-            let rowClass = i < 8 ? 'top-8-di-tiep' : 'bi-loai';
-            tbody.innerHTML += `
-                <tr class="${rowClass}">
-                    <td>${i+1} (Bảng ${t.groupOrigin})</td>
-                    <td class="team-name">${getTeamFlagHTML(t.name)}</td>
-                    <td>${t.pld}</td>
-                    <td style="font-weight:bold;">${t.pts}</td>
-                    <td>${t.gd > 0 ? '+' + t.gd : t.gd}</td>
-                    <td>${t.gf}</td>
-                </tr>
-            `;
+            const row = document.createElement('tr');
+            if (i < 8) row.className = 'top-8-di-tiep';
+            else row.className = 'bi-loai';
+            body.appendChild(row);
+            row.innerHTML = `<td>${i+1}</td><td class="team-name">${getTeamFlagHTML(t.name)}</td><td>${t.pld}</td><td><strong>${t.pts}</strong></td><td>${t.gd}</td><td>${t.gf}</td>`;
         });
     }
 
@@ -754,143 +725,106 @@
         treeContainer.innerHTML = '';
 
         const groupWinnersMap = getGroupWinners(data);
-        const knockoutMap = getKnockoutAdvancedMap(data, groupWinnersMap);
+        const knockoutAdvMap = getKnockoutAdvancedMap(data, groupWinnersMap);
 
-        const getRealName = (t) => {
-            if (groupWinnersMap[t]) return groupWinnersMap[t];
-            if (knockoutMap[t]) return knockoutMap[t];
-            return t;
-        };
-
-        const getMatchDataByStt = (stt) => data.find(m => m && m.stt === stt) || { team1: `Thua/Thắng ${stt}`, team2: `Thua/Thắng ${stt}`, score1: "", score2: "" };
-
-        // Xây dựng sơ đồ khối cây giải đấu trực quan cho người xem
-        const roundStructures = [
-            { title: "Vòng 32 đội", matches: [74, 77, 73, 75, 76, 78, 79, 80, 83, 84, 81, 82, 86, 88, 85, 87] },
-            { title: "Vòng 16 đội", matches: [89, 90, 91, 92, 93, 94, 95, 96] },
-            { title: "Tứ Kết", matches: [97, 99, 98, 100] },
-            { title: "Bán Kết", matches: [101, 102] },
-            { title: "Chung Kết & Tranh Hạng 3", matches: [104, 103] }
+        const bracketStructure = [
+            { title: "Vòng 1/16", matches: [73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88] },
+            { title: "Vòng 1/8", matches: [89,90,91,92,93,94,95,96] },
+            { title: "Tứ kết", matches: [97,98,99,100] },
+            { title: "Bán kết", matches: [101,102] },
+            { title: "Chung kết", matches: [104] }
         ];
 
-        roundStructures.forEach(round => {
-            const roundUl = document.createElement('ul');
-            roundUl.className = 'bracket-round';
+        bracketStructure.forEach(round => {
+            const roundCol = document.createElement('ul');
+            roundCol.className = 'bracket-round';
             
-            const rTitle = document.createElement('div');
-            rTitle.className = 'bracket-round-title';
-            rTitle.innerText = round.title;
-            roundUl.appendChild(rTitle);
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'bracket-round-title';
+            titleDiv.innerText = round.title;
+            roundCol.appendChild(titleDiv);
 
-            round.matches.forEach(stt => {
-                const m = getMatchDataByStt(stt);
-                const rt1 = getRealName(m.team1);
-                const rt2 = getRealName(m.team2);
+            round.matches.forEach(matchStt => {
+                const matchData = data[matchStt - 1];
+                if (!matchData) return;
 
-                const s1 = m.score1 !== "" ? parseInt(m.score1) : -1;
-                const s2 = m.score2 !== "" ? parseInt(m.score2) : -1;
+                let t1 = matchData.team1;
+                let t2 = matchData.team2;
+                if (groupWinnersMap[t1]) t1 = groupWinnersMap[t1];
+                if (groupWinnersMap[t2]) t2 = groupWinnersMap[t2];
+                if (knockoutAdvMap[t1]) t1 = knockoutAdvMap[t1];
+                if (knockoutAdvMap[t2]) t2 = knockoutAdvMap[t2];
 
-                const li = document.createElement('li');
-                li.className = 'bracket-matchup';
-                li.innerHTML = `
-                    <div class="bracket-match-meta">TRẬN ${stt}</div>
-                    <div class="bracket-team-row ${s1 > s2 ? 'winner' : ''}">
-                        <span class="bracket-team-name">${getTeamFlagHTML(rt1)}</span>
-                        <span class="bracket-team-score">${s1 !== -1 ? s1 : ''}</span>
+                const s1 = matchData.score1;
+                const s2 = matchData.score2;
+                
+                let w1 = false; let w2 = false;
+                if (s1 !== "" && s2 !== "") {
+                    if (parseFloat(s1) > parseFloat(s2)) w1 = true;
+                    else if (parseFloat(s1) < parseFloat(s2)) w2 = true;
+                }
+
+                const matchLi = document.createElement('li');
+                matchLi.className = 'bracket-matchup';
+                matchLi.innerHTML = `
+                    <div class="bracket-match-meta">Trận ${matchStt}</div>
+                    <div class="bracket-team-row ${w1 ? 'winner' : ''}">
+                        <span class="bracket-team-name">${t1}</span>
+                        <span class="bracket-team-score">${s1 !== "" ? Math.floor(parseFloat(s1)) : ''}</span>
                     </div>
-                    <div class="bracket-team-row ${s2 > s1 ? 'winner' : ''}">
-                        <span class="bracket-team-name">${getTeamFlagHTML(rt2)}</span>
-                        <span class="bracket-team-score">${s2 !== -1 ? s2 : ''}</span>
+                    <div class="bracket-team-row ${w2 ? 'winner' : ''}">
+                        <span class="bracket-team-name">${t2}</span>
+                        <span class="bracket-team-score">${s2 !== "" ? Math.floor(parseFloat(s2)) : ''}</span>
                     </div>
                 `;
-                roundUl.appendChild(li);
+                roundCol.appendChild(matchLi);
             });
-            treeContainer.appendChild(roundUl);
+            treeContainer.appendChild(roundCol);
         });
     }
 
- function exportToPDF() {
-    // 1. Lấy chính xác 2 vùng dữ liệu thực tế trên trang
-    const standingsArea = document.getElementById('standings-area');
-    const matchesArea = document.getElementById('match-list');
-
-    if (!standingsArea && !matchesArea) {
-        alert("Không tìm thấy dữ liệu để xuất PDF!");
-        return;
-    }
-
-    // 2. Tạm thời tối ưu giao diện gốc để vừa khít lề A4 khi in
-    const cards = matchesArea ? matchesArea.querySelectorAll('.match-card') : [];
-    const savedCardStyles = [];
-    
-    cards.forEach((card, index) => {
-        savedCardStyles.push({
-            marginBottom: card.style.marginBottom,
-            padding: card.style.padding,
-            fontSize: card.style.fontSize
+    function exportToPDF() {
+        Swal.fire({
+            title: 'Đang khởi tạo bản in...',
+            text: 'Hệ thống đang chuẩn bị định dạng lịch thi đấu dưới dạng file PDF',
+            icon: 'info',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
         });
-        card.style.marginBottom = '5px';
-        card.style.padding = '6px 12px';
-        card.style.fontSize = '12px';
-    });
 
-    // Tạo dòng chân trang (Footer) chứa bản quyền cho file PDF
-    const pdfFooter = document.createElement('div');
-    pdfFooter.id = "pdf-custom-footer";
-    pdfFooter.innerText = "© 2026 Bản quyền thuộc về Lê Công Minh | Thiết kế cho World Cup 2026 ⚽";
-    pdfFooter.style.textAlign = 'center';
-    pdfFooter.style.fontSize = '11px';
-    pdfFooter.style.color = '#718096';
-    pdfFooter.style.marginTop = '25px';
-    pdfFooter.style.paddingTop = '10px';
-    pdfFooter.style.borderTop = '1px solid #e2e8f0';
-    pdfFooter.style.fontFamily = 'Arial, sans-serif';
+        const element = document.getElementById('match-list');
+        const opt = {
+            margin: 10,
+            filename: 'Lich_Thi_Dau_WorldCup_2026.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
 
-    // Gắn dòng bản quyền vào cuối vùng hiển thị trận đấu để nó xuất hiện ở chân trang PDF
-    if (matchesArea) {
-        matchesArea.appendChild(pdfFooter);
-    }
-
-    // Ẩn tạm thời các nút bấm hành động và thanh tab để tránh lọt vào PDF
-    const actionZones = document.querySelectorAll('.action-zone, button, .btn-update, .pdf-zone, #tabs-container');
-    actionZones.forEach(el => el.style.setProperty('display', 'none', 'important'));
-
-    // Xác định vùng chụp (ưu tiên container chính)
-    const elementToPrint = document.querySelector('.container') || document.body;
-
-    // 3. Cấu hình xuất tệp PDF thiết lập lề vừa vặn
-    const opt = {
-        margin:       [10, 15, 10, 15], 
-        filename:     'WorldCup_2026.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, logging: false },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: 'avoid-all' } 
-    };
-
-    // 4. Chạy lệnh xuất PDF và KHÔI PHỤC lại giao diện ban đầu sau khi hoàn thành
-    html2pdf().set(opt).from(elementToPrint).save().then(() => {
-        // Xóa bỏ dòng chữ bản quyền tạm thời trên giao diện web sau khi in xong
-        if (pdfFooter) pdfFooter.remove();
-
-        // Khôi phục lại các nút bấm
-        actionZones.forEach(el => el.style.display = '');
-        
-        // Khôi phục lại kích thước ban đầu của các trận đấu
-        cards.forEach((card, index) => {
-            if (savedCardStyles[index]) {
-                card.style.marginBottom = savedCardStyles[index].marginBottom;
-                card.style.padding = savedCardStyles[index].padding;
-                card.style.fontSize = savedCardStyles[index].fontSize;
-            }
+        const inputs = element.querySelectorAll('.score-input');
+        inputs.forEach(input => {
+            const val = input.value;
+            const span = document.createElement('span');
+            span.innerText = val !== "" ? Math.floor(parseFloat(val)) : " - ";
+            span.style.fontWeight = 'bold';
+            span.style.fontSize = '1.2em';
+            span.className = 'pdf-temp-span';
+            input.style.display = 'none';
+            input.parentNode.insertBefore(span, input);
         });
-    }).catch((error) => {
-        console.error("Lỗi xuất PDF:", error);
-        // Khôi phục lại giao diện nếu có lỗi
-        if (pdfFooter) pdfFooter.remove();
-        actionZones.forEach(el => el.style.display = '');
-    });
-}
+
+        const updateButtons = element.querySelectorAll('.action-zone');
+        updateButtons.forEach(btn => btn.style.visibility = 'hidden');
+
+        html2pdf().set(opt).from(element).save().then(() => {
+            inputs.forEach(input => { input.style.display = 'inline-block'; });
+            element.querySelectorAll('.pdf-temp-span').forEach(span => span.remove());
+            updateButtons.forEach(btn => btn.style.visibility = 'visible');
+            Swal.fire('Thành công', 'Đã tải xuống file lịch PDF thành công!', 'success');
+        }).catch(err => {
+            Swal.fire('Thất bại', 'Gặp lỗi trong quá trình xuất PDF: ' + err.message, 'error');
+        });
+    }
 </script>
     <footer style="text-align: center; margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; color: #718096; font-size: 0.9em;">
     © 2026 Bản quyền thuộc về <strong>Lê Công Minh</strong> | Thiết kế cho World Cup 2026 ⚽
